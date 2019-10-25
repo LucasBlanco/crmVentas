@@ -1,0 +1,16 @@
+<div class="card" style="margin-bottom:15px">
+    <div class="card-body" [class]=" disabled? 'card-body disabled' : 'card-body'">
+        <div class="row">
+
+            <div class="col">
+                <ng-content></ng-content>
+            </div>
+
+            <div class="col-auto">
+
+                <img src="assets/media/mobile-phone.png" alt="call" (click)="llamar.emit();">
+
+            </div>
+        </div>
+    </div>
+</div>

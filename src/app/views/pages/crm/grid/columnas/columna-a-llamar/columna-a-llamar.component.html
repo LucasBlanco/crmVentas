@@ -1,0 +1,15 @@
+<div class="card grid-column">
+    <div class="card-header header-colored">
+        A llamar
+    </div>
+    <div class="card-body" style="overflow-y: scroll;">
+        <ng-container *ngFor="let contacto of contactos$ | async">
+            <crm-card-a-llamar 
+                [contacto]="contacto" 
+                [disabled]="!esElPrimerContactoDeLaCola(contacto)"
+                (llamar)="handleLlamar(contacto)"
+                ></crm-card-a-llamar>
+        </ng-container>
+    </div>
+</div>
+<crm-modal-a-llamar (moverA)="moverA($event)"></crm-modal-a-llamar>

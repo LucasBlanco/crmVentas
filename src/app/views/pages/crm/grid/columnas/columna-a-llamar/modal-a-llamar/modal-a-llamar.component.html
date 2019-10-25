@@ -1,0 +1,26 @@
+<ng-template #modalALlamar let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">A llamar</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+      Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
+      Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
+      at eros.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-success" id="dropdownBasic1" ngbDropdownToggle>Enviar a</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item" id="aLlamar" (click)="moverALlamar()">A llamar</button>
+        <button class="dropdown-item" id="aReLlamar" (click)="moverAReLlamar()">Re llamar</button>
+        <button class="dropdown-item" id="aAgendado" (click)="moverAAgendado()">Agendado</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

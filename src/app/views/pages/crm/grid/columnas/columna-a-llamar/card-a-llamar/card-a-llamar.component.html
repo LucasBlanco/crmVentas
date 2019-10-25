@@ -1,0 +1,4 @@
+<crm-base-card [disabled]="disabled" (llamar)="!disabled && llamar.emit()">
+    <h5 class="card-title">{{contacto.nombre}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{contacto.cuil }}</h6>
+</crm-base-card>

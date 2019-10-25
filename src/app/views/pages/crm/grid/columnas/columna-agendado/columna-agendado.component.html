@@ -1,0 +1,12 @@
+<div class="card grid-column">
+    <div class="card-header header-colored">
+        Agendado
+    </div>
+    <div class="card-body" style="overflow-y: scroll;">
+        <ng-container *ngFor="let contacto of contactos$ | async">
+            <crm-card-agendado [contacto]="contacto" (llamar)="handleLlamar(contacto)"></crm-card-agendado>
+        </ng-container>
+    </div>
+</div>
+
+<crm-modal-agendado (moverA)="moverA($event)"></crm-modal-agendado>

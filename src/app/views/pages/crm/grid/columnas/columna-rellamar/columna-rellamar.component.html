@@ -1,0 +1,12 @@
+<div class="card grid-column">
+    <div class="card-header header-colored">
+        Re llamar
+    </div>
+    <div class="card-body" style="overflow-y: scroll;">
+        <ng-container *ngFor="let contacto of contactos$ | async">
+            <crm-card-rellamar [contacto]="contacto" (llamar)="handleLlamar(contacto)"></crm-card-rellamar>
+        </ng-container>
+    </div>
+</div>
+
+<crm-modal-rellamar (moverA)="moverA($event)"></crm-modal-rellamar>
