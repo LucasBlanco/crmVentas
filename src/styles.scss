@@ -16,3 +16,32 @@
 .position-static {
 	position: static;
 }
+
+.custom .mat-dialog-container {
+	padding: 0;
+  }
+
+.custom .mat-dialog-title {
+	background-color: #36a3f7;	
+	padding: 10px;
+	color: white
+  }
+.custom .mat-dialog-content{
+	padding: 20px;
+	margin: 0
+}
+.custom .mat-dialog-actions{
+	padding: 20px;
+	margin: 0;
+	display: flex;
+    justify-content: flex-end;
+}
+
+mat-form-field.mat-form-field {
+	font-size: 14px;
+	width: 100%;
+  }
+
+mat-form-field > .mat-form-field-wrapper > .mat-form-field-flex > .mat-form-field-outline{
+	color: rgba(216, 220, 230, 0.82);
+  }

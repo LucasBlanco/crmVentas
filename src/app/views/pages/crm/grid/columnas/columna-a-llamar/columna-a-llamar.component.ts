@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Contacto } from '@modelos/contacto';
 import { CrmService } from '@servicios/crm.service';
 import { Observable } from 'rxjs';
@@ -16,9 +17,8 @@ export class ColumnaALlamarComponent implements OnInit {
   contactos$: Observable<Contacto[]>;
   contactos: Contacto[];
   contactoSeleccionado: Contacto;
-  @ViewChild(ModalALlamarComponent, { static: false }) modal;
 
-  constructor(private crmService: CrmService) { }
+  constructor(private crmService: CrmService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.contactos$ = this.crmService.getContactosALlamar();
@@ -34,11 +34,13 @@ export class ColumnaALlamarComponent implements OnInit {
 
   handleLlamar(contacto: Contacto) {
     this.contactoSeleccionado = contacto;
-    this.modal.open();
+    const dialogRef = this.dialog.open(ModalALlamarComponent, {
+      width: '60%',
+      panelClass: 'custom'
+    });
   }
 
   moverA(to) {
     this.crmService.moverContacto(Columnas.ALLAMAR, to, this.contactoSeleccionado);
-    this.modal.close();
   }
 }

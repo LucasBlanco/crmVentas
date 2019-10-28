@@ -25,6 +25,9 @@
       ],
       "@modelos/*": [
         "./src/app/views/models/*"
+      ],
+      "@baseConfig/*":[
+        "./src/app/views/base-config/*"
       ]
     }
   }

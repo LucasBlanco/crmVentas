@@ -1,4 +1,3 @@
-// Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -6,6 +5,7 @@ import { AuthGuard } from './core/auth';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
 
+// Angular
 // Components
 // Auth
 const routes: Routes = [
@@ -19,6 +19,10 @@ const routes: Routes = [
 			{
 				path: 'crm',
 				loadChildren: () => import('app/views/pages/crm/crm.module').then(m => m.CrmModule)
+			},
+			{
+				path: 'asignacionBases',
+				loadChildren: () => import('app/views/pages/asignacion-bases/asignacion-bases.module').then(m => m.AsignacionBasesModule)
 			},
 			{
 				path: 'dashboard',

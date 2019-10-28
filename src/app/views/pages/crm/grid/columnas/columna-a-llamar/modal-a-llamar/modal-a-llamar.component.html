@@ -1,26 +1,80 @@
-<ng-template #modalALlamar let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">A llamar</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>
-      Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-      Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-      Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-      at eros.
-    </p>
-  </div>
-  <div class="modal-footer">
-    <div ngbDropdown class="d-inline-block">
-      <button class="btn btn-success" id="dropdownBasic1" ngbDropdownToggle>Enviar a</button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button class="dropdown-item" id="aLlamar" (click)="moverALlamar()">A llamar</button>
-        <button class="dropdown-item" id="aReLlamar" (click)="moverAReLlamar()">Re llamar</button>
-        <button class="dropdown-item" id="aAgendado" (click)="moverAAgendado()">Agendado</button>
+<form [formGroup]="formALlamar" autocomplete="off">
+
+
+  <h1 mat-dialog-title>A llamar</h1>
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput formControlName="nombre">
+          <mat-error *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+            <span *ngIf="nombre.hasError('required')"> El nombre es requerido</span>
+            <span *ngIf="nombre.hasError('pattern')"> El nombre solo puede contener letras</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input type="text" matInput formControlName="apellido">
+          <mat-error *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+            <span *ngIf="apellido.hasError('required')"> El apellido es requerido</span>
+            <span *ngIf="apellido.hasError('pattern')"> El apellido solo puede contener letras</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Dni</mat-label>
+          <input type="number" matInput formControlName="dni">
+          <mat-error *ngIf="dni.invalid && (dni.dirty || dni.touched)">
+            <span *ngIf="dni.hasError('required')"> El dni es requerido</span>
+            <span *ngIf="dni.hasError('min') || dni.hasError('max')"> El dni debe tener 8 digitos</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Nacionalidad</mat-label>
+          <mat-select formControlName="nacionalidad">
+            <mat-option *ngFor="let nacionalidad of nacionalidades" [value]="nacionalidad.id">
+              {{nacionalidad.nombre}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="nacionalidad.invalid && (nacionalidad.dirty || nacionalidad.touched)">
+            <span *ngIf="nacionalidad.hasError('required')"> La nacionalidad es requerida</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col radio-sexo">
+        <div class="row">
+          <div class="col-auto">
+            Sexo
+          </div>
+          <div class="col">
+            <mat-radio-group formControlName="sexo">
+              <mat-radio-button value="MASCULINO">Masculino</mat-radio-button>
+              <mat-radio-button value="FEMENINO">Femenino</mat-radio-button>
+              <mat-radio-button value="OTRO">Otro</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-</ng-template>
+  {{formALlamar.value | json}}
+  <mat-divider></mat-divider>
+  <div mat-dialog-actions>
+    <button mat-stroked-button color="primary" type="button" cdkFocusInitial (click)="cargar()">Cargar</button>
+    <button mat-raised-button color="primary" [matMenuTriggerFor]="aLlamarMenu" [disabled]="formALlamar.invalid">Enviar
+      a</button>
+    <mat-menu #aLlamarMenu="matMenu">
+      <button mat-menu-item>Settings</button>
+      <button mat-menu-item>Help</button>
+    </mat-menu>
+  </div>
+</form>

@@ -10,6 +10,12 @@ export class MenuConfig {
 					page: '/crm',
 				},
 				{
+					title: 'Bases',
+					root: true,
+					alignment: 'left',
+					page: '/asignacionBases/fuentes',
+				},
+				{
 					title: 'Dashboards',
 					root: true,
 					alignment: 'left',

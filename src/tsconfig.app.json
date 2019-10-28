@@ -10,6 +10,9 @@
       ],
       "@modelos/*": [
         "./app/views/models/*"
+      ],
+      "@baseConfig/*": [
+        "./app/views/base-config/*"
       ]
     }
   },
