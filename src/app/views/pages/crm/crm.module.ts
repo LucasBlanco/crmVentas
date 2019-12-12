@@ -12,7 +12,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { BaseCardConHorarioComponent } from './grid/columnas/base-card-con-horario/base-card-con-horario.component';
 import { BaseCardComponent } from './grid/columnas/base-card/base-card.component';
@@ -44,12 +43,11 @@ import { GridComponent } from './grid/grid.component';
     ModalRellamarComponent,
     BaseCardConHorarioComponent
   ],
-  entryComponents: [ModalALlamarComponent],
+  entryComponents: [ModalALlamarComponent, ModalRellamarComponent, ModalAgendadoComponent],
   imports: [
     CommonModule,
     MatGridListModule,
     MatCardModule,
-    NgbModule,
     MatDialogModule,
     MatButtonModule,
     MatDividerModule,

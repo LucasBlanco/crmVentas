@@ -1,24 +1,25 @@
 // Angular
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// RxJS
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { finalize, takeUntil, tap } from 'rxjs/operators';
-// Translate
-import { TranslateService } from '@ngx-translate/core';
-// Store
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../core/reducers';
-// Auth
-import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
 
+import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
+import { AppState } from '../../../../core/reducers';
+
+// RxJS
+// Translate
+// Store
+// Auth
 /**
  * ! Just example => Should be removed in development
  */
 const DEMO_PARAMS = {
-	USERNAME: 'admin',
-	PASSWORD: 'demo'
+	USERNAME: 'prueba',
+	PASSWORD: 'kvega'
 };
 
 @Component({

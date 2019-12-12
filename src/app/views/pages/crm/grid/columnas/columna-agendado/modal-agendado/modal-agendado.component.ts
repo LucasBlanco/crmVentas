@@ -1,17 +1,17 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { BaseModalComponent } from './../../base-modal/base-modal.component';
 
 @Component({
   selector: 'crm-modal-agendado',
   templateUrl: './modal-agendado.component.html',
-  styleUrls: ['./modal-agendado.component.scss']
+  styleUrls: ['./modal-agendado.component.scss', '../../../../../styles/modal.scss']
 })
-export class ModalAgendadoComponent extends BaseModalComponent implements OnInit {
+export class ModalAgendadoComponent extends BaseModalComponent {
 
-  @ViewChild('modalAgendado', { static: false }) modalTemplateRef: ElementRef;
-
-  moverALlamar() { }
-  moverAReLlamar() { }
+  constructor(public dialogRef: MatDialogRef<ModalAgendadoComponent>) {
+    super();
+  }
 
 }

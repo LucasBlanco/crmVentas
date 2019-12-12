@@ -1,17 +1,14 @@
 // Angular
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-// RxJS
+import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-// NGRX
-import { select, Store } from '@ngrx/store';
-// Module reducers and selectors
-import { AppState } from '../../../core/reducers/';
-import { currentUserPermissions } from '../_selectors/auth.selectors';
-import { Permission } from '../_models/permission.model';
-import { find } from 'lodash';
 
+import { AppState } from '../../../core/reducers/';
+
+// RxJS
+// NGRX
+// Module reducers and selectors
 @Injectable()
 export class ModuleGuard implements CanActivate {
     constructor(private store: Store<AppState>, private router: Router) { }
@@ -41,6 +38,9 @@ export class ModuleGuard implements CanActivate {
         const tokenInfo = localStorage.getItem('tokenInfo');
         if (tokenInfo) {
             return of(true);
+        } else {
+            this.router.navigateByUrl('/error/403');
+            return of(false);
         }
     }
 }

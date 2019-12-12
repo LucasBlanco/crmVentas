@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule, MatDialogModule, MatDividerModule, MatMenuModule } from '@angular/material';
 
 import { BaseCardComponent } from '../base-card/base-card.component';
 import { CardALlamarComponent } from './card-a-llamar/card-a-llamar.component';
@@ -11,7 +12,13 @@ describe('ALlamarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ColumnaALlamarComponent, CardALlamarComponent, ModalALlamarComponent, BaseCardComponent]
+      declarations: [ColumnaALlamarComponent, CardALlamarComponent, ModalALlamarComponent, BaseCardComponent],
+      imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatMenuModule
+      ]
     })
       .compileComponents();
   }));

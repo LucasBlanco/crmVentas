@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule, MatDialogModule, MatDividerModule, MatMenuModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { getFakeContactoConHorario } from '@modelos/contacto';
 import { CrmService } from '@servicios/crm.service';
@@ -26,6 +27,12 @@ describe('ColumnaRellamarComponent', () => {
         ModalRellamarComponent,
         BaseCardComponent,
         BaseCardConHorarioComponent
+      ],
+      imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatMenuModule
       ],
       providers: [
         { provide: CrmService, useValue: spy }

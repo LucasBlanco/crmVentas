@@ -1,3 +1,5 @@
+
+
 export interface IPersona {
     nombre: string;
     apellido: string;
@@ -43,19 +45,20 @@ export class Persona implements IPersona {
 }
 
 export const getFakePersona = () => {
+    const faker = require('faker/locale/es');
     return new Persona({
-        nombre: 'Carlos',
-        apellido: 'Mazoud',
+        nombre: faker.name.firstName(),
+        apellido: faker.name.lastName(),
         telefonos: [
-            { numero: '15-2399-6532', horarioContacto: 'de 11 a 12' },
-            { numero: '15-2399-6532', horarioContacto: 'de 11 a 12' }
+            { numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' },
+            { numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' }
         ],
-        id: 1,
-        dni: 39268594,
-        cuil: 20392685945,
-        nacionalidad: 'Argentina',
+        id: faker.random.number(),
+        dni: faker.random.number(99999999),
+        cuil: faker.random.number(99999999999),
+        nacionalidad: faker.address.country(),
         estadoCivil: 'CASADO',
-        fechaNacimiento: '1995-10-17',
-        capitas: 3
+        fechaNacimiento: faker.date.past().toDateString(),
+        capitas: faker.random.number(10)
     });
 };

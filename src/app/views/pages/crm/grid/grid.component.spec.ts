@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { BaseCardConHorarioComponent } from './columnas/base-card-con-horario/base-card-con-horario.component';
 import { BaseCardComponent } from './columnas/base-card/base-card.component';
@@ -20,7 +22,8 @@ describe('GridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GridComponent,
+      declarations: [
+        GridComponent,
         ColumnaALlamarComponent,
         CardALlamarComponent,
         ColumnaAgendadoComponent,
@@ -32,7 +35,14 @@ describe('GridComponent', () => {
         BaseModalComponent,
         ModalAgendadoComponent,
         ModalRellamarComponent,
-        BaseCardConHorarioComponent
+        BaseCardConHorarioComponent,
+      ],
+      imports: [
+        MatMenuModule,
+        MatDialogModule
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
       ]
     })
       .compileComponents();

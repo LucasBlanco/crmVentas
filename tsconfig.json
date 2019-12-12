@@ -26,8 +26,11 @@
       "@modelos/*": [
         "./src/app/views/models/*"
       ],
-      "@baseConfig/*":[
+      "@baseConfig/*": [
         "./src/app/views/base-config/*"
+      ],
+      "@estilos/*": [
+        "./src/app/views/pages/styles"
       ]
     }
   }

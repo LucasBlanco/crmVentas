@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ContactoConHorario } from '@modelos/contacto';
 import { Columnas, CrmService } from '@servicios/crm.service';
 import { Observable } from 'rxjs';
@@ -14,9 +15,8 @@ export class ColumnaAgendadoComponent implements OnInit {
 
   contactos$: Observable<ContactoConHorario[]>;
   contactoSeleccionado: ContactoConHorario;
-  @ViewChild(ModalAgendadoComponent, { static: false }) modal;
 
-  constructor(private crmService: CrmService) { }
+  constructor(private crmService: CrmService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.contactos$ = this.crmService.getContactosAgendados();
@@ -24,11 +24,14 @@ export class ColumnaAgendadoComponent implements OnInit {
 
   handleLlamar(contacto: ContactoConHorario) {
     this.contactoSeleccionado = contacto;
-    this.modal.open();
+    const dialogRef = this.dialog.open(ModalAgendadoComponent, {
+      width: '60%',
+      panelClass: 'custom'
+    });
   }
 
   moverA(to) {
     this.crmService.moverContacto(Columnas.AGENDADO, to, this.contactoSeleccionado);
-    this.modal.close();
+
   }
 }

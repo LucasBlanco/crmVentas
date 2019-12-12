@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "types": [],
+    "types": [
+      "node"
+    ],
     "paths": {
       "@servicios/*": [
         "./app/views/services/*"
@@ -13,6 +15,9 @@
       ],
       "@baseConfig/*": [
         "./app/views/base-config/*"
+      ],
+      "@estilos/*": [
+        "./app/views/pages/styles"
       ]
     }
   },

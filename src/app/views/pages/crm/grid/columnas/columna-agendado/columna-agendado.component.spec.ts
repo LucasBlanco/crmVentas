@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule, MatDialogModule, MatDividerModule, MatMenuModule } from '@angular/material';
 
 import { BaseCardConHorarioComponent } from '../base-card-con-horario/base-card-con-horario.component';
 import { BaseCardComponent } from '../base-card/base-card.component';
@@ -18,6 +19,12 @@ describe('ColumnaAgendadoComponent', () => {
         ModalAgendadoComponent,
         BaseCardComponent,
         BaseCardConHorarioComponent
+      ],
+      imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatMenuModule
       ]
     })
       .compileComponents();

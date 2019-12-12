@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { Columnas } from '@servicios/crm.service';
 
 import { ModalALlamarComponent } from './modal-a-llamar.component';
@@ -11,7 +12,10 @@ describe('ModalALlamarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ModalALlamarComponent],
-      imports: [NgbModule]
+      imports: [MatMenuModule, MatDialogModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+      ]
     })
       .compileComponents();
   }));
@@ -20,7 +24,6 @@ describe('ModalALlamarComponent', () => {
     fixture = TestBed.createComponent(ModalALlamarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    component.open();
   });
 
   it('should create', () => {

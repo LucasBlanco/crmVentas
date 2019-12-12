@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { Columnas } from '@servicios/crm.service';
 
 import { ModalRellamarComponent } from './modal-rellamar.component';
@@ -9,7 +11,11 @@ describe('ModalRellamarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ModalRellamarComponent]
+      declarations: [ModalRellamarComponent],
+      imports: [MatMenuModule, MatDialogModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+      ]
     })
       .compileComponents();
   }));

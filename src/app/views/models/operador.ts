@@ -1,3 +1,5 @@
+
+
 export interface IOperador {
     nombre: string;
     id: number;
@@ -12,7 +14,10 @@ export class Operador implements IOperador {
     }
 }
 
-export const getFakeOperador = () => new Operador({
-    nombre: 'Carlos',
-    id: 1
-});
+export const getFakeOperador = () => {
+    const faker = require('faker/locale/es');
+    return new Operador({
+        nombre: faker.name.firstName(),
+        id: faker.random.number()
+    });
+};

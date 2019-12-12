@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import * as jwtDecode from 'jwt-decode';
 import { Observable, of } from 'rxjs';
-import { User } from '../_models/user.model';
+import { catchError, map } from 'rxjs/operators';
+
+import { environment } from '../../../../environments/environment';
+import { QueryParamsModel, QueryResultsModel } from '../../_base/crud';
 import { Permission } from '../_models/permission.model';
 import { Role } from '../_models/role.model';
-import { catchError, map } from 'rxjs/operators';
-import { QueryParamsModel, QueryResultsModel } from '../../_base/crud';
-import { environment } from '../../../../environments/environment';
-import { Router } from '@angular/router';
-import * as jwtDecode from 'jwt-decode';
+import { User } from '../_models/user.model';
+
 const API_USERS_URL = 'api/users';
 const API_PERMISSION_URL = 'api/permissions';
 const API_ROLES_URL = 'api/roles';
@@ -25,6 +26,7 @@ export class AuthService {
             environment.ip + '/login', { user: username.toUpperCase(), password: password.toUpperCase() });
         loginObservable.subscribe(response => {
             const decodedToken = JSON.stringify(jwtDecode(response.data.token));
+            localStorage.setItem('token', response.data.token);
             localStorage.setItem('tokenInfo', decodedToken);
         });
         return loginObservable.pipe(

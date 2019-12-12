@@ -1,27 +1,39 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Fuente } from '@modelos/fuente';
-import { of } from 'rxjs';
+import { Persona } from '@modelos/persona';
+import { BehaviorSubject } from 'rxjs';
 
-import { getFakeFuente } from './../models/fuente';
-import { getFakePersona } from './../models/persona';
+import { environment } from './../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FuentesService {
 
-  fuentes: Fuente[];
-  constructor() {
-    const fuente1 = getFakeFuente();
-    const fuente2 = { ...getFakeFuente(), nombre: 'otraFuente', id: 2 };
-    this.fuentes = [fuente1, fuente2];
+  fuentes$ = new BehaviorSubject<Fuente[]>([]);
+  personas$ = new BehaviorSubject<Persona[]>([]);
+  constructor(private http: HttpClient) {
+    /*for (let i = 0; i <= 100; i++) {
+      this.fuentes.push(getFakeFuente());
+    }
+    for (let i = 0; i <= 100; i++) {
+      this.personas.push(getFakePersona());
+    }*/
   }
 
   traerTodos() {
-    return of(this.fuentes);
+    this.http.get<Fuente[]>(`${environment.ip}/bases`).subscribe(
+      bases => this.fuentes$.next(bases)
+    );
+    return this.fuentes$;
+    // return new BehaviorSubject(this.fuentes);
   }
 
   traerUno(id: number) {
-    return of([getFakePersona(), { ...getFakePersona(), id: 2 }]);
+    this.http.get<Persona[]>(`${environment.ip}/bases/${id}/personas`).subscribe(
+      personas => this.personas$.next(personas)
+    );
+    return this.personas$;
   }
 }

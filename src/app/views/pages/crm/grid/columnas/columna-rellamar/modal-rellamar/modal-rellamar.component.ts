@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { BaseModalComponent } from './../../base-modal/base-modal.component';
 
@@ -7,9 +8,9 @@ import { BaseModalComponent } from './../../base-modal/base-modal.component';
   templateUrl: './modal-rellamar.component.html',
   styleUrls: ['./modal-rellamar.component.scss']
 })
-export class ModalRellamarComponent extends BaseModalComponent implements OnInit {
+export class ModalRellamarComponent extends BaseModalComponent {
 
-  @ViewChild('modalRellamar', { static: false }) modalTemplateRef: ElementRef;
-
-  moverALlamar() { }
+  constructor(public dialogRef: MatDialogRef<ModalRellamarComponent>) {
+    super();
+  }
 }
