@@ -5,13 +5,14 @@ import { Persona } from '@modelos/persona';
 import { BehaviorSubject } from 'rxjs';
 
 import { environment } from './../../../environments/environment';
+import {Operador} from "@modelos/operador";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FuentesService {
 
-  fuentes$ = new BehaviorSubject<Fuente[]>([]);
   personas$ = new BehaviorSubject<Persona[]>([]);
   constructor(private http: HttpClient) {
     /*for (let i = 0; i <= 100; i++) {
@@ -23,10 +24,9 @@ export class FuentesService {
   }
 
   traerTodos() {
-    this.http.get<Fuente[]>(`${environment.ip}/bases`).subscribe(
-      bases => this.fuentes$.next(bases)
-    );
-    return this.fuentes$;
+	  return this.http.get<Fuente[]>(environment.ip + '/bases').pipe(
+		  map(fuentes => fuentes.map(this.mapToFront))
+	  )
     // return new BehaviorSubject(this.fuentes);
   }
 
@@ -35,5 +35,9 @@ export class FuentesService {
       personas => this.personas$.next(personas)
     );
     return this.personas$;
+  }
+
+  mapToFront(fuente){
+  	return new Fuente({nombre: fuente.nombre, id:fuente.id, proveedor: fuente.proveedor})
   }
 }

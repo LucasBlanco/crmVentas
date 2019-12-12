@@ -4,7 +4,7 @@ import 'hammerjs';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { GestureConfig, MatProgressSpinnerModule } from '@angular/material';
+import {GestureConfig, MatProgressSpinnerModule} from '@angular/material';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
@@ -47,6 +47,8 @@ import { metaReducers, reducers } from './core/reducers';
 import { AuthModule } from './views/pages/auth/auth.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
+import {NotificacionInterceptorService} from "@servicios/notificacion-interceptor.service";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 // Angular in memory
 // Perfect Scroll bar
@@ -113,7 +115,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 		TranslateModule.forRoot(),
 		MatProgressSpinnerModule,
 		InlineSVGModule.forRoot(),
-		ThemeModule
+		ThemeModule,
+		MatSnackBarModule
 	],
 	exports: [],
 	providers: [
@@ -146,6 +149,11 @@ export function hljsLanguages(): HighlightLanguage[] {
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: AuthInterceptorService,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: NotificacionInterceptorService,
 			multi: true
 		},
 		// template services

@@ -43,7 +43,7 @@ export class AsignacionOperadorComponent implements OnInit, OnDestroy {
     this.route.url.subscribe((url: UrlSegment[]) => {
       const id = url[1].path;
       this.personas$ = this.fuentesSrv.traerUno(Number(id));
-      this.operadores$ = this.operadoresSrv.traerTodos();
+      // this.operadores$ = this.operadoresSrv.traerTodos();
       this.iniciarAutocompleteOperador();
       this.iniciarTabla();
     });

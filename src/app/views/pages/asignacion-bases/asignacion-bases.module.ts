@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule, MatPaginatorIntl } from '@angular/material';
+import {MatCheckboxModule, MatPaginatorIntl} from '@angular/material';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -18,14 +18,17 @@ import { OperadoresService } from '@servicios/operadores.service';
 
 import { AsignacionOperadorComponent } from './asignacion-operador/asignacion-operador.component';
 import { FuentesComponent } from './fuentes/fuentes.component';
+import { BuscadorPersonaComponent } from './buscador-persona/buscador-persona.component';
+import {MatSelectModule} from "@angular/material/select";
 
 const routes: Routes = [
   { path: 'fuentes', component: FuentesComponent },
-  { path: 'operador/:idFuente', component: AsignacionOperadorComponent }
+  { path: 'operador/:idFuente', component: AsignacionOperadorComponent },
+  { path: 'buscadorPersonas', component: BuscadorPersonaComponent }
 ];
 
 @NgModule({
-  declarations: [FuentesComponent, AsignacionOperadorComponent],
+  declarations: [FuentesComponent, AsignacionOperadorComponent, BuscadorPersonaComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -39,7 +42,8 @@ const routes: Routes = [
     MatInputModule,
     MatCheckboxModule,
     MatAutocompleteModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+	  MatSelectModule,
   ],
   providers: [
     FuentesService,

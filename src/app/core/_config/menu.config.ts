@@ -13,7 +13,7 @@ export class MenuConfig {
 					title: 'Bases',
 					root: true,
 					alignment: 'left',
-					page: '/asignacionBases/fuentes',
+					page: '/asignacionBases/buscadorPersonas',
 				},
 				{
 					title: 'Dashboards',
