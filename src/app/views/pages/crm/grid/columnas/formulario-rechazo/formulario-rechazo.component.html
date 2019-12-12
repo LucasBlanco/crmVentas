@@ -6,8 +6,9 @@
                 {{observacion}}
             </mat-option>
         </mat-select>
+        <mat-error *ngIf="this.form.get('observacion').invalid">El campo es requerido</mat-error>
     </mat-form-field>
     <div class="d-flex justify-content-end">
-        <button mat-flat-button>Enviar</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Enviar</button>
     </div>
 </form>

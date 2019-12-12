@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CrmService } from '@servicios/crm.service';
 
@@ -9,11 +9,20 @@ import { CrmService } from '@servicios/crm.service';
 })
 export class FormularioRechazoComponent implements OnInit {
 
+  @Output() guardar = new EventEmitter<{ observacion: string }>();
   form = new FormGroup({
     observacion: new FormControl('', Validators.required)
   });
+
   observaciones = [
-    'Tiene piojitos'
+    'No le interesa',
+    'No trabaja',
+    'Colgo el telefono',
+    'Monotributista',
+    'Enfermo',
+    'Conforme con obra social',
+    'Capita',
+    'Convenio de obra social',
   ]
 
   constructor(private carmSrv: CrmService) { }
@@ -22,6 +31,7 @@ export class FormularioRechazoComponent implements OnInit {
   }
 
   rechazar() {
-    console.log(this.form.get('observacion').value)
+    console.log('rechazo')
+    this.guardar.emit({ observacion: this.form.get('observacion').value });
   }
 }

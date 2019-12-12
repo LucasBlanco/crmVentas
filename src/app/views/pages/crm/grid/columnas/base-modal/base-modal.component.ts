@@ -8,7 +8,7 @@ import { Columnas } from '@servicios/crm.service';
 export class BaseModalComponent {
 
   @Output() moverA = new EventEmitter<Columnas>();
-  @Output() rechazar = new EventEmitter<{ observacion: string, id: number }>();
+  @Output() rechazar = new EventEmitter<{ observacion: string }>();
 
   moverALlamar() {
     this.moverA.emit(Columnas.ALLAMAR);
