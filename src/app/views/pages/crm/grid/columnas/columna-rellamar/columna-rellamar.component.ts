@@ -39,6 +39,10 @@ export class ColumnaRellamarComponent implements OnInit {
       width: '60%',
       panelClass: 'custom'
     });
+    dialogRef.componentInstance.rechazar.subscribe(form => {
+      this.crmService.rechazar(Columnas.RELLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id })
+      dialogRef.close();
+    })
   }
 
   moverA(to) {
