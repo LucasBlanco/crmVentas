@@ -39,11 +39,12 @@ export class ColumnaRellamarComponent implements OnInit {
       width: '60%',
       panelClass: 'custom'
     });
+    dialogRef.componentInstance.agendar.subscribe(form => {
+      this.crmService.agendar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close()
+    })
   }
 
-  moverA(to) {
-    this.crmService.moverContacto(Columnas.RELLAMAR, to, this.contactoSeleccionado);
-  }
 
 
 }
