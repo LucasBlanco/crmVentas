@@ -3,7 +3,7 @@
 		<div class="col">
 			<mat-form-field appearance="outline">
 				<mat-label>Nombre</mat-label>
-				<input matInput formControlName="nombre">
+				<input  matInput formControlName="nombre">
 				<mat-error *ngIf="nombre.invalid">El campo es requerido</mat-error>
 			</mat-form-field>
 		</div>
@@ -17,7 +17,7 @@
 		<div class="col">
 			<mat-form-field appearance="outline">
 				<mat-label>Pais de origen</mat-label>
-				<select matInput formControlName="nacionalidad">
+				<mat-select formControlName="nacionalidad">
 					<mat-option value="ARGENTINA">Argentina</mat-option>
 					<mat-option value="BOLIVIA">Bolivia</mat-option>
 					<mat-option value="BRASIL">Brasil</mat-option>
@@ -27,21 +27,140 @@
 					<mat-option value="URUGUAY">Uruguay</mat-option>
 					<mat-option value="VENEZUELA">Venezuela</mat-option>
 					<mat-option value="PARAGUAY">Paraguay</mat-option>
-				</select>
-				<mat-error *ngIf="apellido.invalid">El campo es requerido</mat-error>
+				</mat-select>
+				<mat-error *ngIf="nacionalidad.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col">
+			<mat-radio-group aria-label="Select an option">
+				<mat-radio-button value="M">M</mat-radio-button>
+				<mat-radio-button value="F">F</mat-radio-button>
+			</mat-radio-group>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Estado civil</mat-label>
+				<mat-select formControlName="estadoCivil">
+					<mat-option value="SOLTERO">Soltero</mat-option>
+					<mat-option value="CASADO">Casado</mat-option>
+					<mat-option value="CONCUBINATO">Concubinato</mat-option>
+					<mat-option value="DIVORSIADO">Divorsiado</mat-option>
+					<mat-option value="VIUDO">Viudo</mat-option>
+				</mat-select>
+				<mat-error *ngIf="estadoCivil.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Fecha nacimiento</mat-label>
+				<input type="date" matInput formControlName="fechaNacimiento" [max]="fechaHoy()">
+				<mat-error *ngIf="fechaNacimiento.invalid">El campo es requerido</mat-error>
 			</mat-form-field>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
 			<mat-form-field appearance="outline">
-				<mat-label>Nota</mat-label>
-				<textarea type="text" matInput formControlName="nota"></textarea>
-				<mat-error *ngIf="nota.invalid">El campo es requerido</mat-error>
+				<mat-label>Cuil</mat-label>
+				<input type="number" matInput formControlName="cuil">
+				<mat-error *ngIf="cuil.hasError('required')">El campo es requerido</mat-error>
+				<mat-error *ngIf="cuil.hasError('min') || cuil.hasError('max') ">El campo debe tener 11 digitos</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Horario contacto tel 2</mat-label>
+				<input matInput formControlName="horaContactoTel1">
+				<mat-error *ngIf="horaContactoTel1.invalid" >El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Horario contacto tel 2</mat-label>
+				<input matInput formControlName="horaContactoTel2">
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Telefono 1</mat-label>
+				<input matInput formControlName="telefono1">
+				<mat-error *ngIf="telefono1.invalid" >El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Telefono 2</mat-label>
+				<input matInput formControlName="telefono2">
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Capitas</mat-label>
+				<input matInput formControlName="capitas">
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Calle</mat-label>
+				<input matInput formControlName="calle">
+				<mat-error *ngIf="calle.invalid" >El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Numero</mat-label>
+				<input type="number" matInput formControlName="numero">
+				<mat-error *ngIf="numero.invalid" >El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Localidad</mat-label>
+				<mat-select formControlName="localidad">
+					<mat-option *ngFor="let localidad of localidades" [value]="localidad.id">{{localidad.nombre}}</mat-option>
+				</mat-select>
+				<mat-error *ngIf="localidad.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Piso</mat-label>
+				<input matInput formControlName="piso">
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Departamento</mat-label>
+				<input matInput formControlName="departamento">
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Codigo postal</mat-label>
+				<input matInput formControlName="codigoPostal">
+				<mat-error *ngIf="codigoPostal.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Obra social</mat-label>
+				<mat-select formControlName="obraSocial">
+					<mat-option *ngFor="let obraSocial of obrasSociales" [value]="obraSocial.id">{{obraSocial.nombre}}</mat-option>
+				</mat-select>
+				<mat-error *ngIf="obraSocial.invalid">El campo es requerido</mat-error>
 			</mat-form-field>
 		</div>
 	</div>
 	<div class="d-flex justify-content-end">
-		<button mat-raised-button color="accent" [disabled]="form.invalid">Agendar</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid">Vender</button>
 	</div>
 </form>

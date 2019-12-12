@@ -14,7 +14,7 @@ export class Usuario implements IUsuario {
     nombre: string;
     id: number;
     constructor(usuario: IUsuario) {
-        this.obrasSociales = usuario.obrasSociales;
+        this.obrasSociales = (usuario as any).obraSociales;
         this.permisos = usuario.permisos;
         this.perfiles = usuario.perfiles;
         this.nombre = usuario.nombre;
