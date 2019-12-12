@@ -88,11 +88,12 @@ export class CrmService {
     }
   }
 
-  moverContacto(from: Columnas, to: Columnas, contacto: Contacto) {
+  moverContacto(from: Columnas, to: Columnas, id: number) {
     const fromObservable = this.getObservable(from);
     const toObservable = this.getObservable(to);
     const fromValues = fromObservable.value;
     const toValues = toObservable.value;
+    const contacto = fromValues.find(c => c.id === id);
     if (from === to) {
       toObservable.next([...toValues.filter(c => c.id !== contacto.id), contacto]);
     } else {
@@ -108,9 +109,14 @@ export class CrmService {
   }
 
   rechazar(from: Columnas, { id, observacion }) {
-    this.http.post(`${environment.ip}/crm/rechazar`, { id_venta: id, observacion }).subscribe(
-      () => this.borrarContacto(from, id)
-    );
+    this.http.post(`${environment.ip}/crm/rechazar`, { id_venta: id, observacion })
+      .subscribe(() => this.borrarContacto(from, id));
+  }
+
+  agendar(from: Columnas, { fechaYHoraDeProximoContacto, nota, id }) {
+    this.http.post(`${environment.ip}/crm/agendarLlamado`,
+      { id_venta: id, fecha: fechaYHoraDeProximoContacto, nota, rellamado: false })
+      .subscribe(() => this.getContactosAgendados());
   }
 
   hayContactosAgendados(): Observable<boolean> {

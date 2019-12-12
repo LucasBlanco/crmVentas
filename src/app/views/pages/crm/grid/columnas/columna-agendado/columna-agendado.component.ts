@@ -35,9 +35,11 @@ export class ColumnaAgendadoComponent implements OnInit {
       width: '60%',
       panelClass: 'custom'
     });
+    dialogRef.componentInstance.agendar.subscribe(form => {
+      this.crmService.agendar(Columnas.AGENDADO, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close()
+    })
   }
 
-  moverA(to) {
-    this.crmService.moverContacto(Columnas.AGENDADO, to, this.contactoSeleccionado);
-  }
+
 }
