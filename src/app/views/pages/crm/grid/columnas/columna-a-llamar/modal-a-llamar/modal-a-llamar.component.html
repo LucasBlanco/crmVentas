@@ -1,10 +1,15 @@
-<h1 mat-dialog-title>A llamar</h1>
+<h1 mat-dialog-title>Rellamar</h1>
 <div mat-dialog-content>
-  <mat-tab-group>
-    <mat-tab label="Rechazo">
-      <crm-formulario-rechazo (onSubmit)="this.rechazar.emit($event)"></crm-formulario-rechazo>
-    </mat-tab>
-    <mat-tab label="Second"> Content 2 </mat-tab>
-    <mat-tab label="Third"> Content 3 </mat-tab>
-  </mat-tab-group>
+	<mat-tab-group>
+		<mat-tab label="Rechazo">
+			<crm-formulario-rechazo (onSubmit)="this.rechazar.emit($event)"></crm-formulario-rechazo>
+		</mat-tab>
+		<mat-tab label="Agendar">
+			<crm-formulario-agendar></crm-formulario-agendar>
+		</mat-tab>
+		<mat-tab label="Rellamar"><crm-formulario-agendar></crm-formulario-agendar>
+		</mat-tab>
+		<mat-tab label="Vender"><crm-formulario-vender></crm-formulario-vender>
+		</mat-tab>
+	</mat-tab-group>
 </div>

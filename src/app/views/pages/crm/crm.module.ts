@@ -28,6 +28,8 @@ import { ColumnaRellamarComponent } from './grid/columnas/columna-rellamar/colum
 import { ModalRellamarComponent } from './grid/columnas/columna-rellamar/modal-rellamar/modal-rellamar.component';
 import { FormularioRechazoComponent } from './grid/columnas/formulario-rechazo/formulario-rechazo.component';
 import { GridComponent } from './grid/grid.component';
+import { FormularioAgendarComponent } from './grid/columnas/formulario-agendar/formulario-agendar.component';
+import { FormularioVenderComponent } from './grid/columnas/formulario-vender/formulario-vender.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { GridComponent } from './grid/grid.component';
     ModalAgendadoComponent,
     ModalRellamarComponent,
     BaseCardConHorarioComponent,
-    FormularioRechazoComponent
+    FormularioRechazoComponent,
+    FormularioAgendarComponent,
+    FormularioVenderComponent
   ],
   entryComponents: [ModalALlamarComponent, ModalRellamarComponent, ModalAgendadoComponent],
   imports: [
