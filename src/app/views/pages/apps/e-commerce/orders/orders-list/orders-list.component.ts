@@ -1,9 +1,8 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'kt-orders-list',
-	templateUrl: './orders-list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './orders-list.component.html'
 })
 export class OrdersListComponent { }

@@ -29,7 +29,7 @@ import { HtmlClassService } from '../../html-class.service';
 	selector: 'kt-menu-horizontal',
 	templateUrl: './menu-horizontal.component.html',
 	styleUrls: ['./menu-horizontal.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 	// Public properties

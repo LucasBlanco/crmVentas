@@ -1,20 +1,19 @@
-import { ChangeDetectorRef } from '@angular/core';
-// Angular
-import {Component, Inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-// Material
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-// RxJS
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-// Services and Models
+
 import { SPECIFICATIONS_DICTIONARY } from '../../../../../../../../core/e-commerce';
 
+// Angular
+// Material
+// RxJS
+// Services and Models
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-specification-edit-dialog',
-	templateUrl: './specification-edit-dialog.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './specification-edit-dialog.component.html'
 })
 export class SpecificationEditDialogComponent implements OnInit {
 	// Public properties
@@ -60,7 +59,7 @@ export class SpecificationEditDialogComponent implements OnInit {
 		const specName: string = !this.data.specId ? '' : this.specificationsDictionary[this.data.specId];
 		const specText: string = this.data.value;
 		this.specificationEditForm = this.fb.group({
-			name: [specName, [ Validators.required]],
+			name: [specName, [Validators.required]],
 			text: [specText, Validators.compose([
 				Validators.required,
 				Validators.minLength(3),
@@ -73,7 +72,7 @@ export class SpecificationEditDialogComponent implements OnInit {
 	 * Close dialog
 	 */
 	onNoClick(): void {
-		this.dialogRef.close({ isUpdated : false });
+		this.dialogRef.close({ isUpdated: false });
 	}
 
 	/**

@@ -1,10 +1,4 @@
-<crm-base-card-con-horario [horario]="contacto.horario">
-    <crm-base-card [disabled]="disabled" (llamar)="llamar.emit()">
-        <h5 class="card-title">{{contacto.nombre}}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{contacto.cuil}}</h6>
-        <h6 class="card-subtitle mb-2 text-muted">
-            Horario contacto: {{contacto.horario.desde | date:'shortTime'}} -
-            {{contacto.horario.hasta | date:'shortTime'}}
-        </h6>
-    </crm-base-card>
-</crm-base-card-con-horario>
+<crm-base-card [disabled]="disabled" (llamar)="llamar.emit()">
+    <h5 class="card-title">{{contacto.persona.nombre}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{contacto.persona.cuil}}</h6>
+</crm-base-card>

@@ -178,7 +178,7 @@ export class ButtonTypesExample {}`,
 @Component({
 	selector: 'kt-button',
 	templateUrl: './button.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-button-row {
 		display: flex;

@@ -125,7 +125,7 @@ export class ProgressSpinnerColorizedExample {}`,
 @Component({
 	selector: 'kt-progress-spinner',
 	templateUrl: './progress-spinner.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-h2 {
 		margin: 10px;

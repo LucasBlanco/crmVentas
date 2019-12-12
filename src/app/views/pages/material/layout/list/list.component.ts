@@ -129,7 +129,7 @@ export class ListSectionsExample {
 @Component({
 	selector: 'kt-list',
 	templateUrl: './list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.mat-list-icon {
 		color: rgba(0, 0, 0, 0.54);

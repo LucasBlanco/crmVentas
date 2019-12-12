@@ -433,7 +433,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
 	selector: 'kt-input',
 	templateUrl: './input.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-form {
 		min-width: 150px;

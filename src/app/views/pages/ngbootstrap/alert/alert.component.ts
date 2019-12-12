@@ -218,7 +218,7 @@ export class NgbdAlertConfig {
 			border-color: #800040;
     	}`
 	],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class AlertComponent implements OnInit {
 	@Input() alerts: Array<IAlert> = [];

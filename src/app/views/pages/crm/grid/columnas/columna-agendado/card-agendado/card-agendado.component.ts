@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ContactoConHorario } from '@modelos/contacto';
+
+import { BaseCardComponent } from './../../base-card/base-card.component';
 
 
 @Component({
@@ -9,11 +11,15 @@ import { ContactoConHorario } from '@modelos/contacto';
 })
 export class CardAgendadoComponent implements OnInit {
 
+  @ViewChild(BaseCardComponent, { static: true }) baseCard: BaseCardComponent;
   @Input() contacto: ContactoConHorario;
   @Input() disabled: boolean;
   @Output() llamar = new EventEmitter();
 
   constructor() { }
+
+  ngOnChanges() {
+  }
 
   ngOnInit() {
   }

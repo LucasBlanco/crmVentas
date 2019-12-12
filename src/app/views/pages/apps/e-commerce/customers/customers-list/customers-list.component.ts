@@ -1,23 +1,31 @@
 // Angular
-import { Component, OnInit, ElementRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-// Material
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator, MatSort, MatSnackBar, MatDialog } from '@angular/material';
-// RXJS
-import { debounceTime, distinctUntilChanged, tap, skip, delay, take } from 'rxjs/operators';
-import { fromEvent, merge, Subscription, of } from 'rxjs';
-// Translate Module
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSnackBar, MatSort } from '@angular/material';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-// NGRX
-import { Store, ActionsSubject } from '@ngrx/store';
-import { AppState } from '../../../../../../core/reducers';
-// CRUD
+import { fromEvent, merge, of, Subscription } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, skip, take, tap } from 'rxjs/operators';
+
 import { LayoutUtilsService, MessageType, QueryParamsModel } from '../../../../../../core/_base/crud';
-// Services and Models
-import { CustomerModel, CustomersDataSource, CustomersPageRequested, OneCustomerDeleted, ManyCustomersDeleted, CustomersStatusUpdated } from '../../../../../../core/e-commerce';
-// Components
+import {
+    CustomerModel,
+    CustomersDataSource,
+    CustomersPageRequested,
+    CustomersStatusUpdated,
+    ManyCustomersDeleted,
+    OneCustomerDeleted,
+} from '../../../../../../core/e-commerce';
+import { AppState } from '../../../../../../core/reducers';
 import { CustomerEditDialogComponent } from '../customer-edit/customer-edit.dialog.component';
 
+// Material
+// RXJS
+// Translate Module
+// NGRX
+// CRUD
+// Services and Models
+// Components
 // Table with EDIT item in MODAL
 // ARTICLE for table with sort/filter/paginator
 // https://blog.angular-university.io/angular-material-data-table/
@@ -29,17 +37,16 @@ import { CustomerEditDialogComponent } from '../customer-edit/customer-edit.dial
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-customers-list',
 	templateUrl: './customers-list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
 export class CustomersListComponent implements OnInit, OnDestroy {
 	// Table fields
 	dataSource: CustomersDataSource;
 	displayedColumns = ['select', 'id', 'lastName', 'firstName', 'email', 'gender', 'status', 'type', 'actions'];
-	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-	@ViewChild('sort1', {static: true}) sort: MatSort;
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild('sort1', { static: true }) sort: MatSort;
 	// Filter fields
-	@ViewChild('searchInput', {static: true}) searchInput: ElementRef;
+	@ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 	filterStatus: string = '';
 	filterType: string = '';
 	// Selection
@@ -84,7 +91,7 @@ export class CustomersListComponent implements OnInit, OnDestroy {
 		const paginatorSubscriptions = merge(this.sort.sortChange, this.paginator.page).pipe(
 			tap(() => this.loadCustomersList())
 		)
-		.subscribe();
+			.subscribe();
 		this.subscriptions.push(paginatorSubscriptions);
 
 		// Filtration, bind to searchInput
@@ -97,7 +104,7 @@ export class CustomersListComponent implements OnInit, OnDestroy {
 				this.loadCustomersList();
 			})
 		)
-		.subscribe();
+			.subscribe();
 		this.subscriptions.push(searchSubscription);
 
 		// Init DataSource

@@ -1,30 +1,31 @@
 // Angular
-import { Component, OnInit, ElementRef, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-// Material
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-// RXJS
-import { debounceTime, distinctUntilChanged, tap, skip, delay } from 'rxjs/operators';
-import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
-// NGRX
-import { Store, select } from '@ngrx/store';
-import { AppState } from '../../../../../../core/reducers';
-// UI
-import { SubheaderService } from '../../../../../../core/_base/layout';
-// CRUD
-import { LayoutUtilsService, MessageType, QueryParamsModel } from '../../../../../../core/_base/crud';
-// Services and Models
-import {
-	ProductModel,
-	ProductsDataSource,
-	ProductsPageRequested,
-	OneProductDeleted,
-	ManyProductsDeleted,
-	ProductsStatusUpdated,
-	selectProductsPageLastQuery
-} from '../../../../../../core/e-commerce';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSort } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { fromEvent, merge, of, Subscription } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, skip, tap } from 'rxjs/operators';
 
+import { LayoutUtilsService, MessageType, QueryParamsModel } from '../../../../../../core/_base/crud';
+import { SubheaderService } from '../../../../../../core/_base/layout';
+import {
+    ManyProductsDeleted,
+    OneProductDeleted,
+    ProductModel,
+    ProductsDataSource,
+    ProductsPageRequested,
+    ProductsStatusUpdated,
+    selectProductsPageLastQuery,
+} from '../../../../../../core/e-commerce';
+import { AppState } from '../../../../../../core/reducers';
+
+// Material
+// RXJS
+// NGRX
+// UI
+// CRUD
+// Services and Models
 // Table with EDIT item in new page
 // ARTICLE for table with sort/filter/paginator
 // https://blog.angular-university.io/angular-material-data-table/
@@ -35,17 +36,16 @@ import {
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-products-list',
-	templateUrl: './products-list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './products-list.component.html'
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
 	// Table fields
 	dataSource: ProductsDataSource;
 	displayedColumns = ['select', 'VINCode', 'manufacture', 'model', 'modelYear', 'color', 'price', 'condition', 'status', 'actions'];
-	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-	@ViewChild('sort1', {static: true}) sort: MatSort;
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild('sort1', { static: true }) sort: MatSort;
 	// Filter fields
-	@ViewChild('searchInput', {static: true}) searchInput: ElementRef;
+	@ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 	filterStatus: string = '';
 	filterCondition: string = '';
 	lastQuery: QueryParamsModel;
@@ -90,7 +90,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 		const paginatorSubscriptions = merge(this.sort.sortChange, this.paginator.page).pipe(
 			tap(() => this.loadProductsList())
 		)
-		.subscribe();
+			.subscribe();
 		this.subscriptions.push(paginatorSubscriptions);
 
 		// Filtration, bind to searchInput
@@ -102,7 +102,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 				this.loadProductsList();
 			})
 		)
-		.subscribe();
+			.subscribe();
 		this.subscriptions.push(searchSubscription);
 
 		// Set title to page breadCrumbs

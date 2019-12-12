@@ -16,7 +16,7 @@ import { LayoutUtilsService } from '../../../../../../core/_base/crud';
 @Component({
 	selector: 'kt-address',
 	templateUrl: './address.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class AddressComponent implements OnInit {
 	// Public properties

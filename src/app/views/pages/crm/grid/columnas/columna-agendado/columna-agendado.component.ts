@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactoConHorario } from '@modelos/contacto';
 import { Columnas, CrmService } from '@servicios/crm.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ModalAgendadoComponent } from './modal-agendado/modal-agendado.component';
 
@@ -19,7 +20,13 @@ export class ColumnaAgendadoComponent implements OnInit {
   constructor(private crmService: CrmService, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.contactos$ = this.crmService.getContactosAgendados();
+    this.contactos$ = this.crmService.getContactosAgendados().pipe(
+      map(contactos => {
+        const contactosHabilitados = contactos.filter(c => c.habilitado);
+        const contactosNoHabilitados = contactos.filter(c => !c.habilitado);
+        return [...contactosHabilitados, ...contactosNoHabilitados];
+      })
+    );
   }
 
   handleLlamar(contacto: ContactoConHorario) {
@@ -32,6 +39,5 @@ export class ColumnaAgendadoComponent implements OnInit {
 
   moverA(to) {
     this.crmService.moverContacto(Columnas.AGENDADO, to, this.contactoSeleccionado);
-
   }
 }

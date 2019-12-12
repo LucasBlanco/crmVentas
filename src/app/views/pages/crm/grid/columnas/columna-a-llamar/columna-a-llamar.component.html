@@ -4,7 +4,8 @@
     </div>
     <div class="card-body" style="overflow-y: scroll;">
         <ng-container *ngFor="let contacto of contactos$ | async">
-            <crm-card-a-llamar [contacto]="contacto" [disabled]="!esElPrimerContactoDeLaCola(contacto)"
+            <crm-card-a-llamar [contacto]="contacto"
+                [disabled]="!esElPrimerContactoDeLaCola(contacto) || hayContactosAgendados"
                 (llamar)="handleLlamar(contacto)"></crm-card-a-llamar>
         </ng-container>
     </div>

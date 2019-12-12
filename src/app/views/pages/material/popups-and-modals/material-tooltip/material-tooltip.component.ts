@@ -187,7 +187,7 @@ export class TooltipManualExample {}
 @Component({
 	selector: 'kt-material-tooltip',
 	templateUrl: './material-tooltip.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class MaterialTooltipComponent implements OnInit {
 

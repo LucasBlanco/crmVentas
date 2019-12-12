@@ -1,32 +1,38 @@
 // Angular
-import { Component, OnInit, ElementRef, ViewChild, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-// Material
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-// RXJS
-import { debounceTime, distinctUntilChanged, tap, delay } from 'rxjs/operators';
-import { fromEvent, merge, BehaviorSubject, Subscription, Observable, of } from 'rxjs';
-// NGRX
-import { Store, select } from '@ngrx/store';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatPaginator, MatSort } from '@angular/material';
 import { Update } from '@ngrx/entity';
-// State
-import { AppState } from '../../../../../../../../core/reducers';
-// CRUD
-import { TypesUtilsService, QueryParamsModel, LayoutUtilsService, MessageType } from '../../../../../../../../core/_base/crud';
-// Services and Models
-import {
-	ProductRemarkModel,
-	ProductRemarksDataSource,
-	ProductRemarksPageRequested,
-	ProductRemarkUpdated,
-	ProductRemarkStoreUpdated,
-	OneProductRemarkDeleted,
-	ManyProductRemarksDeleted,
-	selectLastCreatedProductRemarkId,
-	ProductRemarkOnServerCreated
-} from '../../../../../../../../core/e-commerce';
+import { select, Store } from '@ngrx/store';
+import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, tap } from 'rxjs/operators';
 
+import {
+    LayoutUtilsService,
+    MessageType,
+    QueryParamsModel,
+    TypesUtilsService,
+} from '../../../../../../../../core/_base/crud';
+import {
+    ManyProductRemarksDeleted,
+    OneProductRemarkDeleted,
+    ProductRemarkModel,
+    ProductRemarkOnServerCreated,
+    ProductRemarksDataSource,
+    ProductRemarksPageRequested,
+    ProductRemarkStoreUpdated,
+    ProductRemarkUpdated,
+    selectLastCreatedProductRemarkId,
+} from '../../../../../../../../core/e-commerce';
+import { AppState } from '../../../../../../../../core/reducers';
+
+// Material
+// RXJS
+// NGRX
+// State
+// CRUD
+// Services and Models
 // Table with EDIT item in new page
 // ARTICLE for table with sort/filter/paginator
 // https://blog.angular-university.io/angular-material-data-table/
@@ -37,8 +43,7 @@ import {
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-remarks-list',
-	templateUrl: './remarks-list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './remarks-list.component.html'
 })
 export class RemarksListComponent implements OnInit, OnDestroy {
 	// Public properties
@@ -48,10 +53,10 @@ export class RemarksListComponent implements OnInit, OnDestroy {
 	// Table fields
 	dataSource: ProductRemarksDataSource;
 	displayedColumns = ['select', 'id', 'text', 'type', 'dueDate', 'actions'];
-	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-	@ViewChild(MatSort, {static: true}) sort: MatSort;
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 	// Filter fields
-	@ViewChild('searchInput', {static: true}) searchInput: ElementRef;
+	@ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 	// Selection
 	selection = new SelectionModel<ProductRemarkModel>(true, []);
 	productRemarksResult: ProductRemarkModel[] = [];
@@ -77,7 +82,7 @@ export class RemarksListComponent implements OnInit, OnDestroy {
 		private fb: FormBuilder,
 		public dialog: MatDialog,
 		public typesUtilsService: TypesUtilsService,
-		private layoutUtilsService: LayoutUtilsService) {}
+		private layoutUtilsService: LayoutUtilsService) { }
 
 	/**
 	 * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks
@@ -236,28 +241,28 @@ export class RemarksListComponent implements OnInit, OnDestroy {
 		}
 
 		const controls = this.formGroup.controls;
-			this.loadingAfterSubmit = false;
-			this.remarkForAdd._isEditMode = false;
-			this.remarkForAdd.text = controls['newText'].value;
-			this.remarkForAdd.type = +controls['newType'].value;
-			const _date = new Date(controls['newDueDate'].value);
-			this.remarkForAdd.dueDate = this.typesUtilsService.getDateStringFromDate(_date);
-			this.remarkForAdd._updatedDate = this.typesUtilsService.getDateStringFromDate();
-			this.remarkForAdd._createdDate = this.remarkForEdit._updatedDate;
-			this.remarkForAdd._userId = 1; // Admin TODO: Get from user servics
-			this.store.dispatch(new ProductRemarkOnServerCreated({ productRemark: this.remarkForAdd }));
-			this.componentSubscriptions = this.store.pipe(
-				select(selectLastCreatedProductRemarkId)
-			).subscribe(res => {
-				if (!res) {
-					return;
-				}
+		this.loadingAfterSubmit = false;
+		this.remarkForAdd._isEditMode = false;
+		this.remarkForAdd.text = controls['newText'].value;
+		this.remarkForAdd.type = +controls['newType'].value;
+		const _date = new Date(controls['newDueDate'].value);
+		this.remarkForAdd.dueDate = this.typesUtilsService.getDateStringFromDate(_date);
+		this.remarkForAdd._updatedDate = this.typesUtilsService.getDateStringFromDate();
+		this.remarkForAdd._createdDate = this.remarkForEdit._updatedDate;
+		this.remarkForAdd._userId = 1; // Admin TODO: Get from user servics
+		this.store.dispatch(new ProductRemarkOnServerCreated({ productRemark: this.remarkForAdd }));
+		this.componentSubscriptions = this.store.pipe(
+			select(selectLastCreatedProductRemarkId)
+		).subscribe(res => {
+			if (!res) {
+				return;
+			}
 
-				const _saveMessage = `Remark has been created`;
-				this.isSwitchedToEditMode = false;
-				this.layoutUtilsService.showActionNotification(_saveMessage, MessageType.Create, 10000, true, true);
-				this.clearAddForm();
-			});
+			const _saveMessage = `Remark has been created`;
+			this.isSwitchedToEditMode = false;
+			this.layoutUtilsService.showActionNotification(_saveMessage, MessageType.Create, 10000, true, true);
+			this.clearAddForm();
+		});
 	}
 
 	// EDIT REMARK FUNCTIONS: clearEditForm | checkEditForm | editRemarkButtonOnClick | cancelEditButtonOnClick |

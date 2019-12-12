@@ -229,7 +229,7 @@ export class NgbdProgressbarConfig {
 @Component({
 	selector: 'kt-progressbar',
 	templateUrl: './progressbar.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
     	ngb-progressbar {
       		margin-top: 5rem;
