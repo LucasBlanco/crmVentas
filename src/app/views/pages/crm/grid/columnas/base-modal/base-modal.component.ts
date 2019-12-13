@@ -13,6 +13,7 @@ export class BaseModalComponent {
   @Output() rellamar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>();
   @Output() vender = new EventEmitter();
 
+
   moverALlamar() {
     this.moverA.emit(Columnas.ALLAMAR);
   }
