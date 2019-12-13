@@ -44,10 +44,9 @@ export class CrmService {
   getContactosALlamar = (): Observable<Contacto[]> => {
     this.http.get<Contacto[]>(`${environment.ip}/crm/asignados/${this.userSrv.getCurrentUser().id}`)
       .pipe(map(contactos => contactos.map(this.mapContactoToFront)),
-      tap(contactos => {
-        console.log('contactosMapeados', contactos)
-      }))
-      
+        tap(contactos => {
+          console.log('contactosMapeados', contactos)
+        }))
       .subscribe(contactos => this.contactosALlamar$.next(contactos));
     return this.contactosALlamar$;
   }

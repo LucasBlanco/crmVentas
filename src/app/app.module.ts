@@ -4,7 +4,8 @@ import 'hammerjs';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import {GestureConfig, MatProgressSpinnerModule} from '@angular/material';
+import { GestureConfig, MatProgressSpinnerModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,6 +14,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthInterceptorService } from '@servicios/auth-interceptor.service';
+import { NotificacionInterceptorService } from '@servicios/notificacion-interceptor.service';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import * as json from 'highlight.js/lib/languages/json';
 import * as scss from 'highlight.js/lib/languages/scss';
@@ -47,8 +49,6 @@ import { metaReducers, reducers } from './core/reducers';
 import { AuthModule } from './views/pages/auth/auth.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
-import {NotificacionInterceptorService} from "@servicios/notificacion-interceptor.service";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 // Angular in memory
 // Perfect Scroll bar
