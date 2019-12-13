@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 			const initialNotice = `Use account
 			<strong>${DEMO_PARAMS.USERNAME}</strong> and password
 			<strong>${DEMO_PARAMS.PASSWORD}</strong> to continue.`;
-			this.authNoticeService.setNotice(initialNotice, 'info');
+			//this.authNoticeService.setNotice(initialNotice, 'info');
 		}
 
 		this.loginForm = this.fb.group({

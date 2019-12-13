@@ -1,20 +1,50 @@
+import * as jwtDecode from 'jwt-decode';
+
 export class MenuConfig {
+
+	constructor() {
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases()]
+	}
+
+	getPermisos() {
+		const token = localStorage.getItem('token');
+		const user = jwtDecode(token);
+		return user.permisos;
+	}
+
+	tienePermiso(permiso: string) {
+		return this.getPermisos().some(p => p === permiso)
+	}
+
+	getCrm() {
+		if (this.tienePermiso('crm')) {
+			return [{
+				title: 'CRM',
+				root: true,
+				alignment: 'left',
+				page: '/crm',
+			}]
+		} else {
+			return []
+		}
+	}
+
+	getBases() {
+		if (this.tienePermiso('ventas')) {
+			return [{
+				title: 'Bases',
+				root: true,
+				alignment: 'left',
+				page: '/asignacionBases/buscadorPersonas',
+			}]
+		} else {
+			return []
+		}
+	}
 	public defaults: any = {
 		header: {
 			self: {},
 			items: [
-				{
-					title: 'CRM',
-					root: true,
-					alignment: 'left',
-					page: '/crm',
-				},
-				{
-					title: 'Bases',
-					root: true,
-					alignment: 'left',
-					page: '/asignacionBases/buscadorPersonas',
-				},
 				// {
 				// 	title: 'Dashboards',
 				// 	root: true,
@@ -762,3 +792,5 @@ export class MenuConfig {
 		return this.defaults;
 	}
 }
+
+

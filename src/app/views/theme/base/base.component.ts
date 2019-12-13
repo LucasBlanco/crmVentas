@@ -1,21 +1,22 @@
 // Angular
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-// RxJS
-import { Observable, Subscription } from 'rxjs';
-// Object-Path
+import { select, Store } from '@ngrx/store';
+import { NgxPermissionsService } from 'ngx-permissions';
 import * as objectPath from 'object-path';
-// Layout
+import { Observable, Subscription } from 'rxjs';
+
 import { LayoutConfigService, MenuConfigService, PageConfigService } from '../../../core/_base/layout';
-import { HtmlClassService } from '../html-class.service';
 import { LayoutConfig } from '../../../core/_config/layout.config';
 import { MenuConfig } from '../../../core/_config/menu.config';
 import { PageConfig } from '../../../core/_config/page.config';
-// User permissions
-import { NgxPermissionsService } from 'ngx-permissions';
 import { currentUserPermissions, Permission } from '../../../core/auth';
-import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../core/reducers';
+import { HtmlClassService } from '../html-class.service';
 
+// RxJS
+// Object-Path
+// Layout
+// User permissions
 @Component({
 	selector: 'kt-base',
 	templateUrl: './base.component.html',
@@ -56,9 +57,10 @@ export class BaseComponent implements OnInit, OnDestroy {
 
 		// register configs by demos
 		this.layoutConfigService.loadConfigs(new LayoutConfig().configs);
-		this.menuConfigService.loadConfigs(new MenuConfig().configs);
+
 		this.pageConfigService.loadConfigs(new PageConfig().configs);
 
+		this.menuConfigService.loadConfigs(new MenuConfig().configs);
 		// setup element classes
 		this.htmlClassService.setConfig(this.layoutConfigService.getConfig());
 
