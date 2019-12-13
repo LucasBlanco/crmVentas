@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Contacto, ContactoConHorario } from '@modelos/contacto';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
@@ -156,9 +156,8 @@ export class CrmService {
   }
 
   hayContactosAgendados(): Observable<boolean> {
-    /*return this.contactosAgendados$.pipe(
+    return this.contactosAgendados$.pipe(
       map(contactos => contactos.filter(c => c.habilitado).length > 0)
-    );*/
-    return of(false)
+    );
   }
 }
