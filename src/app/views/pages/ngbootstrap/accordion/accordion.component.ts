@@ -297,7 +297,7 @@ export class NgbdAccordionConfig {
 			display:block;
 		}
 	`],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	providers: [NgbAccordionConfig] // add the NgbAccordionConfig to the component providers
 })
 export class AccordionComponent implements OnInit {

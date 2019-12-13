@@ -1,9 +1,8 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-	templateUrl: './e-commerce.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './e-commerce.component.html'
 })
 export class ECommerceComponent implements OnInit {
 	/**
@@ -12,7 +11,7 @@ export class ECommerceComponent implements OnInit {
 	 * @param store: Store<AppState>
 	 * @param router: Router
 	 */
-	constructor() {}
+	constructor() { }
 
 	/*
 	 * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks
@@ -21,5 +20,5 @@ export class ECommerceComponent implements OnInit {
 	/**
 	 * On init
 	 */
-	ngOnInit() {}
+	ngOnInit() { }
 }

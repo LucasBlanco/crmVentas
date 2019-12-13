@@ -1,31 +1,31 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// Material
 import { MatDialog } from '@angular/material';
-// RxJS
-import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
-import { map, startWith, delay, first } from 'rxjs/operators';
-// NGRX
-import { Store, select } from '@ngrx/store';
-import { Dictionary, Update } from '@ngrx/entity';
-import { AppState } from '../../../../../../core/reducers';
-// Layout
-import { SubheaderService, LayoutConfigService } from '../../../../../../core/_base/layout';
-// CRUD
-import { LayoutUtilsService, TypesUtilsService, MessageType } from '../../../../../../core/_base/crud';
-// Services and Models
-import {
-	selectLastCreatedProductId,
-	selectProductById,
-	SPECIFICATIONS_DICTIONARY,
-	ProductModel,
-	ProductOnServerCreated,
-	ProductUpdated,
-	ProductsService
-} from '../../../../../../core/e-commerce';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Update } from '@ngrx/entity';
+import { select, Store } from '@ngrx/store';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { delay, map, startWith } from 'rxjs/operators';
 
+import { LayoutUtilsService, MessageType, TypesUtilsService } from '../../../../../../core/_base/crud';
+import { LayoutConfigService, SubheaderService } from '../../../../../../core/_base/layout';
+import {
+    ProductModel,
+    ProductOnServerCreated,
+    ProductsService,
+    ProductUpdated,
+    selectLastCreatedProductId,
+    selectProductById,
+} from '../../../../../../core/e-commerce';
+import { AppState } from '../../../../../../core/reducers';
+
+// Material
+// RxJS
+// NGRX
+// Layout
+// CRUD
+// Services and Models
 const AVAILABLE_COLORS: string[] =
 	['Red', 'CadetBlue', 'Gold', 'LightSlateGrey', 'RoyalBlue', 'Crimson', 'Blue', 'Sienna', 'Indigo', 'Green', 'Violet',
 		'GoldenRod', 'OrangeRed', 'Khaki', 'Teal', 'Purple', 'Orange', 'Pink', 'Black', 'DarkTurquoise'];
@@ -37,8 +37,7 @@ const AVAILABLE_MANUFACTURES: string[] =
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-product-edit',
-	templateUrl: './product-edit.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	templateUrl: './product-edit.component.html'
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
 	// Public properties
@@ -239,7 +238,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
 	}
 
-	goBackWithoutId	() {
+	goBackWithoutId() {
 		this.router.navigateByUrl('/ecommerce/products', { relativeTo: this.activatedRoute });
 	}
 

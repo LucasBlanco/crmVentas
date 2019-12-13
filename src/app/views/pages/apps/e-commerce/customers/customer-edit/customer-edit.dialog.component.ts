@@ -1,26 +1,32 @@
 // Angular
-import { Component, OnInit, Inject, ChangeDetectionStrategy, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// Material
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-// RxJS
-import { Subscription, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
-// NGRX
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Update } from '@ngrx/entity';
-import { Store, select } from '@ngrx/store';
-// State
-import { AppState } from '../../../../../../core/reducers';
-// CRUD
-import { TypesUtilsService } from '../../../../../../core/_base/crud';
-// Services and Models
-import { CustomerModel, CustomerUpdated, CustomerOnServerCreated, selectLastCreatedCustomerId, selectCustomersPageLoading, selectCustomersActionLoading } from '../../../../../../core/e-commerce';
+import { select, Store } from '@ngrx/store';
+import { of, Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
+import { TypesUtilsService } from '../../../../../../core/_base/crud';
+import {
+    CustomerModel,
+    CustomerOnServerCreated,
+    CustomerUpdated,
+    selectCustomersActionLoading,
+    selectLastCreatedCustomerId,
+} from '../../../../../../core/e-commerce';
+import { AppState } from '../../../../../../core/reducers';
+
+// Material
+// RxJS
+// NGRX
+// State
+// CRUD
+// Services and Models
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-customers-edit-dialog',
 	templateUrl: './customer-edit.dialog.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None
 })
 export class CustomerEditDialogComponent implements OnInit, OnDestroy {
@@ -74,7 +80,7 @@ export class CustomerEditDialogComponent implements OnInit, OnDestroy {
 		this.customerForm = this.fb.group({
 			firstName: [this.customer.firstName, Validators.required],
 			lastName: [this.customer.lastName, Validators.required],
-			email: [ this.customer.email, Validators.compose([Validators.required, Validators.email]) ],
+			email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
 			dob: [this.typesUtilsService.getDateFromString(this.customer.dateOfBbirth), Validators.compose([Validators.nullValidator])],
 			userName: [this.customer.userName, Validators.compose([Validators.required])],
 			gender: [this.customer.gender, Validators.compose([Validators.required])],
@@ -90,7 +96,7 @@ export class CustomerEditDialogComponent implements OnInit, OnDestroy {
 		if (this.customer.id > 0) {
 			return `Edit customer '${this.customer.firstName} ${
 				this.customer.lastName
-			}'`;
+				}'`;
 		}
 
 		return 'New customer';

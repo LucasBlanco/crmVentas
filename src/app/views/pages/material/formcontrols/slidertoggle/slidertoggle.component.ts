@@ -121,7 +121,7 @@ export class SlideToggleLabelPositionsExample {\n
 @Component({
 	selector: 'kt-slidertoggle',
 	templateUrl: './slidertoggle.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-h2 {
 		margin: 10px;

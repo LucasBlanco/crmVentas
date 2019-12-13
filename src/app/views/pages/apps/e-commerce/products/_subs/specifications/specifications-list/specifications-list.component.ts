@@ -1,32 +1,32 @@
-import { Pipe } from '@angular/core';
-// Angular
-import { Component, OnInit, ElementRef, ViewChild, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-// Material
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-// RXJS
-import { debounceTime, distinctUntilChanged, tap, delay } from 'rxjs/operators';
-import { fromEvent, merge, BehaviorSubject, Subscription, Observable, of } from 'rxjs';
-// NGRX
-import { Store, select } from '@ngrx/store';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSort } from '@angular/material';
 import { Update } from '@ngrx/entity';
-import { AppState } from '../../../../../../../../core/reducers';
-// CRUD
-import { QueryParamsModel, LayoutUtilsService, MessageType } from '../../../../../../../../core/_base/crud';
-// Services and models
+import { select, Store } from '@ngrx/store';
+import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, tap } from 'rxjs/operators';
+
+import { LayoutUtilsService, MessageType, QueryParamsModel } from '../../../../../../../../core/_base/crud';
 import {
-	ProductSpecificationModel,
-	ProductSpecificationsDataSource,
-	ProductSpecificationsPageRequested,
-	OneProductSpecificationDeleted,
-	ManyProductSpecificationsDeleted,
-	ProductSpecificationUpdated,
-	ProductSpecificationOnServerCreated,
-	selectLastCreatedProductSpecificationId
+    ManyProductSpecificationsDeleted,
+    OneProductSpecificationDeleted,
+    ProductSpecificationModel,
+    ProductSpecificationOnServerCreated,
+    ProductSpecificationsDataSource,
+    ProductSpecificationsPageRequested,
+    ProductSpecificationUpdated,
+    selectLastCreatedProductSpecificationId,
 } from '../../../../../../../../core/e-commerce';
-// Components
+import { AppState } from '../../../../../../../../core/reducers';
 import { SpecificationEditDialogComponent } from '../specification-edit/specification-edit-dialog.component';
 
+// Angular
+// Material
+// RXJS
+// NGRX
+// CRUD
+// Services and models
+// Components
 // Table with EDIT item in new page
 // ARTICLE for table with sort/filter/paginator
 // https://blog.angular-university.io/angular-material-data-table/
@@ -37,8 +37,7 @@ import { SpecificationEditDialogComponent } from '../specification-edit/specific
 @Component({
 	// tslint:disable-next-line:component-selector
 	selector: 'kt-specifications-list',
-	templateUrl: './specifications-list.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './specifications-list.component.html'
 })
 export class SpecificationsListComponent implements OnInit, OnDestroy {
 	// Public properties
@@ -50,10 +49,10 @@ export class SpecificationsListComponent implements OnInit, OnDestroy {
 	// Table fields
 	dataSource: ProductSpecificationsDataSource;
 	displayedColumns = ['select', '_specificationName', 'value', 'actions'];
-	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-	@ViewChild(MatSort, {static: true}) sort: MatSort;
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 	// Filter fields
-	@ViewChild('searchInput', {static: true}) searchInput: ElementRef;
+	@ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 	// Selection
 	selection = new SelectionModel<ProductSpecificationModel>(true, []);
 	productSpecificationsResult: ProductSpecificationModel[] = [];

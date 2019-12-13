@@ -17,17 +17,22 @@ export class ColumnaALlamarComponent implements OnInit {
   contactos$: Observable<Contacto[]>;
   contactos: Contacto[];
   contactoSeleccionado: Contacto;
+  hayContactosAgendados = false;
 
   constructor(private crmService: CrmService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.contactos$ = this.crmService.getContactosALlamar();
     this.crmService.getContactosALlamar().subscribe(
-      contactos => this.contactos = contactos
+      contactos => {
+        this.contactos = contactos;
+      }
     );
+    this.crmService.hayContactosAgendados().subscribe(hayAgendados => this.hayContactosAgendados = hayAgendados);
   }
 
   esElPrimerContactoDeLaCola(contacto: Contacto) {
+    if (!this.contactos) { return false; }
     const indice = this.contactos.findIndex(c => c.id === contacto.id);
     return (indice === 0);
   }
@@ -38,9 +43,14 @@ export class ColumnaALlamarComponent implements OnInit {
       width: '60%',
       panelClass: 'custom'
     });
+    dialogRef.componentInstance.rechazar.subscribe(rechazo => {
+      this.crmService.rechazar(Columnas.ALLAMAR, rechazo)
+      dialogRef.close()
+    })
+    dialogRef.componentInstance.agendar.subscribe(form => {
+      this.crmService.agendar(Columnas.ALLAMAR, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close()
+    })
   }
 
-  moverA(to) {
-    this.crmService.moverContacto(Columnas.ALLAMAR, to, this.contactoSeleccionado);
-  }
 }

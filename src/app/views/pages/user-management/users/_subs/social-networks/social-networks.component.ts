@@ -16,7 +16,7 @@ import { LayoutUtilsService } from '../../../../../../core/_base/crud';
 @Component({
 	selector: 'kt-social-networks',
 	templateUrl: './social-networks.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class SocialNetworksComponent implements OnInit {
 	// Public properties

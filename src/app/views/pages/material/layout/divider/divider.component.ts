@@ -93,7 +93,7 @@ export class DividerListExample {}
 @Component({
 	selector: 'kt-divider',
 	templateUrl: './divider.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.mat-list-icon {
 		color: rgba(0, 0, 0, 0.54);

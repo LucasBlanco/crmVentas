@@ -22,7 +22,7 @@ export class FuentesComponent implements OnInit {
   constructor(private fuentesSrv: FuentesService, private router: Router) { }
 
   ngOnInit() {
-    this.fuentes$ = this.fuentesSrv.traerTodos();
+    //this.fuentes$ = this.fuentesSrv.traerTodos();
     this.fuentes$.subscribe(fuentes => {
       this.dataSource = new MatTableDataSource(fuentes);
     });

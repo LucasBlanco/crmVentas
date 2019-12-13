@@ -407,7 +407,7 @@ export class NgbdTabsetConfig {
 @Component({
 	selector: 'kt-tabs',
 	templateUrl: './tabs.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	providers: [NgbTabsetConfig] // add NgbTabsetConfig to the component providers
 })
 export class TabsComponent implements OnInit {

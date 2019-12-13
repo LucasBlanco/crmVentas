@@ -256,7 +256,7 @@ export class NgbdRatingConfig {
 @Component({
 	selector: 'kt-rating',
 	templateUrl: './rating.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 		.star {
 		f	ont-size: 1.5rem;

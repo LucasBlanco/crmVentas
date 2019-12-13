@@ -101,7 +101,7 @@ export class CardImageExample {}
 @Component({
 	selector: 'kt-card',
 	templateUrl: './card.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-card {
 		max-width: 400px;

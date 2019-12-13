@@ -15,7 +15,7 @@ export class State {
 @Component({
 	selector: 'kt-default-forms',
 	templateUrl: './default-forms.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-container {
 		display: flex;

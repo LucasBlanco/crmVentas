@@ -229,7 +229,7 @@ export class NgbdPaginationConfig {
 @Component({
 	selector: 'kt-pagination',
 	templateUrl: './pagination.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class PaginationComponent implements OnInit {
 

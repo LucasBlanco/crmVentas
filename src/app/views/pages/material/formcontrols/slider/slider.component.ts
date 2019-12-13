@@ -167,7 +167,7 @@ export class SliderChangeEventExample {\n
 @Component({
 	selector: 'kt-slider',
 	templateUrl: './slider.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.mat-slider {
 		width: 300px;

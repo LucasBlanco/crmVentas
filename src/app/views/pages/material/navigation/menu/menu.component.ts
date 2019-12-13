@@ -164,7 +164,7 @@ export class MenuCustomizingExample {}
 @Component({
 	selector: 'kt-menu',
 	templateUrl: './menu.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 })
 export class MenuComponent implements OnInit {
 

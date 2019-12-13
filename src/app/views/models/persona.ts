@@ -4,6 +4,7 @@ export interface IPersona {
     nombre: string;
     apellido: string;
     telefonos: {
+        nombre: 'telefono' | 'celular',
         numero: string,
         horarioContacto: string
     }[];
@@ -20,6 +21,7 @@ export class Persona implements IPersona {
     nombre: string;
     apellido: string;
     telefonos: {
+        nombre: 'telefono' | 'celular',
         numero: string,
         horarioContacto: string
     }[];
@@ -50,8 +52,8 @@ export const getFakePersona = () => {
         nombre: faker.name.firstName(),
         apellido: faker.name.lastName(),
         telefonos: [
-            { numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' },
-            { numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' }
+            { nombre: 'telefono', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' },
+            { nombre: 'celular', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' }
         ],
         id: faker.random.number(),
         dni: faker.random.number(99999999),

@@ -181,7 +181,7 @@ export class NgbdDropdownConfig {
 	selector: 'kt-dropdown',
 	templateUrl: './dropdown.component.html',
 	styleUrls: ['dropdown.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	providers: [NgbDropdownConfig] // add NgbDropdownConfig to the component providers
 })
 export class DropdownComponent implements OnInit {

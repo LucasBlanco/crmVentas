@@ -209,7 +209,7 @@ function compare(a, b, isAsc) {
 @Component({
 	selector: 'kt-sort-header',
 	templateUrl: './sort-header.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.mat-sort-header-container {
 		align-items: center;

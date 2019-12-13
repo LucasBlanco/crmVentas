@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 
 import { BaseCardConHorarioComponent } from './grid/columnas/base-card-con-horario/base-card-con-horario.component';
@@ -25,7 +26,10 @@ import { ModalAgendadoComponent } from './grid/columnas/columna-agendado/modal-a
 import { CardRellamarComponent } from './grid/columnas/columna-rellamar/card-rellamar/card-rellamar.component';
 import { ColumnaRellamarComponent } from './grid/columnas/columna-rellamar/columna-rellamar.component';
 import { ModalRellamarComponent } from './grid/columnas/columna-rellamar/modal-rellamar/modal-rellamar.component';
+import { FormularioRechazoComponent } from './grid/columnas/formulario-rechazo/formulario-rechazo.component';
 import { GridComponent } from './grid/grid.component';
+import { FormularioAgendarComponent } from './grid/columnas/formulario-agendar/formulario-agendar.component';
+import { FormularioVenderComponent } from './grid/columnas/formulario-vender/formulario-vender.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,10 @@ import { GridComponent } from './grid/grid.component';
     BaseModalComponent,
     ModalAgendadoComponent,
     ModalRellamarComponent,
-    BaseCardConHorarioComponent
+    BaseCardConHorarioComponent,
+    FormularioRechazoComponent,
+    FormularioAgendarComponent,
+    FormularioVenderComponent
   ],
   entryComponents: [ModalALlamarComponent, ModalRellamarComponent, ModalAgendadoComponent],
   imports: [
@@ -57,6 +64,7 @@ import { GridComponent } from './grid/grid.component';
     ReactiveFormsModule,
     MatSelectModule,
     MatRadioModule,
+    MatTabsModule,
     RouterModule.forChild([
       {
         path: '',

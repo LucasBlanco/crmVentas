@@ -1,0 +1,23 @@
+<form [formGroup]="form" (submit)="agendar()">
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Fecha y hora</mat-label>
+				<input type="datetime-local" matInput formControlName="fechaYHoraDeProximoContacto" [min]="fechaHoy()">
+				<mat-error *ngIf="fechaYHoraDeProximoContacto.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Nota</mat-label>
+				<textarea type="text" matInput formControlName="nota"></textarea>
+				<mat-error *ngIf="nota.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="d-flex justify-content-end">
+		<button mat-raised-button color="accent" [disabled]="form.invalid">Agendar</button>
+	</div>
+</form>

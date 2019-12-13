@@ -178,7 +178,7 @@ export class TabsTemplateLabelExample {}
 @Component({
 	selector: 'kt-material-tabs',
 	templateUrl: './material-tabs.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.demo-tab-group {
 		border: 1px solid #e8e8e8;

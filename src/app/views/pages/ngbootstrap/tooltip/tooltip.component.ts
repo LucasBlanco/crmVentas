@@ -244,7 +244,7 @@ export class NgbdTooltipConfig {
 	selector: 'kt-tooltip',
 	templateUrl: './tooltip.component.html',
 	styles: ['.card { padding: 50px 0; text-align: center; overflow:hidden }'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	providers: [NgbTooltipConfig] // add NgbTooltipConfig to the component providers
 })
 export class TooltipComponent implements OnInit {

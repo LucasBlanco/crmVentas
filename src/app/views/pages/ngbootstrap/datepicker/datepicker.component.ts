@@ -614,7 +614,7 @@ export class CustomDatepickerI18n extends NgbDatepickerI18n {
 @Component({
 	selector: 'kt-datepicker',
 	templateUrl: './datepicker.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
     select.custom-select {
       margin-right: 0.5rem;

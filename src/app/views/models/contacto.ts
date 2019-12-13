@@ -1,55 +1,50 @@
+import { Persona } from '@modelos/persona';
+import moment from 'moment';
+
+import { getFakePersona } from './persona';
+
+
 export interface IContacto {
-    nombre: string;
-    domicilio: string;
-    cuil: string;
-    telefono: string;
     id: number;
+    persona: Persona;
 }
 
 export interface IContactoConHorario extends IContacto {
-    horario: {
-        desde: any,
-        hasta: any
-    }
+    horario: string;
 }
 
 export class Contacto implements IContacto {
-    nombre: string;
-    domicilio: string;
-    cuil: string;
-    telefono: string;
+    persona: Persona;
     id: number;
     constructor(contacto: IContacto) {
-        this.nombre = contacto.nombre;
-        this.domicilio = contacto.domicilio;
-        this.cuil = contacto.cuil;
-        this.telefono = contacto.telefono;
         this.id = contacto.id;
+        this.persona = contacto.persona;
     }
 }
 
 export class ContactoConHorario extends Contacto implements IContactoConHorario {
 
-    horario: { desde: any, hasta: any }
+    horario: string;
     constructor(contacto: IContactoConHorario) {
-        super(contacto)
+        super(contacto);
         this.horario = contacto.horario;
+    }
+
+    get habilitado() {
+        const hora = moment(this.horario, 'YYYY-MM-DD hh-mm-ss')
+        const ahora = moment()
+        const laHoraYaPaso = hora.isBefore(ahora)
+        return laHoraYaPaso
     }
 }
 
 export const getFakeContacto = () => new Contacto({
-    nombre: 'Carlos',
-    cuil: '20-39268594-5',
-    domicilio: 'Dr Luis Belaustegui 4043',
-    telefono: '+54-11-45681513',
-    id: 1
+    id: 1,
+    persona: getFakePersona()
 });
 
 export const getFakeContactoConHorario = () => new ContactoConHorario({
-    nombre: 'Carlos',
-    cuil: '20-39268594-5',
-    domicilio: 'Dr Luis Belaustegui 4043',
-    telefono: '+54-11-45681513',
+    persona: getFakePersona(),
     id: 1,
-    horario: { desde: '2019-10-23T12:24:00', hasta: '2019-10-23T11:30:00' }
+    horario: '2000-05-05T12:24:00'
 });

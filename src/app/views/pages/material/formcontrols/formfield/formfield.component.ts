@@ -479,7 +479,7 @@ span {
 @Component({
 	selector: 'kt-formfield',
 	templateUrl: './formfield.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [`
 	.example-container {
 		display: flex;

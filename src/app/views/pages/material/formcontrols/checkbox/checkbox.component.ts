@@ -137,7 +137,7 @@ export class CheckboxChangeEventExample {
 @Component({
 	selector: 'kt-checkbox',
 	templateUrl: './checkbox.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	
 	styles: [
 		`
 		.example-h2 {
