@@ -8,7 +8,7 @@
             <crm-formulario-agendar (guardar)="agendar.emit($event)"></crm-formulario-agendar>
         </mat-tab>
         <mat-tab label="Rellamar">
-            <crm-formulario-agendar></crm-formulario-agendar>
+            <crm-formulario-agendar (guardar)="rellamar.emit($event)"></crm-formulario-agendar>
         </mat-tab>
         <mat-tab label="Vender">
             <crm-formulario-vender></crm-formulario-vender>
