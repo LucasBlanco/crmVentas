@@ -2,13 +2,13 @@
 <div mat-dialog-content>
     <mat-tab-group>
         <mat-tab label="Rechazo">
-            <crm-formulario-rechazo (onSubmit)="rechazar.emit($event)"></crm-formulario-rechazo>
+            <crm-formulario-rechazo (guardar)="rechazar.emit($event)"></crm-formulario-rechazo>
         </mat-tab>
         <mat-tab label="Agendar">
             <crm-formulario-agendar (guardar)="agendar.emit($event)"></crm-formulario-agendar>
         </mat-tab>
         <mat-tab label="Vender">
-            <crm-formulario-vender></crm-formulario-vender>
+            <crm-formulario-vender (guardar)="vender.emit($event)"></crm-formulario-vender>
         </mat-tab>
 
     </mat-tab-group>

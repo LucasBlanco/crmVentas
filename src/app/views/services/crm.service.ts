@@ -150,7 +150,9 @@ export class CrmService {
           piso: venta.piso,
           departamento: venta.departamento
         }
-      }).subscribe(() => { this.borrarContacto(from, venta.id); });
+      }).subscribe(() => {
+        this.borrarContacto(from, venta.id);
+      });
   }
 
   hayContactosAgendados(): Observable<boolean> {

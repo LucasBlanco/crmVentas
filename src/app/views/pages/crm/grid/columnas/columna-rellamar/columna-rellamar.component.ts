@@ -44,15 +44,17 @@ export class ColumnaRellamarComponent implements OnInit {
       dialogRef.close()
     });
     dialogRef.componentInstance.rellamar.subscribe(form => {
-      this.crmService.rellamar(Columnas.ALLAMAR, { ...form, id: this.contactoSeleccionado.id });
+      this.crmService.rellamar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
       dialogRef.close();
     });
     dialogRef.componentInstance.rechazar.subscribe(form => {
       this.crmService.rechazar(Columnas.RELLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id })
       dialogRef.close();
     })
+    dialogRef.componentInstance.vender.subscribe(form => {
+      this.crmService.vender(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close();
+    });
   }
-
-
 
 }

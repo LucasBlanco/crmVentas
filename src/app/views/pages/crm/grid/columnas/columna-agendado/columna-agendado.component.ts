@@ -44,8 +44,11 @@ export class ColumnaAgendadoComponent implements OnInit {
     dialogRef.componentInstance.rechazar.subscribe(form => {
       this.crmService.rechazar(Columnas.AGENDADO, { observacion: form.observacion, id: this.contactoSeleccionado.id })
       dialogRef.close();
-
     })
+    dialogRef.componentInstance.vender.subscribe(form => {
+      this.crmService.vender(Columnas.AGENDADO, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close();
+    });
 
   }
 
