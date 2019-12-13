@@ -10,7 +10,7 @@
 	<!--begin::Signin-->
 	<div class="kt-login__form">
 		<div class="kt-login__title">
-			<h3>Log In</h3>
+			<h3>Ingresa!</h3>
 		</div>
 
 		<kt-auth-notice></kt-auth-notice>
@@ -19,7 +19,7 @@
 		<form class="kt-form" [formGroup]="loginForm" autocomplete="off">
 			<div class="form-group">
 				<mat-form-field>
-					<mat-label>{{ 'AUTH.INPUT.USERNAME' | translate }}</mat-label>
+					<mat-label>Usuario</mat-label>
 					<input matInput type="username" placeholder="{{ 'AUTH.INPUT.USERNAME' | translate }}"
 						formControlName="username" autocomplete="off" />
 					<mat-error *ngIf="isControlHasError('username','required')">
@@ -38,7 +38,7 @@
 			</div>
 			<div class="form-group">
 				<mat-form-field>
-					<mat-label>{{ 'AUTH.INPUT.PASSWORD' | translate }}</mat-label>
+					<mat-label>Contraseña</mat-label>
 					<input matInput type="password" placeholder="{{ 'AUTH.INPUT.PASSWORD' | translate }}"
 						formControlName="password" autocomplete="off" />
 					<mat-error *ngIf="isControlHasError('password','required')">
@@ -60,7 +60,7 @@
 				<button (click)="submit()"
 					[ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
 					id="kt_login_signin_submit"
-					class="btn btn-primary btn-elevate kt-login__btn-primary">{{ 'AUTH.LOGIN.BUTTON' | translate }}</button>
+					class="btn btn-primary btn-elevate kt-login__btn-primary">Ingresar</button>
 			</div>
 			<!--end::Action-->
 		</form>
