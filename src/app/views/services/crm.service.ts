@@ -116,7 +116,41 @@ export class CrmService {
   agendar(from: Columnas, { fechaYHoraDeProximoContacto, nota, id }) {
     this.http.post(`${environment.ip}/crm/agendarLlamado`,
       { id_venta: id, fecha: fechaYHoraDeProximoContacto, nota, rellamado: false })
-      .subscribe(() => this.getContactosAgendados());
+      .subscribe(() => { this.borrarContacto(from, id); this.getContactosAgendados() });
+  }
+
+  rellamar(from: Columnas, { fechaYHoraDeProximoContacto, nota, id }) {
+    this.http.post(`${environment.ip}/crm/agendarLlamado`,
+      { id_venta: id, fecha: fechaYHoraDeProximoContacto, nota, rellamado: true })
+      .subscribe(() => { this.borrarContacto(from, id); this.getContactosARellamar() });
+  }
+
+  vender(from: Columnas, venta) {
+    this.http.post(`${environment.ip}/crm/vender`,
+      {
+        id_venta: venta.id,
+        nombre: venta.nombre,
+        apellido: venta.apellido,
+        nacionalidad: venta.nacionalidad,
+        telefono: venta.telefono1,
+        cuil: venta.cuil,
+        sexo: venta.sexo,
+        estado_civil: venta.estadoCivil,
+        id_obra_social: venta.obraSocial,
+        fecha_nacimiento: venta.fechaNacimiento,
+        hora_contacto_tel: venta.horaContactoTel1,
+        hora_contacto_cel: venta.horaContactoTel2,
+        celular: venta.telefono2,
+        capitas: venta.capitas,
+        domicilio: {
+          codigo_postal: venta.codigoPostal,
+          numero: venta.numero,
+          id_localidad: venta.localidad,
+          calle: venta.calle,
+          piso: venta.piso,
+          departamento: venta.departamento
+        }
+      }).subscribe(() => { this.borrarContacto(from, venta.id); });
   }
 
   hayContactosAgendados(): Observable<boolean> {

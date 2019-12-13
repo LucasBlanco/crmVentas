@@ -9,7 +9,10 @@ export class BaseModalComponent {
 
   @Output() moverA = new EventEmitter<Columnas>();
   @Output() rechazar = new EventEmitter<{ observacion: string, id: number }>();
-  @Output() agendar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>()
+  @Output() agendar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>();
+  @Output() rellamar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>();
+  @Output() vender = new EventEmitter();
+
 
   moverALlamar() {
     this.moverA.emit(Columnas.ALLAMAR);

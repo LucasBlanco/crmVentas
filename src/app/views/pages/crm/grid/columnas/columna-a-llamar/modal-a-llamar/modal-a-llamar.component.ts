@@ -13,5 +13,4 @@ export class ModalALlamarComponent extends BaseModalComponent {
   constructor(public dialogRef: MatDialogRef<ModalALlamarComponent>) {
     super();
   }
-
 }

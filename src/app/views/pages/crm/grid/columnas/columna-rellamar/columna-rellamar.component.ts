@@ -42,6 +42,14 @@ export class ColumnaRellamarComponent implements OnInit {
     dialogRef.componentInstance.agendar.subscribe(form => {
       this.crmService.agendar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
       dialogRef.close()
+    });
+    dialogRef.componentInstance.rellamar.subscribe(form => {
+      this.crmService.rellamar(Columnas.ALLAMAR, { ...form, id: this.contactoSeleccionado.id });
+      dialogRef.close();
+    });
+    dialogRef.componentInstance.rechazar.subscribe(form => {
+      this.crmService.rechazar(Columnas.RELLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id })
+      dialogRef.close();
     })
   }
 
