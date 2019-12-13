@@ -35,10 +35,16 @@
 	<div class="row">
 
 		<div class="col">
-			<mat-radio-group aria-label="Select an option" formControlName="sexo">
-				<mat-radio-button value="M">M</mat-radio-button>
-				<mat-radio-button value="F">F</mat-radio-button>
-			</mat-radio-group>
+			<div class="row">
+				<div class="col-auto">Sexo:</div>
+				<div class="col">
+					<mat-radio-group aria-label="Select an option" formControlName="sexo">
+						<mat-radio-button value="M">M</mat-radio-button>
+						<mat-radio-button value="F">F</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div>
+
 		</div>
 		<div class="col">
 			<mat-form-field appearance="outline">
@@ -167,4 +173,3 @@
 		<button mat-raised-button color="accent" [disabled]="form.invalid">Vender</button>
 	</div>
 </form>
-{{form.errors | json}}
