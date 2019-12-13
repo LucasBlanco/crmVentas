@@ -1,5 +1,5 @@
 <crm-base-card [disabled]="disabled" (llamar)="!disabled && llamar.emit()">
-    <h5 class="card-title">{{contacto.persona.nombre}}</h5>
+    <h5 class="card-title">{{contacto.persona.nombre}} {{contacto.persona.apellido}}</h5>
     <h6 class="card-subtitle mb-2 text-muted" *ngFor="let tel of contacto.persona.telefonos">
         {{tel.numero}}
     </h6>
