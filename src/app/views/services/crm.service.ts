@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Contacto, ContactoConHorario } from '@modelos/contacto';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
 import { PersonaService } from './persona.service';
@@ -43,7 +43,11 @@ export class CrmService {
 
   getContactosALlamar = (): Observable<Contacto[]> => {
     this.http.get<Contacto[]>(`${environment.ip}/crm/asignados/${this.userSrv.getCurrentUser().id}`)
-      .pipe(map(contactos => contactos.map(this.mapContactoToFront)))
+      .pipe(map(contactos => contactos.map(this.mapContactoToFront)),
+      tap(contactos => {
+        console.log('contactosMapeados', contactos)
+      }))
+      
       .subscribe(contactos => this.contactosALlamar$.next(contactos));
     return this.contactosALlamar$;
   }

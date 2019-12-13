@@ -1,3 +1,4 @@
+import { Domicilio, getFakeDomicilio } from './domicilio';
 
 
 export interface IPersona {
@@ -12,8 +13,10 @@ export interface IPersona {
     dni: number;
     cuil: number;
     nacionalidad: string;
+    domicilio?: Domicilio;
     estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
     fechaNacimiento: string;
+    sexo: 'M' | 'F';
     capitas: number;
 }
 
@@ -28,6 +31,8 @@ export class Persona implements IPersona {
     id: number;
     dni: number;
     cuil: number;
+    domicilio?: Domicilio;
+    sexo: 'M' | 'F';
     nacionalidad: string;
     estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
     fechaNacimiento: string;
@@ -43,7 +48,30 @@ export class Persona implements IPersona {
         this.estadoCivil = persona.estadoCivil;
         this.fechaNacimiento = persona.fechaNacimiento;
         this.capitas = persona.capitas;
+        this.sexo = persona.sexo;
+        this.domicilio = persona.domicilio;
     }
+
+    get telefono() {
+        const tel = this.telefonos.find(t => t.nombre === 'telefono');
+        return tel ? tel.numero : '';
+    }
+
+    get horaContactoTelefono() {
+        const tel = this.telefonos.find(t => t.nombre === 'telefono');
+        return tel ? tel.horarioContacto : '';
+    }
+
+    get celular() {
+        const tel = this.telefonos.find(t => t.nombre === 'celular');
+        return tel ? tel.numero : '';
+    }
+
+    get horaContactoCelular() {
+        const tel = this.telefonos.find(t => t.nombre === 'celular');
+        return tel ? tel.horarioContacto : '';
+    }
+
 }
 
 export const getFakePersona = () => {
@@ -55,12 +83,14 @@ export const getFakePersona = () => {
             { nombre: 'telefono', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' },
             { nombre: 'celular', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' }
         ],
+        domicilio: getFakeDomicilio(),
         id: faker.random.number(),
         dni: faker.random.number(99999999),
         cuil: faker.random.number(99999999999),
         nacionalidad: faker.address.country(),
         estadoCivil: 'CASADO',
         fechaNacimiento: faker.date.past().toDateString(),
-        capitas: faker.random.number(10)
+        capitas: faker.random.number(10),
+        sexo: 'M'
     });
 };

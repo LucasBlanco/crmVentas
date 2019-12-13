@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Localidad } from '@modelos/localidad';
 import { ObraSocial } from '@modelos/obraSocial';
+import { Persona } from '@modelos/persona';
 import { LocalidadesService } from '@servicios/localidades.service';
 import { ObrasSocialesService } from '@servicios/obras-sociales.service';
 import * as moment from 'moment';
@@ -13,7 +14,8 @@ import * as moment from 'moment';
 })
 export class FormularioVenderComponent implements OnInit {
 
-	@Output() guardar = new EventEmitter()
+	@Output() guardar = new EventEmitter();
+	@Input() persona: Persona;
 
 	form = new FormGroup({
 		nombre: new FormControl(null, Validators.required),
@@ -65,10 +67,29 @@ export class FormularioVenderComponent implements OnInit {
 	ngOnInit() {
 		this.obraSocialSrv.traerTodos().subscribe(obrasSociales => this.obrasSociales = obrasSociales)
 		this.localidadSrv.traerTodos().subscribe(localidades => this.localidades = localidades)
+		const domicilio = this.persona.domicilio;
+		this.form.patchValue({
+			...this.persona,
+			fechaNacimiento: moment(this.persona.fechaNacimiento, 'YYYY-MM-DD hh:mm:ss').format('YYYY-MM-DD'),
+			telefono1: this.persona.telefono,
+			telefono2: this.persona.celular,
+			horaContactoTel1: this.persona.horaContactoTelefono,
+			horaContactoTel2: this.persona.horaContactoCelular,
+			calle: domicilio && domicilio.calle,
+			numero: domicilio && domicilio.numero,
+			piso: domicilio && domicilio.piso,
+			departamento: domicilio && domicilio.departamento,
+			localidad: domicilio && domicilio.idLocalidad,
+			codigoPostal: domicilio && domicilio.codigoPostal
+		})
+		Object.keys(this.form.controls).forEach(field => {
+			const control = this.form.get(field);
+			control.markAsTouched({ onlySelf: true });
+		});
 	}
 
 	fechaHoy() {
-		return moment().format("YYYY-MM-DDThh:mm")
+		return moment().format("YYYY-MM-DDThh:mm");
 	}
 
 	vender() {

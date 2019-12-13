@@ -41,7 +41,11 @@ export class ColumnaALlamarComponent implements OnInit {
     this.contactoSeleccionado = contacto;
     const dialogRef = this.dialog.open(ModalALlamarComponent, {
       width: '60%',
-      panelClass: 'custom'
+      panelClass: 'custom',
+      data: {
+        persona: this.contactoSeleccionado.persona
+      }
+
     });
 
     dialogRef.componentInstance.agendar.subscribe(form => {

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { BaseModalComponent } from './../../base-modal/base-modal.component';
 
@@ -10,7 +10,9 @@ import { BaseModalComponent } from './../../base-modal/base-modal.component';
 })
 export class ModalALlamarComponent extends BaseModalComponent {
 
-  constructor(public dialogRef: MatDialogRef<ModalALlamarComponent>) {
+  constructor(
+    public dialogRef: MatDialogRef<ModalALlamarComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
     super();
   }
 }

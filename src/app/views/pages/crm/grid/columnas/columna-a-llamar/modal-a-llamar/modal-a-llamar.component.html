@@ -11,7 +11,7 @@
       <crm-formulario-agendar (guardar)="rellamar.emit($event)"></crm-formulario-agendar>
     </mat-tab>
     <mat-tab label="Vender">
-      <crm-formulario-vender (guardar)="vender.emit($event)"></crm-formulario-vender>
+      <crm-formulario-vender (guardar)="vender.emit($event)" [persona]="data.persona"></crm-formulario-vender>
     </mat-tab>
   </mat-tab-group>
 </div>
