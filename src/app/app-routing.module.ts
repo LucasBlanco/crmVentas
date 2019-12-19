@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
+import {LandingComponent} from "./views/pages/landing/landing.component";
 
 // Angular
 // Components
@@ -17,6 +18,10 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{
+				path: 'landing',
+				component: LandingComponent
+			},
+			{
 				path: 'crm',
 				loadChildren: () => import('app/views/pages/crm/crm.module').then(m => m.CrmModule)
 			},
@@ -27,6 +32,10 @@ const routes: Routes = [
 			{
 				path: 'dashboard',
 				loadChildren: () => import('app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
+			},
+			{
+				path: 'controlOperadoras',
+				loadChildren: () => import('app/views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
 			},
 			{
 				path: 'mail',
@@ -67,8 +76,8 @@ const routes: Routes = [
 				}
 			},
 			{ path: 'error/:type', component: ErrorPageComponent },
-			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-			{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+			{ path: '', redirectTo: 'landing', pathMatch: 'full' },
+			{ path: '**', redirectTo: 'landing', pathMatch: 'full' }
 		]
 	},
 

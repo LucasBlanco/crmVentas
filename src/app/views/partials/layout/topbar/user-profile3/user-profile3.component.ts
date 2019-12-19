@@ -7,6 +7,7 @@ import { select, Store } from '@ngrx/store';
 // State
 import { AppState } from '../../../../../core/reducers';
 import { currentUser, Logout, User } from '../../../../../core/auth';
+import {ActividadSesionService} from "@servicios/actividad-sesion.service";
 
 @Component({
 	selector: 'kt-user-profile3',
@@ -26,7 +27,7 @@ export class UserProfile3Component implements OnInit {
 	 *
 	 * @param store: Store<AppState>
 	 */
-	constructor(private store: Store<AppState>) {
+	constructor(private store: Store<AppState>, private actividadSesionSrv: ActividadSesionService) {
 	}
 
 	/**
@@ -44,6 +45,11 @@ export class UserProfile3Component implements OnInit {
 	 * Log out
 	 */
 	logout() {
+		this.actividadSesionSrv.logout();
 		this.store.dispatch(new Logout());
+	}
+
+	iniciarBreak(){
+		this.actividadSesionSrv.iniciarBreak();
 	}
 }
