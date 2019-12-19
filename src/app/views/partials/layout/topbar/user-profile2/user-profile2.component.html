@@ -79,9 +79,13 @@
 					</div>
 				</div>
 			</a>-->
-			<div class="kt-notification__custom">
-				<a href="javascript:;" (click)="logout()" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Desconectar</a>
-				<a href="javascript:;" (click)="iniciarBreak()" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Break</a>
+			<div class="kt-notification__custom row">
+				<div class="col">
+					<a href="javascript:;" (click)="logout()" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Desconectar</a>
+				</div>
+				<div class="col">
+					<a href="javascript:;" (click)="iniciarBreak()" style="margin-left: 100px" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Break</a>
+				</div>
 			</div>
 		</div>
 		<!--end: Navigation -->
@@ -113,8 +117,8 @@
 				</a>
 			</li>-->
 			<li class="kt-nav__item kt-nav__item--custom kt-margin-t-15">
-				<a (click)="logout()" class="btn btn-label-brand btn-sm btn-bold">Sign PUTO</a>
-			</li>
+				<a href="javascript:;" (click)="logout()" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Desconectar</a>
+				<a href="javascript:;" (click)="iniciarBreak()" class="btn btn-outline-brand btn-upper btn-sm btn-bold">Break</a>			</li>
 		</ul>
 		<!--end: Navigation(alternative) -->
 	</div>
