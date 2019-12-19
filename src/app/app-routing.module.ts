@@ -29,6 +29,10 @@ const routes: Routes = [
 				loadChildren: () => import('app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
 			},
 			{
+				path: 'controlOperadoras',
+				loadChildren: () => import('app/views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
+			},
+			{
 				path: 'mail',
 				loadChildren: () => import('app/views/pages/apps/mail/mail.module').then(m => m.MailModule)
 			},

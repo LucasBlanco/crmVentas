@@ -8,6 +8,7 @@ import { select, Store } from '@ngrx/store';
 // State
 import { AppState } from '../../../../../core/reducers';
 import { currentUser, Logout, User } from '../../../../../core/auth';
+import {ActividadSesionService} from "@servicios/actividad-sesion.service";
 
 @Component({
 	selector: 'kt-user-profile2',
@@ -27,7 +28,7 @@ export class UserProfile2Component implements OnInit {
 	 *
 	 * @param store: Store<AppState>
 	 */
-	constructor(private store: Store<AppState>, private router: Router) {
+	constructor(private store: Store<AppState>, private router: Router, private actividadSesionSrv: ActividadSesionService) {
 	}
 
 	/**
@@ -48,7 +49,13 @@ export class UserProfile2Component implements OnInit {
 	 */
 	logout() {
 		// this.store.dispatch(new Logout());
+		this.actividadSesionSrv.logout();
 		localStorage.setItem('tokenInfo', '');
 		this.router.navigateByUrl('/auth/login');
+	}
+
+
+	iniciarBreak(){
+		this.actividadSesionSrv.iniciarBreak();
 	}
 }

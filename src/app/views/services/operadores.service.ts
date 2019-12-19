@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {map} from "rxjs/operators"
+import {ActividadSesionService} from "@servicios/actividad-sesion.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +13,18 @@ export class OperadoresService {
 
 	operadores: Operador[];
 
-	constructor(private http: HttpClient) {
-		/*const operador1: Operador = getFakeOperador();
-        const operador2: Operador = getFakeOperador();
-        this.operadores = [operador1, operador2];*/
+	constructor(private http: HttpClient, private actividadSesionSrv: ActividadSesionService) {
+
 	}
 
 	traerTodos() {
 		return this.http.get<Operador[]>(environment.ip + '/usuarios/operadores').pipe(
-			map(operadores => operadores.map(this.mapToFront))
+			map(operadores => operadores.map(x => this.mapToFront(x)))
 		)
 	}
 
-	private mapToFront(operadorBack){
-		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id})
+	private mapToFront(operadorBack) {
+		let actividades = operadorBack.actividad_reciente.map(x => this.actividadSesionSrv.mapToFront(x))
+		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id, actividadReciente:actividades})
 	}
 }

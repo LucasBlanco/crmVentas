@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras()]
 	}
 
 	getPermisos() {
@@ -36,6 +36,19 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/asignacionBases/buscadorPersonas',
+			}]
+		} else {
+			return []
+		}
+	}
+
+	getControlOperadoras() {
+		if (true) {
+			return [{
+				title: 'Control',
+				root: true,
+				alignment: 'left',
+				page: '/controlOperadoras/',
 			}]
 		} else {
 			return []
