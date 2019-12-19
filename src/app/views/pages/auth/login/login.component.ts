@@ -19,7 +19,7 @@ import { AppState } from '../../../../core/reducers';
  */
 const DEMO_PARAMS = {
 	USERNAME: 'prueba',
-	PASSWORD: 'kvega'
+	PASSWORD: 'ksegui	vega'
 };
 
 @Component({
