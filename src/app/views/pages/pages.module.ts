@@ -14,11 +14,12 @@ import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
 import {ControlOperadorasModule} from "./control-operadoras/control-operadoras.module";
 import { ModalBreakComponent } from './modal-break/modal-break.component';
+import { LandingComponent } from './landing/landing.component';
 
 // Partials
 // Pages
 @NgModule({
-	declarations: [MyPageComponent],
+	declarations: [MyPageComponent, LandingComponent],
 	exports: [],
 	imports: [
 		CommonModule,
