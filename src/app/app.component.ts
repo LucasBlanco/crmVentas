@@ -10,6 +10,7 @@ import { locale as esLang } from './core/_config/i18n/es';
 import { locale as frLang } from './core/_config/i18n/fr';
 import { locale as jpLang } from './core/_config/i18n/jp';
 import { AfkService } from './views/services/afk.service';
+import {ActividadSesionService} from "@servicios/actividad-sesion.service";
 
 // Angular
 // Layout
@@ -26,6 +27,10 @@ export class AppComponent implements OnInit, OnDestroy {
 	@HostListener('mousemove', ['$event'])
 	onMousemove(event: MouseEvent) {
 		this.mouseMoveObservable.next()
+	}
+	@HostListener('window:unload', ['$event'])
+	beforeunloadHandler(event) {
+		this.actividadSesion.onWindowClose();
 	}
 	// Public properties
 	title = 'Metronic';
@@ -44,7 +49,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private layoutConfigService: LayoutConfigService,
 		private splashScreenService: SplashScreenService,
-		private afkService: AfkService) {
+		private afkService: AfkService,
+		private actividadSesion: ActividadSesionService) {
 
 		// register translations
 		this.afkService.subscribeToMouseMove(this.mouseMoveObservable)

@@ -7,13 +7,23 @@ export class MenuConfig {
 	}
 
 	getPermisos() {
-		const token = localStorage.getItem('token');
+		const token = sessionStorage.getItem('token');
 		const user = jwtDecode(token);
 		return user.permisos;
 	}
 
+	getPerfiles() {
+		const token = sessionStorage.getItem('token');
+		const user = jwtDecode(token);
+		return user.perfiles;
+	}
+
 	tienePermiso(permiso: string) {
 		return this.getPermisos().some(p => p === permiso)
+	}
+
+	tienePerfil(perfil: string) {
+		return this.getPerfiles().some(p => p === perfil)
 	}
 
 	getCrm() {
@@ -43,7 +53,7 @@ export class MenuConfig {
 	}
 
 	getControlOperadoras() {
-		if (true) {
+		if (this.tienePerfil('SUPERVISOR CALL')) {
 			return [{
 				title: 'Control',
 				root: true,

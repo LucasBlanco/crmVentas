@@ -43,8 +43,8 @@ export class UserProfile2Component implements OnInit {
 	 */
 	ngOnInit(): void {
 		//this.user$ = this.store.pipe(select(currentUser));
-		console.log('user', JSON.parse(localStorage.getItem('tokenInfo')))
-		this.user = JSON.parse(localStorage.getItem('tokenInfo'))
+		console.log('user', JSON.parse(sessionStorage.getItem('tokenInfo')))
+		this.user = JSON.parse(sessionStorage.getItem('tokenInfo'))
 	}
 
 	/**
@@ -53,8 +53,7 @@ export class UserProfile2Component implements OnInit {
 	logout() {
 		// this.store.dispatch(new Logout());
 		this.actividadSesionSrv.logout();
-		localStorage.setItem('tokenInfo', '');
-		this.router.navigateByUrl('/auth/login');
+
 	}
 
 

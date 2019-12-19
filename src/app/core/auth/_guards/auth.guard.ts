@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
                     }
                 })
             );*/
-        const tokenInfo = localStorage.getItem('tokenInfo');
+        const tokenInfo = sessionStorage.getItem('tokenInfo');
         if (tokenInfo) {
             return of(true);
         } else {

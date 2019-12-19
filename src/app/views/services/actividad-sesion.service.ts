@@ -3,17 +3,24 @@ import {ActividadSesion} from "@modelos/actividadSesion";
 import {environment} from "../../../environments/environment";
 import {Columnas} from "@servicios/crm.service";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActividadSesionService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
 	logout() {
   		console.log('asdasdas')
-		this.http.post(environment.ip+ '/actividadesSesion/logout',{}).subscribe(x => console.log('logout'));
+		this.http.post(environment.ip+ '/actividadesSesion/logout',{}).subscribe();
+		sessionStorage.setItem('tokenInfo', '');
+		this.router.navigateByUrl('/auth/login');
+	}
+
+	onWindowClose(){
+		this.http.post(environment.ip+ '/actividadesSesion/logout',{}).subscribe();
 	}
 
 	iniciarBreak() {

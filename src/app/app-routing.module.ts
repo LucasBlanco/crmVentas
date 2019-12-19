@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
+import {LandingComponent} from "./views/pages/landing/landing.component";
 
 // Angular
 // Components
@@ -16,6 +17,10 @@ const routes: Routes = [
 		component: BaseComponent,
 		canActivate: [AuthGuard],
 		children: [
+			{
+				path: 'landing',
+				component: LandingComponent
+			},
 			{
 				path: 'crm',
 				loadChildren: () => import('app/views/pages/crm/crm.module').then(m => m.CrmModule)
@@ -71,8 +76,8 @@ const routes: Routes = [
 				}
 			},
 			{ path: 'error/:type', component: ErrorPageComponent },
-			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-			{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+			{ path: '', redirectTo: 'landing', pathMatch: 'full' },
+			{ path: '**', redirectTo: 'landing', pathMatch: 'full' }
 		]
 	},
 
