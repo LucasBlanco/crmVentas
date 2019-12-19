@@ -13,6 +13,7 @@ import { CrmModule } from './crm/crm.module';
 import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
 import {ControlOperadorasModule} from "./control-operadoras/control-operadoras.module";
+import { ModalBreakComponent } from './modal-break/modal-break.component';
 
 // Partials
 // Pages

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {OperadoresService} from "@servicios/operadores.service";
 import Pusher from 'pusher-js';
 import {ActividadSesion} from "@modelos/actividadSesion";
+import {MatDialog} from "@angular/material";
 
 
 const data = [
@@ -18,7 +19,7 @@ const data = [
 })
 export class TablaControlComponent implements OnInit {
 	dataSource = []
-  constructor(private operadorSrv: OperadoresService) { }
+  constructor(private operadorSrv: OperadoresService, public dialog: MatDialog) { }
 
   ngOnInit() {
 	  var pusher = new Pusher('e7b3f11c95045ebe9b9c', {

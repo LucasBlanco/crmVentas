@@ -9,6 +9,9 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../../../core/reducers';
 import { currentUser, Logout, User } from '../../../../../core/auth';
 import {ActividadSesionService} from "@servicios/actividad-sesion.service";
+import {ModalALlamarComponent} from "../../../../pages/crm/grid/columnas/columna-a-llamar/modal-a-llamar/modal-a-llamar.component";
+import {MatDialog} from "@angular/material";
+import {ModalBreakComponent} from "../../../../pages/modal-break/modal-break.component";
 
 @Component({
 	selector: 'kt-user-profile2',
@@ -28,7 +31,7 @@ export class UserProfile2Component implements OnInit {
 	 *
 	 * @param store: Store<AppState>
 	 */
-	constructor(private store: Store<AppState>, private router: Router, private actividadSesionSrv: ActividadSesionService) {
+	constructor(private store: Store<AppState>, private router: Router, private actividadSesionSrv: ActividadSesionService, private dialog: MatDialog) {
 	}
 
 	/**
@@ -57,5 +60,11 @@ export class UserProfile2Component implements OnInit {
 
 	iniciarBreak(){
 		this.actividadSesionSrv.iniciarBreak();
+		const dialogRef = this.dialog.open(ModalBreakComponent, {
+			width: '60%',
+			panelClass: 'custom',
+			disableClose: true,
+			hasBackdrop:true
+		});
 	}
 }
