@@ -1,6 +1,7 @@
 import {ActividadSesion} from "@modelos/actividadSesion";
 
 
+
 export interface IOperador {
     nombre: string;
     id: number;
@@ -16,6 +17,10 @@ export class Operador implements IOperador {
         this.id = contacto.id;
 		this.actividadReciente = contacto.actividadReciente;
     }
+
+    get ultimaActividad(){
+    	return this.actividadReciente.length > 0 ? this.actividadReciente[0] : null
+	}
 }
 
 export const getFakeOperador = () => {

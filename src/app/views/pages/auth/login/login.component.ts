@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 			.pipe(
 				tap(user => {
 					if (user) {
-						this.store.dispatch(new Login({ authToken: user.accessToken }));
+						//this.store.dispatch(new Login({ authToken: user.accessToken }));
 						this.menuConfigService.loadConfigs(new MenuConfig().configs);
 						this.menuHorizontalService.loadMenu();
 						this.router.navigateByUrl('landing'); // Main page

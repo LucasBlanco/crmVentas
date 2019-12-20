@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as moment from "../pages/control-operadoras/tabla-control/tabla-control.component";
+import * as moment from "moment";
 import Pusher from 'pusher-js';
 import {OperadoresService} from "@servicios/operadores.service";
 import {BehaviorSubject} from "rxjs";
@@ -38,7 +38,7 @@ export class SesionOperadorService {
 
   private cambiarEstadoOperador(id, estado){
 	  return this.sesionOperadores$.value.map( sesionOperador => {
-		  return sesionOperador.id === id ? {...sesionOperador, estado: {nombre: estado, fechaCambio: moment()}} : sesionOperador
+		  return sesionOperador.id === id ? {...sesionOperador, estado: {nombre: estado, fechaCambio: moment().format("YYYY-MM-DD hh:mm:ss")}} : sesionOperador
 	  });
   }
 
