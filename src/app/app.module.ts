@@ -49,6 +49,7 @@ import { metaReducers, reducers } from './core/reducers';
 import { AuthModule } from './views/pages/auth/auth.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
+import {LandingComponent} from "./views/pages/landing/landing.component";
 
 // Angular in memory
 // Perfect Scroll bar

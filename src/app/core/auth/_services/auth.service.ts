@@ -28,8 +28,8 @@ export class AuthService {
         return loginObservable.pipe(
             map(response => {
                 sessionStorage.setItem('token', response.data.token);
-                sessionStorage.setItem('tokenInfo', JSON.stringify(jwtDecode(response.data.token)));
                 const decodedToken = jwtDecode(response.data.token);
+                sessionStorage.setItem('tokenInfo', JSON.stringify(decodedToken));
                 return { name: decodedToken.nombre, accessToken: response.data.token };
             })
         );

@@ -46,11 +46,12 @@ export class SesionOperadorService {
 	private cambiarEstadoOperador(id, estado) {
 		return this.sesionOperadores$.value.map(sesionOperador => {
 			if (sesionOperador.id === id) {
-				sesionOperador.estado = { nombre: estado, fechaCambio: moment().format('YYYY-MM-DD hh:mm:ss') };
+				sesionOperador.estado = { nombre: estado, fechaCambio: moment().format('YYYY-MM-DD HH:mm:ss') };
 			}
 			return sesionOperador;
 		});
 	}
+
 
 	traerTodos(): Observable<SesionOperador[]> {
 		this.operadorSrv.traerTodos().subscribe(operadores => {

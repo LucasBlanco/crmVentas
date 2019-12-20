@@ -24,12 +24,16 @@ export class ActividadSesionService {
 	}
 
 	iniciarBreak() {
-		this.http.post(environment.ip + '/actividadesSesion/iniciarBreak', {}).subscribe(x => console.log("break"));
+		this.http.post(environment.ip + '/actividadesSesion/iniciarBreak', {}).subscribe();
 	}
 
 
 	finalizarBreak() {
-		this.http.post(environment.ip + '/actividadesSesion/finBreak', {}).subscribe(x => console.log("finalizar break"));
+		this.http.post(environment.ip + '/actividadesSesion/finBreak', {}).subscribe();
+	}
+
+	iniciarSesion() {
+		this.http.post(environment.ip + '/actividadesSesion/inicioSesion', {}).subscribe();
 	}
 
 	public mapToFront(operadorBack) {
