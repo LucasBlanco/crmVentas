@@ -1,76 +1,86 @@
 import { Injectable } from '@angular/core';
-import * as moment from "../pages/control-operadoras/tabla-control/tabla-control.component";
+import { Operador } from '@modelos/operador';
+import { OperadoresService } from '@servicios/operadores.service';
+import * as moment from 'moment';
 import Pusher from 'pusher-js';
-import {OperadoresService} from "@servicios/operadores.service";
-import {BehaviorSubject} from "rxjs";
-import {Operador} from "@modelos/operador";
-import {ActividadSesion} from "@modelos/actividadSesion";
+import { BehaviorSubject, Observable } from 'rxjs';
 
+import { IOperador } from './../models/operador';
 
-export interface SesionOperador extends Operador{
+interface ISesionOperador extends IOperador {
 	estado: { nombre: string, fechaCambio: string }
+}
+export class SesionOperador extends Operador implements ISesionOperador {
+	constructor({ estado, ...operador }: ISesionOperador) {
+		super(operador);
+		this.estado = estado;
+	}
+	estado: { nombre: string, fechaCambio: string };
 }
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class SesionOperadorService {
 
 	sesionOperadores$ = new BehaviorSubject<SesionOperador[]>([]);
-  constructor(private operadorSrv: OperadoresService) {
-	  var pusher = new Pusher('e7b3f11c95045ebe9b9c', {
-		  cluster: 'us2'
-	  });
-	  var channel = pusher.subscribe('supervisorcall');
-	  channel.bind('usuario.conectado', (data) => {
-	  	const sesiones = this.cambiarEstadoOperador(data.id, "Conectado")
-	  	this.sesionOperadores$.next(sesiones)
-	  });
-	  channel.bind('usuario.desconectado', (data) => {
-		  const sesiones = this.cambiarEstadoOperador(data.id, "Desconectado")
-		  this.sesionOperadores$.next(sesiones)
-	  });
-	  channel.bind('usuario.enbreak', (data) => {
-		  const sesiones = this.cambiarEstadoOperador(data.id, "Break")
-		  this.sesionOperadores$.next(sesiones)
-	  });
-  }
+	constructor(private operadorSrv: OperadoresService) {
+		const pusher = new Pusher('e7b3f11c95045ebe9b9c', {
+			cluster: 'us2'
+		});
+		const channel = pusher.subscribe('supervisorcall');
+		channel.bind('usuario.conectado', (sesion) => {
+			const sesiones = this.cambiarEstadoOperador(sesion.id, 'Conectado');
+			this.sesionOperadores$.next(sesiones);
+		});
+		channel.bind('usuario.desconectado', (sesion) => {
+			const sesiones = this.cambiarEstadoOperador(sesion.id, 'Desconectado');
+			this.sesionOperadores$.next(sesiones);
+		});
+		channel.bind('usuario.enbreak', (sesion) => {
+			const sesiones = this.cambiarEstadoOperador(sesion.id, 'Break');
+			this.sesionOperadores$.next(sesiones);
+		});
+	}
 
-  private cambiarEstadoOperador(id, estado){
-	  return this.sesionOperadores$.value.map( sesionOperador => {
-		  return sesionOperador.id === id ? {...sesionOperador, estado: {nombre: estado, fechaCambio: moment()}} : sesionOperador
-	  });
-  }
+	private cambiarEstadoOperador(id, estado) {
+		return this.sesionOperadores$.value.map(sesionOperador => {
+			if (sesionOperador.id === id) {
+				sesionOperador.estado = { nombre: estado, fechaCambio: moment().format('YYYY-MM-DD hh:mm:ss') };
+			}
+			return sesionOperador;
+		});
+	}
 
-  traerTodos(){
-  	this.operadorSrv.traerTodos().subscribe( operadores => {
-  		const sesionesOperador = operadores.map( operador => {
-  			return {
-  				...operador,
-				estado: {
-  					nombre: this.getEstado(operador),
-					fechaCambio: operador.ultimaActividad? operador.ultimaActividad.fecha : ''
-  				}
-  			}
+	traerTodos(): Observable<SesionOperador[]> {
+		this.operadorSrv.traerTodos().subscribe(operadores => {
+			const sesionesOperador = operadores.map(operador => {
+				return new SesionOperador({
+					estado: {
+						nombre: this.getEstado(operador),
+						fechaCambio: operador.ultimaActividad ? operador.ultimaActividad.fecha : ''
+					},
+					...operador
+				})
+			})
+			this.sesionOperadores$.next(sesionesOperador);
 		})
-  		this.sesionOperadores$.next(sesionesOperador)
-	})
-	return this.sesionOperadores$
-  }
+		return this.sesionOperadores$;
+	}
 
 
-	getEstado(operador: Operador){
-		switch (operador.ultimaActividad) {
-			case "Inicio sesion":
-				return "Conectado";
-			case "Cerrar sesion":
-				return "Desconectado";
-			case "Inicio break":
-				return "Break";
-			case "Fin break":
-				return "Conectado";
+	getEstado(operador: Operador) {
+		switch (operador.ultimaActividad.actividad) {
+			case 'Inicio sesion':
+				return 'Conectado';
+			case 'Cerrar sesion':
+				return 'Desconectado';
+			case 'Inicio break':
+				return 'Break';
+			case 'Fin break':
+				return 'Conectado';
 			default:
-				return "Sin actividad";
+				return 'Sin actividad';
 		}
 	}
 

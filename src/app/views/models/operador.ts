@@ -1,4 +1,4 @@
-import {ActividadSesion} from "@modelos/actividadSesion";
+import { ActividadSesion } from '@modelos/actividadSesion';
 
 
 export interface IOperador {
@@ -14,8 +14,10 @@ export class Operador implements IOperador {
     constructor(contacto: IOperador) {
         this.nombre = contacto.nombre;
         this.id = contacto.id;
-		this.actividadReciente = contacto.actividadReciente;
+        this.actividadReciente = contacto.actividadReciente;
     }
+
+    get ultimaActividad() { return this.actividadReciente[0] }
 }
 
 export const getFakeOperador = () => {
@@ -23,6 +25,6 @@ export const getFakeOperador = () => {
     return new Operador({
         nombre: faker.name.firstName(),
         id: faker.random.number(),
-		actividadReciente: []
+        actividadReciente: []
     });
 };
