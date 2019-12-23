@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SesionOperador, SesionOperadorService } from '@servicios/sesion-operador.service';
 import * as moment from 'moment';
+import { BehaviorSubject } from 'rxjs';
 
 
 
@@ -16,15 +17,42 @@ export class TablaControlComponent implements OnInit {
 
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
 	dataSource = new MatTableDataSource<SesionOperador>([]);
+	filtros = {
+		estados: [],
+		nombre: ''
+	};
+	sesionesOperador$ = new BehaviorSubject<SesionOperador[]>([]);
+
 	constructor(private sesionOperadorSrv: SesionOperadorService, public dialog: MatDialog) { }
 
 	ngOnInit() {
-		this.sesionOperadorSrv.traerTodos().subscribe(operadores => {
-			this.dataSource = new MatTableDataSource<SesionOperador>(operadores);
-			this.dataSource.sort = this.sort;
+		this.sesionesOperador$ = this.sesionOperadorSrv.traerTodos();
+		this.sesionesOperador$.subscribe(operadores => {
+			this.updateTabla();
 		});
 	}
 
+	updateTabla() {
+		const operadores = this.sesionesOperador$.value
+			.filter(this.filtroEstado.bind(this))
+			.filter(this.filtroNombre.bind(this));
+		this.dataSource = new MatTableDataSource<SesionOperador>(operadores);
+		this.dataSource.sort = this.sort;
+	}
+
+	filtroEstado(operador) {
+		if (this.filtros.estados.length === 0) { return true; }
+		return this.filtros.estados.some(e => e.toLowerCase() === operador.estado.nombre.toLowerCase());
+	}
+
+	filtroNombre(operador) {
+		if (!this.filtros.nombre) { return true; }
+		return operador.nombre.toLowerCase().includes(this.filtros.nombre.toLowerCase());
+	}
+
+	filtrar(filtros) {
+		this.dataSource.filter = `${filtros.estados.join(',')};${filtros.nombre}`;
+	}
 
 
 	formatHoraActividad(fecha) {

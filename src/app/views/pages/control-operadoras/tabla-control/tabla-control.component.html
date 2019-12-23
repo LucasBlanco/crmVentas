@@ -5,6 +5,24 @@
 	<mat-card-content>
 		<mat-card>
 			<mat-card-content>
+				<div class="row">
+					<div class="col">
+						<mat-form-field>
+							<mat-select placeholder="Estado" [(value)]="filtros.estados"
+								(selectionChange)="updateTabla()" multiple>
+								<mat-option value="Conectado">Conectado</mat-option>
+								<mat-option value="Desconectado">Desconectado</mat-option>
+								<mat-option value="Break">Break</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div class="col">
+						<mat-form-field>
+							<input matInput placeholder="Operadora" [(ngModel)]="filtros.nombre"
+								(ngModelChange)="updateTabla()">
+						</mat-form-field>
+					</div>
+				</div>
 				<div class="row justify-content-center">
 					<div class="col-12">
 						<table mat-table matSort [dataSource]="dataSource" style="width: 100%">

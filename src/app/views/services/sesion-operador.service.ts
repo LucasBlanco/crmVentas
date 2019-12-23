@@ -3,19 +3,19 @@ import { Operador } from '@modelos/operador';
 import { OperadoresService } from '@servicios/operadores.service';
 import * as moment from 'moment';
 import Pusher from 'pusher-js';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { IOperador } from './../models/operador';
 
 interface ISesionOperador extends IOperador {
-	estado: { nombre: string, fechaCambio: string }
+	estado: { nombre: string, fechaCambio: string; };
 }
 export class SesionOperador extends Operador implements ISesionOperador {
 	constructor({ estado, ...operador }: ISesionOperador) {
 		super(operador);
 		this.estado = estado;
 	}
-	estado: { nombre: string, fechaCambio: string };
+	estado: { nombre: string, fechaCambio: string; };
 }
 
 @Injectable({
@@ -53,7 +53,7 @@ export class SesionOperadorService {
 	}
 
 
-	traerTodos(): Observable<SesionOperador[]> {
+	traerTodos(): BehaviorSubject<SesionOperador[]> {
 		this.operadorSrv.traerTodos().subscribe(operadores => {
 			const sesionesOperador = operadores.map(operador => {
 				return new SesionOperador({
@@ -62,16 +62,16 @@ export class SesionOperadorService {
 						fechaCambio: operador.ultimaActividad ? operador.ultimaActividad.fecha : ''
 					},
 					...operador
-				})
-			})
+				});
+			});
 			this.sesionOperadores$.next(sesionesOperador);
-		})
+		});
 		return this.sesionOperadores$;
 	}
 
 
 	getEstado(operador: Operador) {
-		switch (operador.ultimaActividad.actividad) {
+		switch (operador.ultimaActividad && operador.ultimaActividad.actividad) {
 			case 'Inicio sesion':
 				return 'Conectado';
 			case 'Cerrar sesion':

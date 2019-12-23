@@ -1,4 +1,3 @@
-// Angular
 import 'hammerjs';
 
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -49,8 +48,8 @@ import { metaReducers, reducers } from './core/reducers';
 import { AuthModule } from './views/pages/auth/auth.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
-import {LandingComponent} from "./views/pages/landing/landing.component";
 
+// Angular
 // Angular in memory
 // Perfect Scroll bar
 // SVG inline
@@ -118,6 +117,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		InlineSVGModule.forRoot(),
 		ThemeModule,
 		MatSnackBarModule
+
 	],
 	exports: [],
 	providers: [
