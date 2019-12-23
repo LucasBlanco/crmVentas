@@ -23,8 +23,8 @@ export class OperadoresService {
 		)
 	}
 
-	private mapToFront(operadorBack) {
-		let actividades = operadorBack.actividad_reciente.map(x => this.actividadSesionSrv.mapToFront(x))
+	mapToFront(operadorBack) {
+		let actividades = operadorBack.actividadReciente.map(x => this.actividadSesionSrv.mapToFront(x))
 		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id, actividadReciente:actividades})
 	}
 }
