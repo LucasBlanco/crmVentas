@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getDashboard()]
 	}
 
 	getPermisos() {
@@ -41,6 +41,17 @@ export class MenuConfig {
 			return []
 		}
 	}
+
+	getDashboard() {
+
+		return [{
+			title: 'Dashboard',
+			root: true,
+			alignment: 'left',
+			page: '/dashboard/supervisorcall',
+		}]
+	}
+
 	public defaults: any = {
 		header: {
 			self: {},

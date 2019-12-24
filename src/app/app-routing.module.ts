@@ -26,7 +26,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'dashboard',
-				loadChildren: () => import('app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
+				loadChildren: () => import('app/views/pages/dashboard-posta/dashboard-posta.module').then(m => m.DashboardPostaModule)
 			},
 			{
 				path: 'mail',

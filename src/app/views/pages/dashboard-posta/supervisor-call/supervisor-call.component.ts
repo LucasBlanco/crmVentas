@@ -1,0 +1,366 @@
+import { Component, OnInit } from '@angular/core';
+import { DashboardChartService } from '../../../services/dashboard-chart.service';
+
+@Component({
+  selector: 'crm-supervisor-call',
+  templateUrl: './supervisor-call.component.html',
+  styleUrls: ['./supervisor-call.component.scss']
+})
+export class SupervisorCallComponent implements OnInit {
+  private showBackButton = false;
+  private supervisorChart = {
+    type: 'bar',
+    data: {
+      labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+      datasets: [
+        {
+          label: 'Vendidas',
+          data: [1, 2, 5, 9, 78],
+          backgroundColor: 'rgb(75, 192, 192)' // green
+        },
+        {
+          label: 'Agendadas',
+          data: [4, 0, 3, 4, 9],
+          backgroundColor: 'rgb(255, 205, 86)' // orange
+        },
+        {
+          label: 'Rechazadas',
+          data: [43, 56, 87, 45, 163],
+          backgroundColor: 'rgb(255, 99, 132)' // red
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  };
+  private generalDia = {
+    labels: ['Lunes', 'Mates', 'Miércoles', 'Jueves', 'Viernes'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [4, 0, 3, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // orange
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 56, 87, 45, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  private generalMes = {
+    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
+      , 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  private vendedorasChart = {
+    type: 'horizontalBar',
+    data: {
+      labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+        , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+        , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+      datasets: [
+        {
+          label: 'Vendidas',
+          data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2, 78],
+          backgroundColor: 'rgb(75, 192, 192)' // green
+        },
+        {
+          label: 'Agendadas',
+          data: [4, 9, 78, 8, 6, 9, 7, 2, 3, 4, 9],
+          backgroundColor: 'rgb(255, 205, 86)' // yellow
+        },
+        {
+          label: 'Rechazadas',
+          data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
+          backgroundColor: 'rgb(255, 99, 132)' // red
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true,
+            scaleLabel: 1,
+            fontSize: 10
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true,
+            scaleLabel: 1,
+            fontSize: 10
+          }
+        }]
+      },
+      onClick: this.clickVendedoras.bind(this)
+    }
+  };
+
+  vendedorasHoy = {
+    labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+      , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+      , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2, 78],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [4, 9, 78, 8, 6, 9, 7, 2, 3, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  vendedoras7Dias = {
+    labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+      , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+      , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [9, 78, 8, 6, 9, 7, 2, 2, 5, 9, 78],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [4, 0, 9, 78, 8, 6, 9, 7, 2, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 9, 78, 8, 6, 9, 7, 2, 87, 45, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  vendedoras30Dias = {
+    labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+      , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+      , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 9, 78, 8, 6, 9, 7, 2],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [9, 78, 8, 6, 9, 7, 2, 0, 3, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 56, 87, 45, 9, 78, 8, 6, 9, 7, 2],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  vendedoras3Meses = {
+    labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+      , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+      , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 9, 78, 8, 6, 9, 7, 2, 9, 78],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [9, 78, 8, 6, 9, 7, 2, 0, 3, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 9, 78, 8, 6, 9, 7, 2, 87, 45, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  vendedoras6Meses = {
+    labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
+      , 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
+      , 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [4, 0, 9, 78, 8, 6, 9, 7, 2, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+  carlitaDia = {
+    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [4, 0, 3, 4, 9],
+        backgroundColor: 'rgb(255, 205, 86)' // orange
+      },
+      {
+        label: 'Rechazadas',
+        data: [43, 56, 87, 45, 163],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  };
+
+  carlitaMes = {
+    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
+      , 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(75, 192, 192)' // green
+      },
+      {
+        label: 'Agendadas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(255, 205, 86)' // yellow
+      },
+      {
+        label: 'Rechazadas',
+        data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
+        backgroundColor: 'rgb(255, 99, 132)' // red
+      }
+    ]
+  }
+
+  cambiarGeneral(value) {
+    if (value == 'dia') {
+      this.chartSrv.charts[4].config.data = this.generalDia;
+    } else {
+      this.chartSrv.charts[4].config.data = this.generalMes;
+    }
+    this.chartSrv.charts[4].update();
+  }
+
+  cambiarVendedoras(value) {
+    if (this.showBackButton == false) {
+      if (value == 'hoy') {
+        this.chartSrv.charts[5].config.data = this.vendedorasHoy;
+      } else if (value == '7dias') {
+        this.chartSrv.charts[5].config.data = this.vendedoras7Dias;
+      } else if (value == '30dias') {
+        this.chartSrv.charts[5].config.data = this.vendedoras30Dias;
+      } else if (value == '3meses') {
+        this.chartSrv.charts[5].config.data = this.vendedoras3Meses;
+      } else if (value == '6meses') {
+        this.chartSrv.charts[5].config.data = this.vendedoras6Meses;
+      }
+    }
+    else {
+      if (value == 'dia') {
+        this.chartSrv.charts[5].config.data = this.carlitaDia;
+      } else {
+        this.chartSrv.charts[5].config.data = this.carlitaMes;
+      }
+    }
+    this.chartSrv.charts[5].update();
+  }
+
+  clickVendedoras(event) {
+    const activePoints = this.chartSrv.charts[5].getElementsAtEvent(event);
+    if (activePoints.length > 0) {
+      const clickedElementindex = activePoints[0]['_index'];
+      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
+        , 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+      const label = this.chartSrv.charts[5].data.labels[clickedElementindex];
+      if (meses.includes(label) || dias.includes(label)) {
+        return;
+      }
+      this.cambiarAVendedora(clickedElementindex, label);
+      this.cambiarVendedoras('dia');
+    }
+  }
+
+  cambiarAVendedora(clickedElementindex, label) {
+    this.showBackButton = true;
+    document.getElementById('titulo').innerHTML = label;
+    document.getElementById('subtitulo').innerHTML = 'Gráfico de vendedora';
+  }
+
+  backButton() {
+    this.showBackButton = false;
+    this.cambiarVendedoras('hoy');
+    document.getElementById('titulo').innerHTML = 'Vendedoras';
+    document.getElementById('subtitulo').innerHTML = 'Estadísticas por vendedora';
+  }
+
+  constructor(public chartSrv: DashboardChartService) {
+  }
+
+  ngOnInit() {
+  }
+}

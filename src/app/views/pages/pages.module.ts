@@ -12,6 +12,7 @@ import { AsignacionBasesModule } from './asignacion-bases/asignacion-bases.modul
 import { CrmModule } from './crm/crm.module';
 import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
+import { DashboardPostaModule } from './dashboard-posta/dashboard-posta.module';
 
 // Partials
 // Pages
@@ -28,6 +29,7 @@ import { UserManagementModule } from './user-management/user-management.module';
 		ECommerceModule,
 		UserManagementModule,
 		CrmModule,
+		DashboardPostaModule,
 		AsignacionBasesModule
 	],
 	providers: []
