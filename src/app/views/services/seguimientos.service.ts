@@ -8,6 +8,7 @@ import {Operador} from "@modelos/operador";
 import {PersonaService} from "@servicios/persona.service";
 import {ObrasSocialesService} from "@servicios/obras-sociales.service";
 import {EstadoService} from "@servicios/estado.service";
+import {AgendadoService} from "@servicios/agendado.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class SeguimientosService {
   	private http: HttpClient,
 	private personaSrv: PersonaService,
 	private obraSocialSrv: ObrasSocialesService,
-  	private estadoSrv: EstadoService
+  	private estadoSrv: EstadoService,
+	private agendadoSrv: AgendadoService
   ) { }
 
   crear(seguimiento){
@@ -49,7 +51,8 @@ export class SeguimientosService {
 	  let persona = this.personaSrv.mapToFront(seguimiento.persona)
 	  let obraSocial = seguimiento.obraSocial ? this.obraSocialSrv.mapToFront(seguimiento.obraSocial) : null
 	  let estados = seguimiento.estados.map(estado => this.estadoSrv.mapToFront(estado))
-	  return new Seguimiento({id: seguimiento.id, tresPorciento:seguimiento.tresPorciento, persona, obraSocial, estados})
+	  let agendados = seguimiento.agendados.map(agendado => this.agendadoSrv.mapToFront(agendado))
+	  return new Seguimiento({id: seguimiento.id, tresPorciento:seguimiento.tresPorciento, persona, obraSocial, estados, agendados})
   }
 }
 

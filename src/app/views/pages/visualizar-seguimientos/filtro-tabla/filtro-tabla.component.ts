@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Operador} from "@modelos/operador";
 import {ObraSocial} from "@modelos/obraSocial";
 import {OperadoresService} from "@servicios/operadores.service";
@@ -7,9 +7,10 @@ import {ObrasSocialesService} from "@servicios/obras-sociales.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS} from "@angular/material-moment-adapter";
-import {MatTableDataSource} from "@angular/material";
-import {Persona} from "@modelos/persona";
+import {MatDialog, MatPaginator, MatTableDataSource} from "@angular/material";
 import {Seguimiento} from "@modelos/seguimiento";
+import {ModalBreakComponent} from "../../modal-break/modal-break.component";
+import {ModalAgendadosComponent} from "../modal-agendados/modal-agendados.component";
 
 @Component({
   selector: 'crm-filtro-tabla',
@@ -29,6 +30,8 @@ export class FiltroTablaComponent implements OnInit {
 	dataSource: MatTableDataSource<Seguimiento>;
 	obrasSociales: ObraSocial[] = []
 	operadores: Operador[] = []
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
 	form = new FormGroup({
 		operador: new FormControl(null, null),
 		obraSocial: new FormControl(null, null),
@@ -36,7 +39,12 @@ export class FiltroTablaComponent implements OnInit {
 		hasta: new FormControl(null, null),
 		cuil: new FormControl(null, [Validators.minLength(11), Validators.maxLength(11)])
 	})
-	constructor(private operadorSrv: OperadoresService, private obraSocialSrv: ObrasSocialesService, private seguimientoSrv: SeguimientosService) { }
+	constructor(
+		private operadorSrv: OperadoresService,
+		private obraSocialSrv: ObrasSocialesService,
+		private seguimientoSrv: SeguimientosService,
+		public dialog: MatDialog
+		) { }
 
   ngOnInit() {
 	  this.operadorSrv.traerTodos().subscribe(operadores => this.operadores = operadores)
@@ -51,6 +59,23 @@ export class FiltroTablaComponent implements OnInit {
 		let hasta = this.form.get('hasta').value.format("YYYY-MM-DD")
 
 	  let parametros = {operador, obraSocial, cuil, desde, hasta}
-	  this.seguimientoSrv.traerTodos(parametros).subscribe(x => this.dataSource = new MatTableDataSource(x))
+	  this.seguimientoSrv.traerTodos(parametros).subscribe(x => {
+	  	this.dataSource = new MatTableDataSource(x)
+		  this.dataSource.paginator = this.paginator;
+
+	  })
+
+  }
+
+  limpiarFiltros(){
+		this.form.reset()
+  }
+
+  mostrarAgendados(seguimiento){
+	  const dialogRef = this.dialog.open(ModalAgendadosComponent, {
+		  width: '60%',
+		  panelClass: 'custom',
+			data: seguimiento
+	  });
   }
 }
