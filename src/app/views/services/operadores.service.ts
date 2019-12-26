@@ -19,12 +19,14 @@ export class OperadoresService {
 
 	traerTodos() {
 		return this.http.get<Operador[]>(environment.ip + '/usuarios/operadores').pipe(
-			map(operadores => operadores.map(x => this.mapToFront(x)))
+			map(operadores => {
+				return operadores.map(x => this.mapToFront(x))
+				})
 		)
 	}
 
 	mapToFront(operadorBack) {
-		let actividades = operadorBack.actividadReciente.map(x => this.actividadSesionSrv.mapToFront(x))
-		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id, actividadReciente:actividades})
+		let actividades = operadorBack.actividadReciente ? operadorBack.actividadReciente.map(x => this.actividadSesionSrv.mapToFront(x)) : []
+		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id, actividadReciente: actividades})
 	}
 }

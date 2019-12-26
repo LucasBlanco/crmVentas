@@ -55,8 +55,8 @@ export class FiltroTablaComponent implements OnInit {
 		let operador = this.form.get('operador').value
 		let obraSocial = this.form.get('obraSocial').value
 		let cuil = this.form.get('cuil').value
-		let desde = this.form.get('desde').value.format("YYYY-MM-DD")
-		let hasta = this.form.get('hasta').value.format("YYYY-MM-DD")
+		let desde = this.form.get('desde').value
+		let hasta = this.form.get('hasta').value
 
 	  let parametros = {operador, obraSocial, cuil, desde, hasta}
 	  this.seguimientoSrv.traerTodos(parametros).subscribe(x => {
