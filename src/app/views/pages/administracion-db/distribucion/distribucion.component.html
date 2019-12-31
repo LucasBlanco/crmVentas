@@ -1,15 +1,18 @@
 <div *ngFor="let dbs of distribucion">
     <mat-card class="col-12" style="margin-bottom: 10px;box-shadow: none;">
         <div class="row">
-            <div class="col-7 align-self-center h2">
+            <div class="col-6 align-self-center h2">
                 {{dbs.name}}
             </div>
-            <div class="col-3 align-self-center">
+            <div class="col-2 align-self-center">
                 {{percentages[dbs.index] + '%'}}
             </div>
             <div class="col-2 align-self-center">
                 <input type="number" [value]="newPercentages[dbs.index]" style="width: 50px;"
                     (input)="changePercentage($event.target.value, dbs.index)" min="0" max="100" maxLength="3"> %
+            </div>
+            <div class="col-2 align-self-center">
+                {{ Math.floor(newPercentages[dbs.index] * 250 / 100) }} Datos
             </div>
         </div>
     </mat-card>

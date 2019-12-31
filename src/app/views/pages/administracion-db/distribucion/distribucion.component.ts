@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./distribucion.component.scss']
 })
 export class DistribucionComponent implements OnInit {
+  Math = Math;
   public total = 0;
   public change = false;
   public distribucion = [{
