@@ -4,7 +4,7 @@ import { SupervisorCallComponent } from './supervisor-call/supervisor-call.compo
 import { RouterModule, Routes } from '@angular/router';
 import { MatCardModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material';
 import { ChartComponent } from '../../components/chart/chart.component';
-import { WidgetComponent } from '../../components/widget/widget.component';
+import {WidgetComponent} from "./widget/widget.component";
 
 const routes: Routes = [
   { path: 'supervisorcall', component: SupervisorCallComponent }

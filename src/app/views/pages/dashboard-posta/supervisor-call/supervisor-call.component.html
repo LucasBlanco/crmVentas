@@ -1,36 +1,42 @@
 <div class="container-fluid">
-    <mat-card style="height: auto;" class="row justify-content-start" [style.margin-bottom]="'10px'">
-        <mat-card-header class="row align-items-start">
-            <div class="col-1">
-                <div mat-card-avatar class="general-image" style="border-radius:0px !important;"></div>
-            </div>
-            <div class="col">
-                <mat-card-title>General</mat-card-title>
-                <mat-card-subtitle>Estadisticas generales</mat-card-subtitle>
-            </div>
-            <mat-select class="col-2 align-end" value="dia" (selectionChange)="cambiarGeneral($event.value)">
-                <mat-option value="dia">Día</mat-option>
-                <mat-option value="mes">Mes</mat-option>
-            </mat-select>
-        </mat-card-header>
-        <mat-card-content>
-            <crm-chart height="300px" [config]="this.supervisorChart"></crm-chart>
-        </mat-card-content>
-    </mat-card>
+	<div class="row">
+		<div class="col-8">
+			<mat-card style="height: auto;" class="row justify-content-start" [style.margin-bottom]="'10px'">
+				<mat-card-header class=" align-items-start">
+					<div class="col-1">
+						<div mat-card-avatar class="general-image" style="border-radius:0px !important;"></div>
+					</div>
+					<div class="col">
+						<mat-card-title>General</mat-card-title>
+						<mat-card-subtitle>Estadisticas generales</mat-card-subtitle>
+					</div>
+					<mat-select class="col-2 align-end" value="dia" (selectionChange)="cambiarGeneral($event.value)">
+						<mat-option value="dia">Día</mat-option>
+						<mat-option value="mes">Mes</mat-option>
+					</mat-select>
+				</mat-card-header>
+				<mat-card-content>
+					<crm-chart height="300px" width="800px" id="general" [config]="this.supervisorChart"></crm-chart>
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<div class="col-4 align-self-center" style="margin-bottom: 10px">
+			<crm-widget titulo="Rechazos" icon="image-rechazos" id="widgetRechazos" [selectOptions]="opcionesPosibles" *ngIf="this.dashboardData" [data]="this.dashboardData.rechazos"></crm-widget>
+		</div>
+	</div>
+
 
     <div class="row">
-        <div class="col-3">
-            <crm-widget titulo="Ventas"></crm-widget>
+        <div class="col-4">
+            <crm-widget titulo="Ventas" icon="image-ventas" *ngIf="this.dashboardData" id="widgetVentas" [data]="this.dashboardData.indicadores.ventas"></crm-widget>
         </div>
-        <div class="col-3">
-            <crm-widget titulo="Rellamados"></crm-widget>
+        <div class="col-4">
+            <crm-widget titulo="Rellamados" cantidad="200" icon="image-llamadas" id="widgetRellamados" *ngIf="this.dashboardData" [data]="this.dashboardData.indicadores.rellamados"></crm-widget>
         </div>
-        <div class="col-3">
-            <crm-widget titulo="Agendados"></crm-widget>
+        <div class="col-4">
+            <crm-widget titulo="Agendados" cantidad="350" icon="image-agendados" id="widgetAgendados" *ngIf="this.dashboardData" [data]="this.dashboardData.indicadores.agendados"></crm-widget>
         </div>
-        <div class="col-3">
-            <crm-widget titulo="Rechazos"></crm-widget>
-        </div>
+
     </div>
 
     <div class="row justify-content-start">
@@ -45,13 +51,13 @@
                 </div>
 
                 <div class="col-2 align-end">
-                    <mat-select *ngIf="showBackButton == false" class="row" value="hoy"
+                    <mat-select *ngIf="showBackButton == false" class="row" value="ultimaSemana"
                         (selectionChange)="cambiarVendedoras($event.value)">
                         <mat-option value="hoy">Hoy</mat-option>
-                        <mat-option value="7dias">Últimos 7 días</mat-option>
-                        <mat-option value="30dias">Últimos 30 días</mat-option>
-                        <mat-option value="3meses">Últimos 3 meses</mat-option>
-                        <mat-option value="6meses">Últimos 6 meses</mat-option>
+                        <mat-option value="ultimaSemana">Últimos 7 días</mat-option>
+                        <mat-option value="ultimoMes">Últimos 30 días</mat-option>
+                        <mat-option value="ultimos3Meses">Últimos 3 meses</mat-option>
+                        <mat-option value="ultimos6Meses">Últimos 6 meses</mat-option>
                     </mat-select>
 
                     <mat-select *ngIf="showBackButton == true" class="row" value="dia"
@@ -69,7 +75,7 @@
             </mat-card-header>
             <mat-card-content style="height: 380px;">
                 <div class="col-9" style="height: 380px;">
-                    <crm-chart height="380px" width="870px" [config]="this.vendedorasChart"></crm-chart>
+                    <crm-chart id="vendedoras" height="380px" width="870px" [config]="this.vendedorasChart"></crm-chart>
                 </div>
             </mat-card-content>
         </mat-card>

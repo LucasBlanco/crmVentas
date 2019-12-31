@@ -20,6 +20,6 @@ export class ChartComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     let myChart = new Chart(this.chartElementRef.nativeElement, this.config);
-    this.chartSrv.charts.push(myChart);
+    this.chartSrv.charts.push({id:this.id, chart:myChart});
   }
 }

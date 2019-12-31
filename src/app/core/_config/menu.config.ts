@@ -4,6 +4,7 @@ export class MenuConfig {
 
 	constructor() {
 		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getDashboard()]
+
 	}
 
 	getPermisos() {
