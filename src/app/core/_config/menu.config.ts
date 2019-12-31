@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getDashboard()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getDashboard(), ...this.getAdministracion()]
 	}
 
 	getPermisos() {
@@ -49,6 +49,16 @@ export class MenuConfig {
 			root: true,
 			alignment: 'left',
 			page: '/dashboard/supervisorcall',
+		}]
+	}
+
+	getAdministracion() {
+
+		return [{
+			title: 'Administracion',
+			root: true,
+			alignment: 'left',
+			page: '/administracion/distribucion',
 		}]
 	}
 
