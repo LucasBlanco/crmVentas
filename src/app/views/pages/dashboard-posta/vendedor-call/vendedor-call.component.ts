@@ -1,22 +1,22 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
 	DashboardChartService,
 	DashboardSupervisoraCall
 } from '../../../services/dashboard-chart.service';
 
 @Component({
-  selector: 'crm-supervisor-call',
-  templateUrl: './supervisor-call.component.html',
-  styleUrls: ['./supervisor-call.component.scss']
+	selector: 'crm-vendedor-call',
+	templateUrl: './vendedor-call.component.html',
+	styleUrls: ['./vendedor-call.component.scss']
 })
-export class SupervisorCallComponent implements OnInit, AfterViewInit {
+export class VendedorCallComponent implements OnInit, AfterViewInit {
 	private showBackButton = false;
 	opcionesPosibles = [
-		{value:"hoy", nombre:"Hoy"},
-		{value:"ultimaSemana", nombre:"Ultima semana"},
-		{value:"ultimoMes", nombre:"Ultimos 30 dias"},
-		{value:"ultimos3Meses", nombre:"Ultimos 3 meses"},
-		{value:"ultimos6Meses", nombre:"Ultimos 6 meses"},
+		{ value: "hoy", nombre: "Hoy" },
+		{ value: "ultimaSemana", nombre: "Ultima semana" },
+		{ value: "ultimoMes", nombre: "Ultimos 30 dias" },
+		{ value: "ultimos3Meses", nombre: "Ultimos 3 meses" },
+		{ value: "ultimos6Meses", nombre: "Ultimos 6 meses" },
 	]
 	private supervisorChart = {
 		type: 'bar',
@@ -98,16 +98,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 					label: 'Vendidas',
 					data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2, 78],
 					backgroundColor: 'rgb(75, 192, 192)' // green
-				},
-				{
-					label: 'Agendadas',
-					data: [4, 9, 78, 8, 6, 9, 7, 2, 3, 4, 9],
-					backgroundColor: 'rgb(255, 205, 86)' // yellow
-				},
-				{
-					label: 'Rechazadas',
-					data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
-					backgroundColor: 'rgb(255, 99, 132)' // red
 				}
 			]
 		},
@@ -130,8 +120,7 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 						fontSize: 10
 					}
 				}]
-			},
-			onClick: this.clickVendedoras.bind(this)
+			}
 		}
 	};
 
@@ -144,16 +133,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2, 78],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [4, 9, 78, 8, 6, 9, 7, 2, 3, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -167,16 +146,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [9, 78, 8, 6, 9, 7, 2, 2, 5, 9, 78],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [4, 0, 9, 78, 8, 6, 9, 7, 2, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 9, 78, 8, 6, 9, 7, 2, 87, 45, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -190,16 +159,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 5, 9, 9, 78, 8, 6, 9, 7, 2],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [9, 78, 8, 6, 9, 7, 2, 0, 3, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 56, 87, 45, 9, 78, 8, 6, 9, 7, 2],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -213,16 +172,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 9, 78, 8, 6, 9, 7, 2, 9, 78],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [9, 78, 8, 6, 9, 7, 2, 0, 3, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 9, 78, 8, 6, 9, 7, 2, 87, 45, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -236,16 +185,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [4, 0, 9, 78, 8, 6, 9, 7, 2, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -256,16 +195,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 5, 9, 78],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [4, 0, 3, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // orange
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 56, 87, 45, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	};
@@ -278,16 +207,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				label: 'Vendidas',
 				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
 				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
-				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
 	}
@@ -296,10 +215,10 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 
 	cambiarGeneral(value) {
 		if (value == 'dia') {
-			this.llenarChart(this.dashboardData.porDia.labels, this.dashboardData.porDia.datasets,"general");
+			this.llenarChart(this.dashboardData.porDia.labels, this.dashboardData.porDia.datasets, "general");
 		} else {
 			console.log(this.dashboardData)
-			this.llenarChart(this.dashboardData.porMes.labels, this.dashboardData.porMes.datasets,"general");
+			this.llenarChart(this.dashboardData.porMes.labels, this.dashboardData.porMes.datasets, "general");
 		}
 	}
 
@@ -326,21 +245,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 		this.chartSrv.charts[5].update();
 	}
 
-	clickVendedoras(event) {
-		const activePoints = this.chartSrv.charts[5].getElementsAtEvent(event);
-		if (activePoints.length > 0) {
-			const clickedElementindex = activePoints[0]['_index'];
-			const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
-				, 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-			const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-			const label = this.chartSrv.charts[5].data.labels[clickedElementindex];
-			if (meses.includes(label) || dias.includes(label)) {
-				return;
-			}
-			this.cambiarAVendedora(clickedElementindex, label);
-			this.cambiarVendedoras('dia');
-		}
-	}
 
 	cambiarAVendedora(clickedElementindex, label) {
 		this.showBackButton = true;
@@ -371,12 +275,11 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 
 	}
 
-	llenarChart(labels, dataset, index)
-	{
+	llenarChart(labels, dataset, index) {
 
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.labels = labels
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.datasets = dataset
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.update();
+		this.chartSrv.charts.filter(c => c.id === index)[0].chart.config.data.labels = labels
+		this.chartSrv.charts.filter(c => c.id === index)[0].chart.config.data.datasets = dataset
+		this.chartSrv.charts.filter(c => c.id === index)[0].chart.update();
 	}
 
 	ngAfterViewInit() {

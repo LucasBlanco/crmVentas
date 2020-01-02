@@ -8,6 +8,8 @@ import { DashboardChartService } from '../../services/dashboard-chart.service';
 })
 export class WidgetComponent implements OnInit {
   @Input() titulo = '';
+  @Input() cantidad= 0;
+  @Input() icon= '';
   private ventasWidget = {
     type: 'line',
     data: {
