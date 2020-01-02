@@ -11,7 +11,7 @@ export class UserService {
   constructor() { }
 
   public getCurrentUser(): Usuario {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const user = jwtDecode(token);
     return new Usuario({ ...user, id: user.user_id });
   }

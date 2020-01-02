@@ -9,6 +9,8 @@ import { finalize, takeUntil, tap } from 'rxjs/operators';
 
 import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
 import { AppState } from '../../../../core/reducers';
+import {MenuConfig} from "../../../../core/_config/menu.config";
+import {MenuConfigService, MenuHorizontalService, SubheaderService} from "../../../../core/_base/layout";
 
 // RxJS
 // Translate
@@ -18,8 +20,8 @@ import { AppState } from '../../../../core/reducers';
  * ! Just example => Should be removed in development
  */
 const DEMO_PARAMS = {
-	USERNAME: 'prueba',
-	PASSWORD: 'kvega'
+	USERNAME: '',
+	PASSWORD: ''
 };
 
 @Component({
@@ -60,7 +62,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private store: Store<AppState>,
 		private fb: FormBuilder,
 		private cdr: ChangeDetectorRef,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private menuConfigService: MenuConfigService,
+		private subHeaderSrv: SubheaderService,
+		private menuHorizontalService: MenuHorizontalService
 	) {
 		this.unsubscribe = new Subject();
 	}
@@ -144,8 +149,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 			.pipe(
 				tap(user => {
 					if (user) {
-						this.store.dispatch(new Login({ authToken: user.accessToken }));
-						this.router.navigateByUrl('/crm'); // Main page
+						//this.store.dispatch(new Login({ authToken: user.accessToken }));
+						this.menuConfigService.loadConfigs(new MenuConfig().configs);
+						this.menuHorizontalService.loadMenu();
+						this.router.navigateByUrl('landing'); // Main page
 					} else {
 						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
 					}

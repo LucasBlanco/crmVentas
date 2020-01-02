@@ -1,30 +1,30 @@
-// Angular
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ActividadSesionService } from '@servicios/actividad-sesion.service';
 import { Observable, of } from 'rxjs';
 
 import { AppState } from '../../../core/reducers/';
 
+// Angular
 // RxJS
 // NGRX
 // Auth reducers and selectors
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private store: Store<AppState>, private router: Router) { }
+
+    esElPrimerLogin = true;
+
+    constructor(private store: Store<AppState>, private router: Router, private actividadSesion: ActividadSesionService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        /*return this.store
-            .pipe(
-                select(isLoggedIn),
-                tap(loggedIn => {
-                    if (!loggedIn) {
-                        this.router.navigateByUrl('/auth/login');
-                    }
-                })
-            );*/
-        const tokenInfo = localStorage.getItem('tokenInfo');
+        const tokenInfo = sessionStorage.getItem('tokenInfo');
+
         if (tokenInfo) {
+            if (this.router.url !== '/auth/login' && this.esElPrimerLogin) {
+                this.esElPrimerLogin = false;
+                this.actividadSesion.iniciarSesion();
+            }
             return of(true);
         } else {
             this.router.navigateByUrl('/auth/login');

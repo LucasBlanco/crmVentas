@@ -1,0 +1,62 @@
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>Control operadoras</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<mat-card>
+			<mat-card-content>
+				<div class="row">
+					<div class="col">
+						<mat-form-field>
+							<mat-select placeholder="Estado" [(value)]="filtros.estados"
+								(selectionChange)="updateTabla()" multiple>
+								<mat-option value="Conectado">Conectado</mat-option>
+								<mat-option value="Desconectado">Desconectado</mat-option>
+								<mat-option value="Break">Break</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div class="col">
+						<mat-form-field>
+							<input matInput placeholder="Operadora" [(ngModel)]="filtros.nombre"
+								(ngModelChange)="updateTabla()">
+						</mat-form-field>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-12">
+						<table mat-table matSort [dataSource]="dataSource" style="width: 100%">
+							<ng-container matColumnDef="nombre">
+								<th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre
+								</th>
+								<td mat-cell *matCellDef="let row"> {{row.nombre}}
+								<td>
+							</ng-container>
+							<ng-container matColumnDef="estado">
+								<th mat-header-cell *matHeaderCellDef>Estado
+								</th>
+								<td mat-cell *matCellDef="let element">
+									<mat-chip-list>
+										<mat-chip [selectable]="false"
+											[ngClass]="determinarChipEstado(element.estado.nombre)">
+											{{element.estado.nombre}}</mat-chip>
+									</mat-chip-list>
+								</td>
+							</ng-container>
+							<ng-container matColumnDef="ultimaActividad">
+								<th mat-header-cell *matHeaderCellDef> Ultima
+									actividad</th>
+								<td mat-cell *matCellDef="let element">
+									{{formatHoraActividad(element.estado.fechaCambio)}} </td>
+							</ng-container>
+							<tr mat-header-row *matHeaderRowDef="['nombre', 'estado', 'ultimaActividad']"></tr>
+							<tr mat-row *matRowDef="let row; columns: ['nombre', 'estado', 'ultimaActividad']"></tr>
+						</table>
+
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+
+	</mat-card-content>
+</mat-card>

@@ -12,11 +12,15 @@ import { AsignacionBasesModule } from './asignacion-bases/asignacion-bases.modul
 import { CrmModule } from './crm/crm.module';
 import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
+import {ControlOperadorasModule} from "./control-operadoras/control-operadoras.module";
+import { ModalBreakComponent } from './modal-break/modal-break.component';
+import { LandingComponent } from './landing/landing.component';
+import {VisualizarSeguimientosModule} from "./visualizar-seguimientos/visualizar-seguimientos.module";
 
 // Partials
 // Pages
 @NgModule({
-	declarations: [MyPageComponent],
+	declarations: [MyPageComponent, LandingComponent],
 	exports: [],
 	imports: [
 		CommonModule,
@@ -28,7 +32,9 @@ import { UserManagementModule } from './user-management/user-management.module';
 		ECommerceModule,
 		UserManagementModule,
 		CrmModule,
-		AsignacionBasesModule
+		AsignacionBasesModule,
+		ControlOperadorasModule,
+		VisualizarSeguimientosModule
 	],
 	providers: []
 })
