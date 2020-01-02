@@ -33,7 +33,8 @@ export class DashboardChartService {
 	  const indicadorAgendados = this.mapWidgetAgendados(data)
 	  const indicadorRellamados = this.mapWidgetRellamados(data)
 	  const rechazos = this.mapWidgetRechazos(data);
-	  return new DashboardSupervisoraCall({porMes, porDia, indicadores:{ventas:indicadorVentas, rellamados:indicadorRellamados, agendados:indicadorAgendados}, rechazos:rechazos})
+	const vendedoras = this.mapChartVendedoras(data);
+	  return new DashboardSupervisoraCall({porMes, porDia, indicadores:{ventas:indicadorVentas, rellamados:indicadorRellamados, agendados:indicadorAgendados}, rechazos:rechazos, vendedoras})
   }
 
   mapChartPorMes(data)  {
@@ -113,6 +114,32 @@ export class DashboardChartService {
 		const chart = new DonaChart({type:'doughnut', data:{labels:labels, datasets:[{data: cantidad, backgroundColor:['rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)','rgb(100, 200, 43)']}]}})
 		return {actual:valor, historico:chart}
 	}
+
+	mapChartVendedoras(data){
+		const hoy = this.mapChartVendedorasPorTiempo(data, "hoy")
+		const ultimaSemana = this.mapChartVendedorasPorTiempo(data, "ultimaSemana")
+		const ultimoMes = this.mapChartVendedorasPorTiempo(data, "ultimoMes")
+		const ultimos3Meses= this.mapChartVendedorasPorTiempo(data, "ultimos3Meses")
+		const ultimos6Meses = this.mapChartVendedorasPorTiempo(data, "ultimos6Meses")
+		return {hoy, ultimos6Meses, ultimaSemana, ultimoMes, ultimos3Meses}
+	}
+
+	mapChartVendedorasPorTiempo(data, tiempo){
+		const datos = data.datosTratados.vendedoras[tiempo]
+		const labelsDuplicadas = datos.map(d => d.nombre)
+		const labels = labelsDuplicadas.filter((e, i) => labelsDuplicadas.indexOf(e) === i)
+		const labelsDataSetDuplicadas = datos.map(datosPorDia => datosPorDia.estadoNuevo)
+		const labelsDataSet = labelsDataSetDuplicadas.filter((e, i) => labelsDataSetDuplicadas.indexOf(e) === i)
+		const dataSet = labelsDataSet.map(estado => new ChartDataSet({
+			label: estado,
+			data: datos
+				.filter(x => x.estadoNuevo === estado)
+				.map(x => x.cantidad),
+			backgroundColor: this.random_rgba(),
+			borderColor:this.random_rgba()
+		}))
+		return new ChartEjeXTiempo({labels, datasets:dataSet})
+	}
 }
 
 export interface IDashboardSupervisoraCall{
@@ -125,6 +152,13 @@ export interface IDashboardSupervisoraCall{
 		ultimoMes:IndicadorDona,
 		ultimos3Meses:IndicadorDona,
 		ultimos6Meses:IndicadorDona
+	}
+	vendedoras:{
+		hoy:ChartEjeXTiempo,
+		ultimaSemana:ChartEjeXTiempo,
+		ultimoMes:ChartEjeXTiempo,
+		ultimos3Meses:ChartEjeXTiempo,
+		ultimos6Meses:ChartEjeXTiempo
 	}
 }
 
@@ -139,6 +173,13 @@ export class DashboardSupervisoraCall implements IDashboardSupervisoraCall {
 		ultimos3Meses:IndicadorDona,
 		ultimos6Meses:IndicadorDona
 	}
+	vendedoras:{
+		hoy:ChartEjeXTiempo,
+		ultimaSemana:ChartEjeXTiempo,
+		ultimoMes:ChartEjeXTiempo,
+		ultimos3Meses:ChartEjeXTiempo,
+		ultimos6Meses:ChartEjeXTiempo
+	}
 	constructor(contacto: IDashboardSupervisoraCall) {
 		this.porDia= contacto.porDia;
 		this.porMes= contacto.porMes;
@@ -148,6 +189,13 @@ export class DashboardSupervisoraCall implements IDashboardSupervisoraCall {
 			ultimoMes:contacto.rechazos.ultimoMes,
 			ultimos3Meses:contacto.rechazos.ultimos3Meses,
 			ultimos6Meses:contacto.rechazos.ultimos6Meses
+		}
+		this.vendedoras = {
+			hoy:contacto.vendedoras.hoy,
+			ultimaSemana:contacto.vendedoras.ultimaSemana,
+			ultimoMes:contacto.vendedoras.ultimoMes,
+			ultimos3Meses:contacto.vendedoras.ultimos3Meses,
+			ultimos6Meses:contacto.vendedoras.ultimos6Meses
 		}
 
 	}

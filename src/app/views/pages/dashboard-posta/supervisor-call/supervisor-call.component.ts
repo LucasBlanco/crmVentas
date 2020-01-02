@@ -44,71 +44,12 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 			}
 		}
 	};
-	private generalDia = {
-		labels: ['Lunes', 'Mates', 'Miércoles', 'Jueves', 'Viernes'],
-		datasets: [
-			{
-				label: 'Vendidas',
-				data: [1, 2, 5, 9, 78],
-				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [4, 0, 3, 4, 9],
-				backgroundColor: 'rgb(255, 205, 86)' // orange
-			},
-			{
-				label: 'Rechazadas',
-				data: [43, 56, 87, 45, 163],
-				backgroundColor: 'rgb(255, 99, 132)' // red
-			}
-		]
-	};
-
-	private generalMes = {
-		labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
-			, 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-		datasets: [
-			{
-				label: 'Vendidas',
-				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
-				backgroundColor: 'rgb(75, 192, 192)' // green
-			},
-			{
-				label: 'Agendadas',
-				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
-				backgroundColor: 'rgb(255, 205, 86)' // yellow
-			},
-			{
-				label: 'Rechazadas',
-				data: [1, 2, 5, 9, 78, 5, 6, 7, 21, 91, 2, 3],
-				backgroundColor: 'rgb(255, 99, 132)' // red
-			}
-		]
-	};
-
 	private vendedorasChart = {
 		type: 'horizontalBar',
 		data: {
-			labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
-				, 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se'
-				, 'No se 2', 'Carlita3?', 'Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?'],
+			labels: [],
 			datasets: [
-				{
-					label: 'Vendidas',
-					data: [1, 2, 5, 9, 78, 8, 6, 9, 7, 2, 78],
-					backgroundColor: 'rgb(75, 192, 192)' // green
-				},
-				{
-					label: 'Agendadas',
-					data: [4, 9, 78, 8, 6, 9, 7, 2, 3, 4, 9],
-					backgroundColor: 'rgb(255, 205, 86)' // yellow
-				},
-				{
-					label: 'Rechazadas',
-					data: [43, 56, 87, 9, 78, 8, 6, 9, 7, 2, 163],
-					backgroundColor: 'rgb(255, 99, 132)' // red
-				}
+
 			]
 		},
 		options: {
@@ -305,17 +246,7 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 
 	cambiarVendedoras(value) {
 		if (this.showBackButton == false) {
-			if (value == 'hoy') {
-				this.chartSrv.charts[5].config.data = this.vendedorasHoy;
-			} else if (value == '7dias') {
-				this.chartSrv.charts[5].config.data = this.vendedoras7Dias;
-			} else if (value == '30dias') {
-				this.chartSrv.charts[5].config.data = this.vendedoras30Dias;
-			} else if (value == '3meses') {
-				this.chartSrv.charts[5].config.data = this.vendedoras3Meses;
-			} else if (value == '6meses') {
-				this.chartSrv.charts[5].config.data = this.vendedoras6Meses;
-			}
+			this.llenarChart(this.dashboardData.vendedoras[value].labels, this.dashboardData.vendedoras[value].datasets, "vendedoras")
 		} else {
 			if (value == 'dia') {
 				this.chartSrv.charts[5].config.data = this.carlitaDia;
@@ -359,12 +290,12 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 	}
 
 
-
 	ngOnInit() {
 		console.log(this.supervisorChart)
 		this.chartSrv.trarDatosDashboardSupervisorCall().subscribe(dashboard => {
 			this.dashboardData = dashboard
 			this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, "general")
+			this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, "vendedoras")
 			console.log(this.dashboardData)
 		})
 
@@ -373,7 +304,6 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 
 	llenarChart(labels, dataset, index)
 	{
-
 		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.labels = labels
 		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.datasets = dataset
 		this.chartSrv.charts.filter(c => c.id===index)[0].chart.update();

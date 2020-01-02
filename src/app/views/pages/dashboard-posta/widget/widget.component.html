@@ -13,9 +13,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" style="padding-left: 25px;">
-		<mat-icon style="color:#4caf50;">trending_down</mat-icon>
-		<b style="color:#4caf50;">+15%</b><span>&nbsp;que ayer</span>
+	<div *ngIf="showTrend" class="row" style="padding-left: 25px;">
+		<mat-icon [ngStyle]="{color:trend.color}">{{trend.icon}}</mat-icon>
+		<b [ngStyle]="{color:trend.color}">{{trend.number}}%</b><span>&nbsp;que ayer</span>
 	</div>
 	<div class="row">
 		<div class="col-12">
