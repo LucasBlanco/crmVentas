@@ -1,5 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { ActividadSesionService } from '@servicios/actividad-sesion.service';
 import { Subject, Subscription } from 'rxjs';
 
 import { LayoutConfigService, SplashScreenService, TranslationService } from './core/_base/layout';
@@ -10,7 +11,6 @@ import { locale as esLang } from './core/_config/i18n/es';
 import { locale as frLang } from './core/_config/i18n/fr';
 import { locale as jpLang } from './core/_config/i18n/jp';
 import { AfkService } from './views/services/afk.service';
-import {ActividadSesionService} from "@servicios/actividad-sesion.service";
 
 // Angular
 // Layout

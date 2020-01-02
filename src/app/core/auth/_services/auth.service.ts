@@ -24,14 +24,12 @@ export class AuthService {
         }
         const loginObservable = this.http.post<{ data: { token: string } }>(
             environment.ip + '/login', { user: username.toUpperCase(), password: password.toUpperCase() });
-        loginObservable.subscribe(response => {
-            const decodedToken = JSON.stringify(jwtDecode(response.data.token));
-            sessionStorage.setItem('token', response.data.token);
-			sessionStorage.setItem('tokenInfo', decodedToken);
-        });
+
         return loginObservable.pipe(
             map(response => {
+                sessionStorage.setItem('token', response.data.token);
                 const decodedToken = jwtDecode(response.data.token);
+                sessionStorage.setItem('tokenInfo', JSON.stringify(decodedToken));
                 return { name: decodedToken.nombre, accessToken: response.data.token };
             })
         );
