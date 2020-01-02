@@ -61,8 +61,7 @@ export class MenuConfig {
 				page: '/visualizarSeguimientos',
 			}]
 			} else {
-				return
-				[]
+				return []
 			}
 	}
 
