@@ -30,6 +30,7 @@ import { FormularioRechazoComponent } from './grid/columnas/formulario-rechazo/f
 import { GridComponent } from './grid/grid.component';
 import { FormularioAgendarComponent } from './grid/columnas/formulario-agendar/formulario-agendar.component';
 import { FormularioVenderComponent } from './grid/columnas/formulario-vender/formulario-vender.component';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { FormularioVenderComponent } from './grid/columnas/formulario-vender/for
     MatSelectModule,
     MatRadioModule,
     MatTabsModule,
+	  MatIconModule,
     RouterModule.forChild([
       {
         path: '',

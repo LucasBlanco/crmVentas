@@ -11,6 +11,7 @@ export interface IContacto {
 
 export interface IContactoConHorario extends IContacto {
     horario: string;
+    nota: string;
 }
 
 export class Contacto implements IContacto {
@@ -25,9 +26,11 @@ export class Contacto implements IContacto {
 export class ContactoConHorario extends Contacto implements IContactoConHorario {
 
     horario: string;
+    nota:string
     constructor(contacto: IContactoConHorario) {
         super(contacto);
         this.horario = contacto.horario;
+        this.nota = contacto.nota;
     }
 
     get habilitado() {
@@ -46,5 +49,6 @@ export const getFakeContacto = () => new Contacto({
 export const getFakeContactoConHorario = () => new ContactoConHorario({
     persona: getFakePersona(),
     id: 1,
-    horario: '2000-05-05T12:24:00'
+    horario: '2000-05-05T12:24:00',
+	nota: 'holaaa'
 });
