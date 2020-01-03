@@ -13,14 +13,14 @@ export class ActividadSesionService {
 	constructor(private http: HttpClient, private router: Router) { }
 
 	logout() {
-		console.log('asdasdas')
+		console.log('asdasdas');
 		this.http.post(environment.ip + '/actividadesSesion/logout', {}).subscribe();
 		sessionStorage.setItem('tokenInfo', '');
 		this.router.navigateByUrl('/auth/login');
 	}
 
 	onWindowClose() {
-		this.http.post(environment.ip + '/actividadesSesion/logout', {}).subscribe();
+		return this.http.post(environment.ip + '/actividadesSesion/logout', {}).toPromise();
 	}
 
 	iniciarBreak() {
@@ -37,6 +37,6 @@ export class ActividadSesionService {
 	}
 
 	public mapToFront(operadorBack) {
-		return new ActividadSesion({ actividad: operadorBack.actividad, id: operadorBack.id, fecha: operadorBack.fecha })
+		return new ActividadSesion({ actividad: operadorBack.actividad, id: operadorBack.id, fecha: operadorBack.fecha });
 	}
 }
