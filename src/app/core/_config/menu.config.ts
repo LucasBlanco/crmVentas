@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras(), ...this.getVisualizacionSeguimientos()]
 	}
 
 	getPermisos() {
@@ -50,6 +50,19 @@ export class MenuConfig {
 		} else {
 			return []
 		}
+	}
+
+	getVisualizacionSeguimientos() {
+		if(this.tienePermiso('ventas')){
+			return [{
+				title: 'Seguimientos',
+				root: true,
+				alignment: 'left',
+				page: '/visualizarSeguimientos',
+			}]
+			} else {
+				return []
+			}
 	}
 
 	getControlOperadoras() {

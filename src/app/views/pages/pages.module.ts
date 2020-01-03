@@ -15,6 +15,7 @@ import { UserManagementModule } from './user-management/user-management.module';
 import {ControlOperadorasModule} from "./control-operadoras/control-operadoras.module";
 import { ModalBreakComponent } from './modal-break/modal-break.component';
 import { LandingComponent } from './landing/landing.component';
+import {VisualizarSeguimientosModule} from "./visualizar-seguimientos/visualizar-seguimientos.module";
 
 // Partials
 // Pages
@@ -32,7 +33,8 @@ import { LandingComponent } from './landing/landing.component';
 		UserManagementModule,
 		CrmModule,
 		AsignacionBasesModule,
-		ControlOperadorasModule
+		ControlOperadorasModule,
+		VisualizarSeguimientosModule
 	],
 	providers: []
 })
