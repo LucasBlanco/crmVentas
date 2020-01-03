@@ -62,9 +62,9 @@ export class TablaControlComponent implements OnInit {
 				return 'Hace ' + minutos + ' minutos';
 			} else {
 				if (minutos % 60 > 0) {
-					return 'Hace ' + Math.trunc(minutos / 60) + ' hora/s y ' + minutos % 60 + ' minutos';
+					return `Hace ${Math.trunc(minutos / 60)} hora/s y ${minutos % 60} minutos`;
 				} else {
-					return 'Hace ' + Math.trunc(minutos / 60) + ' hora/s';
+					return `Hace ${Math.trunc(minutos / 60)} hora/s`;
 				}
 			}
 		}
