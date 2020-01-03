@@ -19,7 +19,7 @@ export class CardRellamarComponent implements OnInit {
   }
 
   ngOnInit() {
-	  this.hora = moment(this.contacto.horario).format('hh:mm')
+	  this.hora = moment(this.contacto.horario).format('HH:mm')
 
   }
 

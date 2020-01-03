@@ -31,9 +31,13 @@ export class ColumnaAgendadoComponent implements OnInit {
 
   handleLlamar(contacto: ContactoConHorario) {
     this.contactoSeleccionado = contacto;
+    console.log(contacto)
     const dialogRef = this.dialog.open(ModalAgendadoComponent, {
       width: '60%',
-      panelClass: 'custom'
+      panelClass: 'custom',
+		data: {
+      		contacto
+		}
     });
 
     dialogRef.componentInstance.agendar.subscribe(form => {

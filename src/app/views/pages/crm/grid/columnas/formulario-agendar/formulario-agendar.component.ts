@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
@@ -9,12 +9,9 @@ import * as moment from 'moment';
 })
 export class FormularioAgendarComponent implements OnInit {
 
-  @Output() guardar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>()
-
-  form = new FormGroup({
-    fechaYHoraDeProximoContacto: new FormControl(null, Validators.required),
-    nota: new FormControl(null, Validators.required)
-  });
+  @Output() guardar = new EventEmitter<{ fechaYHoraDeProximoContacto: string, nota: string }>();
+	@Input() notaIn
+  form
 
   get fechaYHoraDeProximoContacto() { return this.form.get('fechaYHoraDeProximoContacto') }
   get nota() { return this.form.get('nota') }
@@ -23,6 +20,10 @@ export class FormularioAgendarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  	this.form = new FormGroup({
+		fechaYHoraDeProximoContacto: new FormControl(null, Validators.required),
+		nota: new FormControl(this.notaIn, Validators.required)
+	});
   }
 
   fechaHoy() {

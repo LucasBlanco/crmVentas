@@ -26,6 +26,8 @@ export class OperadoresService {
 	}
 
 	mapToFront(operadorBack) {
+		if(operadorBack == null)
+			console.log("hay nulls")
 		let actividades = operadorBack.actividadReciente ? operadorBack.actividadReciente.map(x => this.actividadSesionSrv.mapToFront(x)) : []
 		return new Operador({nombre: operadorBack.nombre, id:operadorBack.id, actividadReciente: actividades})
 	}
