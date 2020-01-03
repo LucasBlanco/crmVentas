@@ -1,30 +1,27 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {
-	DashboardChartService,
-	DashboardSupervisoraCall
-} from '../../../services/dashboard-chart.service';
+import { AfterViewInit, Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+import { DashboardChartService, DashboardSupervisoraCall } from '../../../services/dashboard-chart.service';
 
 @Component({
-  selector: 'crm-supervisor-call',
-  templateUrl: './supervisor-call.component.html',
-  styleUrls: ['./supervisor-call.component.scss']
+	selector: 'crm-supervisor-call',
+	templateUrl: './supervisor-call.component.html',
+	styleUrls: ['./supervisor-call.component.scss']
 })
-export class SupervisorCallComponent implements OnInit, AfterViewInit {
+export class SupervisorCallComponent implements AfterViewInit {
 	private showBackButton = false;
 	opcionesPosibles = [
-		{value:"hoy", nombre:"Hoy"},
-		{value:"ultimaSemana", nombre:"Ultima semana"},
-		{value:"ultimoMes", nombre:"Ultimos 30 dias"},
-		{value:"ultimos3Meses", nombre:"Ultimos 3 meses"},
-		{value:"ultimos6Meses", nombre:"Ultimos 6 meses"},
-	]
-	private supervisorChart = {
+		{ value: "hoy", nombre: "Hoy" },
+		{ value: "ultimaSemana", nombre: "Ultima semana" },
+		{ value: "ultimoMes", nombre: "Ultimos 30 dias" },
+		{ value: "ultimos3Meses", nombre: "Ultimos 3 meses" },
+		{ value: "ultimos6Meses", nombre: "Ultimos 6 meses" },
+	];
+	supervisorChart = new BehaviorSubject<any>({
 		type: 'bar',
 		data: {
 			labels: [],
-			datasets: [
-
-			]
+			datasets: []
 		},
 		options: {
 			maintainAspectRatio: false,
@@ -43,8 +40,8 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				}]
 			}
 		}
-	};
-	private vendedorasChart = {
+	});
+	vendedorasChart = new BehaviorSubject({
 		type: 'horizontalBar',
 		data: {
 			labels: [],
@@ -74,7 +71,7 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 			},
 			onClick: this.clickVendedoras.bind(this)
 		}
-	};
+	});
 
 	vendedorasHoy = {
 		labels: ['Carlita', 'Carlita2', 'No se', 'No se 2', 'Carlita3?', 'Carlita'
@@ -231,40 +228,40 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 				backgroundColor: 'rgb(255, 99, 132)' // red
 			}
 		]
-	}
+	};
 
-	private dashboardData: DashboardSupervisoraCall
+	private dashboardData: DashboardSupervisoraCall;
 
 	cambiarGeneral(value) {
 		if (value == 'dia') {
-			this.llenarChart(this.dashboardData.porDia.labels, this.dashboardData.porDia.datasets,"general");
+			this.llenarChart(this.dashboardData.porDia.labels, this.dashboardData.porDia.datasets, "general");
 		} else {
-			console.log(this.dashboardData)
-			this.llenarChart(this.dashboardData.porMes.labels, this.dashboardData.porMes.datasets,"general");
+			console.log(this.dashboardData);
+			this.llenarChart(this.dashboardData.porMes.labels, this.dashboardData.porMes.datasets, "general");
 		}
 	}
 
 	cambiarVendedoras(value) {
 		if (this.showBackButton == false) {
-			this.llenarChart(this.dashboardData.vendedoras[value].labels, this.dashboardData.vendedoras[value].datasets, "vendedoras")
+			this.llenarChart(this.dashboardData.vendedoras[value].labels, this.dashboardData.vendedoras[value].datasets, "vendedoras");
 		} else {
 			if (value == 'dia') {
-				this.chartSrv.charts[5].config.data = this.carlitaDia;
+				this.chartSrv.charts.find(v => v.id === "vendedoras").config.data = this.carlitaDia;
 			} else {
-				this.chartSrv.charts[5].config.data = this.carlitaMes;
+				this.chartSrv.charts.find(v => v.id === "vendedoras").config.data = this.carlitaMes;
 			}
 		}
-		this.chartSrv.charts[5].update();
+		this.chartSrv.charts.find(v => v.id === "vendedoras").update();
 	}
 
 	clickVendedoras(event) {
-		const activePoints = this.chartSrv.charts[5].getElementsAtEvent(event);
+		const activePoints = this.chartSrv.charts.find(v => v.id === "vendedoras").chart.getElementsAtEvent(event);
 		if (activePoints.length > 0) {
 			const clickedElementindex = activePoints[0]['_index'];
 			const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto'
 				, 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 			const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-			const label = this.chartSrv.charts[5].data.labels[clickedElementindex];
+			const label = this.chartSrv.charts.find(v => v.id === "vendedoras").data.labels[clickedElementindex];
 			if (meses.includes(label) || dias.includes(label)) {
 				return;
 			}
@@ -290,27 +287,21 @@ export class SupervisorCallComponent implements OnInit, AfterViewInit {
 	}
 
 
-	ngOnInit() {
-		console.log(this.supervisorChart)
-		this.chartSrv.trarDatosDashboardSupervisorCall().subscribe(dashboard => {
-			this.dashboardData = dashboard
-			this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, "general")
-			this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, "vendedoras")
-			console.log(this.dashboardData)
-		})
-
-
-	}
-
-	llenarChart(labels, dataset, index)
-	{
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.labels = labels
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.config.data.datasets = dataset
-		this.chartSrv.charts.filter(c => c.id===index)[0].chart.update();
-	}
-
 	ngAfterViewInit() {
-
-
+		this.chartSrv.trarDatosDashboardSupervisorCall().subscribe(dashboard => {
+			this.dashboardData = dashboard;
+			this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, this.supervisorChart);
+			this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, this.vendedorasChart);
+			console.log(this.dashboardData);
+		});
 	}
+
+	llenarChart(labels, dataset, observable) {
+		const chart = observable.value;
+		chart.data.labels = labels;
+		chart.data.datasets = dataset;
+		observable.next(chart);
+	}
+
+
 }

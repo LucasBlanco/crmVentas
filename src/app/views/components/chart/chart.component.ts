@@ -1,25 +1,34 @@
-import { Component, OnInit, Input, Output, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import Chart from 'chart.js';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 import { DashboardChartService } from '../../services/dashboard-chart.service';
+
 
 @Component({
   selector: 'crm-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent implements OnInit, AfterViewInit {
+export class ChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chart', { static: true }) chartElementRef: ElementRef;
   @Input() height = '';
   @Input() width = '';
   @Input() id = '';
-  @Input() config = {};
-  public charts = [];
+  @Input() config: BehaviorSubject<any>;
+  chart;
   constructor(public chartSrv: DashboardChartService) { }
 
-  ngOnInit() {
-  }
+
   ngAfterViewInit() {
-    let myChart = new Chart(this.chartElementRef.nativeElement, this.config);
-    this.chartSrv.charts.push({id:this.id, chart:myChart});
+    this.chart = new Chart(this.chartElementRef.nativeElement, this.config.value);
+    this.config.subscribe(config => {
+      this.chart.update(config);
+    });
+    // this.chartSrv.agregarChart({ id: this.id, chart: this.chart });
+  }
+
+  ngOnDestroy() {
+    // this.chartSrv.borrarChart(this.id);
+    this.chart.destroy();
   }
 }
