@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getDashboard()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases()];
 
 	}
 
@@ -14,7 +14,7 @@ export class MenuConfig {
 	}
 
 	tienePermiso(permiso: string) {
-		return this.getPermisos().some(p => p === permiso)
+		return this.getPermisos().some(p => p === permiso);
 	}
 
 	getCrm() {
@@ -24,9 +24,9 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/crm',
-			}]
+			}];
 		} else {
-			return []
+			return [];
 		}
 	}
 
@@ -37,20 +37,11 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/asignacionBases/buscadorPersonas',
-			}]
+			}];
 		} else {
-			return []
+			return [];
 		}
-	}
 
-	getDashboard() {
-
-		return [{
-			title: 'Dashboard',
-			root: true,
-			alignment: 'left',
-			page: '/dashboard/supervisorcall',
-		}]
 	}
 
 	public defaults: any = {

@@ -21,14 +21,16 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.chart = new Chart(this.chartElementRef.nativeElement, this.config.value);
-    this.config.subscribe(config => {
-      this.chart.update(config);
-    });
-    // this.chartSrv.agregarChart({ id: this.id, chart: this.chart });
+    this.config.subscribe(this.reload.bind(this));
+  }
+
+  reload(config) {
+    this.chart.destroy();
+    config.options.onClick = config.options.onClick && config.options.onClick(this.chart);
+    this.chart = new Chart(this.chartElementRef.nativeElement, config);
   }
 
   ngOnDestroy() {
-    // this.chartSrv.borrarChart(this.id);
     this.chart.destroy();
   }
 }

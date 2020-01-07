@@ -78,35 +78,11 @@
             </mat-card-header>
             <mat-card-content>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col">
                         <crm-chart id="vendedoras" [config]="this.vendedorasChart" height="300px">
                         </crm-chart>
                     </div>
-                    <div class="col">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span>Analizar vendedora:</span>
-                            </div>
-                            <div class="col">
-                                <mat-form-field>
-                                    <input type="text" matInput [formControl]="vendedoraCtrl" [matAutocomplete]="auto">
-                                </mat-form-field>
 
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let vendedora of vendedorasFiltradas | async"
-                                        [value]="vendedora.nombre">
-                                        {{vendedora.nombre}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </div>
-                            <div class="col-auto">
-                                <button mat-icon-button color="primary" [disabled]="vendedoraCtrl.invalid"
-                                    (click)="redireccionarAVendedora()">
-                                    <mat-icon>search</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 

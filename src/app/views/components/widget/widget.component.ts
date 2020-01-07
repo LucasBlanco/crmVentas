@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 import { DashboardChartService } from '../../services/dashboard-chart.service';
 
 @Component({
@@ -8,8 +9,8 @@ import { DashboardChartService } from '../../services/dashboard-chart.service';
 })
 export class WidgetComponent implements OnInit {
   @Input() titulo = '';
-  @Input() cantidad= 0;
-  @Input() icon= '';
+  @Input() cantidad = 0;
+  @Input() icon = '';
   private ventasWidget = {
     type: 'line',
     data: {

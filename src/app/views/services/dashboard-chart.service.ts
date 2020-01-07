@@ -12,13 +12,13 @@ class ColorPalette {
 	constructor(private nroColores: number) { }
 	ultimoIndice = -1;
 	colors = [
-		'#1AC8ED',
-		'#4392F1',
-		'#FFC15E',
-		'#2A2A72',
-		'#EE6352',
-		'#7FBEAB',
+		'#1c84c6',
+		'#1ab394',
+		'#23c6c8',
+		'#ed5565',
+		'#f6db5f',
 		'#FCB5B5',
+		'#f8ac59',
 		'#087E8B',
 		'#ECB0E1',
 		'#C9DDFF',
@@ -45,22 +45,10 @@ export class DashboardChartService {
 		);
 	}
 
-	agregarChart({ id, chart }) {
-		this.charts.push({ id, chart });
-	}
-
-	borrarChart(id) {
-		const chart = this.charts.find(c => c.id === id);
-		if (!chart) { return; }
-		chart.chart.destroy();
-		this.charts = this.charts.filter(c => c.id === id);
-	}
-
-	random_rgba() {
-		const o = Math.round;
-		const r = Math.random;
-		const s = 255;
-		return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ',' + r().toFixed(1) + ')';
+	traerDatosDashboardVendedora(id) {
+		return this.http.get<ChartEjeXTiempo>(environment.ip + '/dashboard/operadorCall/' + id).pipe(
+			map(fuentes => this.mapDashboard(fuentes))
+		);
 	}
 
 	mapDashboard(data) {
@@ -114,7 +102,7 @@ export class DashboardChartService {
 				label: estado,
 				data: labels.map(dia => {
 					const _dia = porTiempo.porDia.find(d => d.dia === dia && d.estadoNuevo === estado);
-					return _dia.cantidad;
+					return _dia ? _dia.cantidad : 0;
 				}),
 				backgroundColor: color,
 				borderColor: color
@@ -129,12 +117,12 @@ export class DashboardChartService {
 		const labels = historico.map(x => x.dia);
 		const dataset = historico.map(x => x.cantidad);
 		const ventasChart = new LineChart({
-			type: "line",
+			type: 'line',
 			data: {
 				labels,
 				datasets: [{
-					label: "ventas",
-					fill: "false",
+					label: 'ventas',
+					fill: 'false',
 					borderColor: '#92ff86',
 					clip: 0,
 					backgroundColor: '#92ff86',
@@ -150,7 +138,18 @@ export class DashboardChartService {
 		const historico = data.indicador.agendadosPendientesDelDia.historico;
 		const labels = historico.map(x => x.dia);
 		const dataset = historico.map(x => x.cantidad);
-		const ventasChart = new BarChart({ type: "bar", data: { labels: labels, datasets: [{ label: "ventas", borderColor: '#3dc892', backgroundColor: '#3dc892', data: dataset, minBarLength: 2 }] } });
+		const ventasChart = new BarChart({
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'ventas',
+					borderColor: '#3dc892',
+					backgroundColor: '#3dc892',
+					data: dataset, minBarLength: 2
+				}]
+			}
+		});
 		return new Indicador({ actual: valorActual, historico: ventasChart });
 	}
 
@@ -159,16 +158,28 @@ export class DashboardChartService {
 		const historico = data.indicador.rellamadosPendientesDelDia.historico;
 		const labels = historico.map(x => x.dia);
 		const dataset = historico.map(x => x.cantidad);
-		const ventasChart = new BarChart({ type: "bar", data: { labels: labels, datasets: [{ label: "ventas", borderColor: '#4b70b4', backgroundColor: '#4b70b4', data: dataset, minBarLength: 2 }] } });
+		const ventasChart = new BarChart({
+			type: 'bar',
+			data: {
+				labels,
+				datasets: [{
+					label: 'ventas',
+					borderColor: '#4b70b4',
+					backgroundColor: '#4b70b4',
+					data: dataset,
+					minBarLength: 2
+				}]
+			}
+		});
 		return new Indicador({ actual: valorActual, historico: ventasChart });
 	}
 
 	mapWidgetRechazos(data) {
-		const hoy = new IndicadorDona(this.mapRechazos(data, "hoy"));
-		const ultimaSemana = new IndicadorDona(this.mapRechazos(data, "ultimaSemana"));
-		const ultimoMes = new IndicadorDona(this.mapRechazos(data, "ultimoMes"));
-		const ultimos3Meses = new IndicadorDona(this.mapRechazos(data, "ultimos3Meses"));
-		const ultimos6Meses = new IndicadorDona(this.mapRechazos(data, "ultimos6Meses"));
+		const hoy = new IndicadorDona(this.mapRechazos(data, 'hoy'));
+		const ultimaSemana = new IndicadorDona(this.mapRechazos(data, 'ultimaSemana'));
+		const ultimoMes = new IndicadorDona(this.mapRechazos(data, 'ultimoMes'));
+		const ultimos3Meses = new IndicadorDona(this.mapRechazos(data, 'ultimos3Meses'));
+		const ultimos6Meses = new IndicadorDona(this.mapRechazos(data, 'ultimos6Meses'));
 		return { hoy, ultimaSemana, ultimoMes, ultimos3Meses, ultimos6Meses };
 	}
 
@@ -176,16 +187,26 @@ export class DashboardChartService {
 		const valor = data.rechazos[index].map(rechazos => rechazos.cantidad).reduce((a, b) => a + b, 0);
 		const labels = data.rechazos[index].map(rechazos => rechazos.estadoNuevo);
 		const cantidad = data.rechazos[index].map(rechazos => rechazos.cantidad);
-		const chart = new DonaChart({ type: 'doughnut', data: { labels: labels, datasets: [{ data: cantidad, backgroundColor: ['rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)', 'rgb(100, 200, 43)'] }] } });
+		const colorPalette = new ColorPalette(cantidad.length);
+		const chart = new DonaChart({
+			type: 'doughnut',
+			data: {
+				labels,
+				datasets: [{
+					data: cantidad,
+					backgroundColor: cantidad.map(() => colorPalette.proximoColor())
+				}]
+			}
+		});
 		return { actual: valor, historico: chart };
 	}
 
 	mapChartVendedoras(data) {
-		const hoy = this.mapChartVendedorasPorTiempo(data, "hoy");
-		const ultimaSemana = this.mapChartVendedorasPorTiempo(data, "ultimaSemana");
-		const ultimoMes = this.mapChartVendedorasPorTiempo(data, "ultimoMes");
-		const ultimos3Meses = this.mapChartVendedorasPorTiempo(data, "ultimos3Meses");
-		const ultimos6Meses = this.mapChartVendedorasPorTiempo(data, "ultimos6Meses");
+		const hoy = this.mapChartVendedorasPorTiempo(data, 'hoy');
+		const ultimaSemana = this.mapChartVendedorasPorTiempo(data, 'ultimaSemana');
+		const ultimoMes = this.mapChartVendedorasPorTiempo(data, 'ultimoMes');
+		const ultimos3Meses = this.mapChartVendedorasPorTiempo(data, 'ultimos3Meses');
+		const ultimos6Meses = this.mapChartVendedorasPorTiempo(data, 'ultimos6Meses');
 		return { hoy, ultimos6Meses, ultimaSemana, ultimoMes, ultimos3Meses };
 	}
 
@@ -195,14 +216,18 @@ export class DashboardChartService {
 		const labels = labelsDuplicadas.filter((e, i) => labelsDuplicadas.indexOf(e) === i);
 		const labelsDataSetDuplicadas = datos.map(datosPorDia => datosPorDia.estadoNuevo);
 		const labelsDataSet = labelsDataSetDuplicadas.filter((e, i) => labelsDataSetDuplicadas.indexOf(e) === i);
-		const dataSet = labelsDataSet.map(estado => new ChartDataSet({
-			label: estado,
-			data: datos
-				.filter(x => x.estadoNuevo === estado)
-				.map(x => x.cantidad),
-			backgroundColor: this.random_rgba(),
-			borderColor: this.random_rgba()
-		}));
+		const colorPalette = new ColorPalette(labelsDataSet.length);
+		const dataSet = labelsDataSet.map(estado => {
+			const color = colorPalette.proximoColor();
+			return new ChartDataSet({
+				label: estado,
+				data: datos
+					.filter(x => x.estadoNuevo === estado)
+					.map(x => x.cantidad),
+				backgroundColor: color,
+				borderColor: color
+			});
+		});
 		return new ChartEjeXTiempo({ labels, datasets: dataSet });
 	}
 }
@@ -248,7 +273,11 @@ export class DashboardSupervisoraCall implements IDashboardSupervisoraCall {
 	constructor(contacto: IDashboardSupervisoraCall) {
 		this.porDia = contacto.porDia;
 		this.porMes = contacto.porMes;
-		this.indicadores = { ventas: contacto.indicadores.ventas, agendados: contacto.indicadores.agendados, rellamados: contacto.indicadores.rellamados };
+		this.indicadores = {
+			ventas: contacto.indicadores.ventas,
+			agendados: contacto.indicadores.agendados,
+			rellamados: contacto.indicadores.rellamados
+		};
 		this.rechazos = {
 			hoy: contacto.rechazos.hoy,
 			ultimaSemana: contacto.rechazos.ultimaSemana,
@@ -268,7 +297,7 @@ export class DashboardSupervisoraCall implements IDashboardSupervisoraCall {
 }
 
 export interface IIndicador {
-	actual: number,
+	actual: number;
 	historico: Chart;
 }
 
@@ -282,7 +311,7 @@ export class Indicador implements IIndicador {
 }
 
 export interface IIndicadorDona {
-	actual: number,
+	actual: number;
 	historico: DonaChart;
 }
 
