@@ -4,7 +4,13 @@ export class MenuConfig {
 
 	constructor() {
 
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras(), ...this.getVisualizacionSeguimientos()]
+		this.defaults.header.items = [
+			...this.getCrm(),
+			...this.getBases(),
+			...this.getControlOperadoras(),
+			...this.getVisualizacionSeguimientos(),
+			...this.getDashboard()
+		];
 
 	}
 
@@ -25,7 +31,7 @@ export class MenuConfig {
 	}
 
 	tienePerfil(perfil: string) {
-		return this.getPerfiles().some(p => p === perfil)
+		return this.getPerfiles().some(p => p === perfil);
 	}
 
 	getCrm() {
@@ -57,16 +63,16 @@ export class MenuConfig {
 
 
 	getVisualizacionSeguimientos() {
-		if(this.tienePermiso('ventas')){
+		if (this.tienePermiso('ventas')) {
 			return [{
 				title: 'Seguimientos',
 				root: true,
 				alignment: 'left',
 				page: '/visualizarSeguimientos',
-			}]
-			} else {
-				return []
-			}
+			}];
+		} else {
+			return [];
+		}
 	}
 
 	getControlOperadoras() {
@@ -76,11 +82,25 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/controlOperadoras/',
-			}]
+			}];
 		} else {
-			return []
+			return [];
 		}
 	}
+
+	getDashboard() {
+		if (this.tienePerfil('SUPERVISOR CALL') || this.tienePerfil('OPERADOR VENTA')) {
+			return [{
+				title: 'Dashboard',
+				root: true,
+				alignment: 'left',
+				page: '/landing',
+			}];
+		} else {
+			return [];
+		}
+	}
+
 	public defaults: any = {
 		header: {
 			self: {},
