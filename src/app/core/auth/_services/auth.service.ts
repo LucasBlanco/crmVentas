@@ -24,21 +24,19 @@ export class AuthService {
         }
         const loginObservable = this.http.post<{ data: { token: string } }>(
             environment.ip + '/login', { user: username.toUpperCase(), password: password.toUpperCase() });
-        loginObservable.subscribe(response => {
-            const decodedToken = JSON.stringify(jwtDecode(response.data.token));
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('tokenInfo', decodedToken);
-        });
+
         return loginObservable.pipe(
             map(response => {
+                sessionStorage.setItem('token', response.data.token);
                 const decodedToken = jwtDecode(response.data.token);
+                sessionStorage.setItem('tokenInfo', JSON.stringify(decodedToken));
                 return { name: decodedToken.nombre, accessToken: response.data.token };
             })
         );
     }
 
     getUserByToken(): Observable<User> {
-        const userToken = localStorage.getItem(environment.authTokenKey);
+        const userToken = sessionStorage.getItem(environment.authTokenKey);
         const httpHeaders = new HttpHeaders();
         httpHeaders.set('Authorization', 'Bearer ' + userToken);
         return this.http.get<User>(API_USERS_URL, { headers: httpHeaders });

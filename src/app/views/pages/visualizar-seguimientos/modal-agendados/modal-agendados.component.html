@@ -1,0 +1,26 @@
+<table mat-table matSort [dataSource]="dataSource" style="width: 100%" class="mat-elevation-z2">
+	<ng-container matColumnDef="id">
+		<th mat-header-cell *matHeaderCellDef> Nro
+		</th>
+		<td mat-cell *matCellDef="let agendado"> {{agendado.id}} </td>
+	</ng-container>
+	<ng-container matColumnDef="fecha">
+		<th mat-header-cell *matHeaderCellDef > Fecha</th>
+		<td mat-cell *matCellDef="let agendado"> {{agendado.fecha}} </td>
+	</ng-container>
+	<ng-container matColumnDef="vendedora">
+		<th mat-header-cell *matHeaderCellDef > Vendedora</th>
+		<td mat-cell *matCellDef="let agendado"> {{agendado.usuario.nombre}} </td>
+	</ng-container>
+	<ng-container matColumnDef="nota">
+		<th mat-header-cell *matHeaderCellDef > Nota</th>
+		<td mat-cell *matCellDef="let agendado"> {{agendado.nota}} </td>
+	</ng-container>
+	<ng-container matColumnDef="rellamado">
+		<th mat-header-cell *matHeaderCellDef > Es agendado</th>
+		<td mat-cell *matCellDef="let agendado"> {{agendado.rellamado ? "si" : "no"}} </td>
+	</ng-container>
+	<tr mat-header-row *matHeaderRowDef="['id', 'fecha', 'vendedora', 'nota', 'rellamado']"></tr>
+	<tr mat-row *matRowDef="let row; columns: ['id', 'fecha', 'vendedora', 'nota', 'rellamado']"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

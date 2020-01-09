@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActividadSesionService } from '@servicios/actividad-sesion.service';
+import { Subject, Subscription } from 'rxjs';
 
 import { LayoutConfigService, SplashScreenService, TranslationService } from './core/_base/layout';
 import { locale as chLang } from './core/_config/i18n/ch';
@@ -9,6 +10,7 @@ import { locale as enLang } from './core/_config/i18n/en';
 import { locale as esLang } from './core/_config/i18n/es';
 import { locale as frLang } from './core/_config/i18n/fr';
 import { locale as jpLang } from './core/_config/i18n/jp';
+import { AfkService } from './views/services/afk.service';
 
 // Angular
 // Layout
@@ -20,6 +22,17 @@ import { locale as jpLang } from './core/_config/i18n/jp';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
+	mouseMoveObservable = new Subject<any>();
+	@HostListener('mousemove', ['$event'])
+	onMousemove(event: MouseEvent) {
+		this.mouseMoveObservable.next();
+	}
+	@HostListener('window:unload', ['$event'])
+	async beforeunloadHandler(event) {
+		await this.actividadSesion.onWindowClose();
+		return 'Hola';
+	}
 	// Public properties
 	title = 'Metronic';
 	loader: boolean;
@@ -36,9 +49,12 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(private translationService: TranslationService,
 		private router: Router,
 		private layoutConfigService: LayoutConfigService,
-		private splashScreenService: SplashScreenService) {
+		private splashScreenService: SplashScreenService,
+		private afkService: AfkService,
+		private actividadSesion: ActividadSesionService) {
 
 		// register translations
+		this.afkService.subscribeToMouseMove(this.mouseMoveObservable);
 		this.translationService.loadTranslations(enLang, chLang, esLang, jpLang, deLang, frLang);
 	}
 

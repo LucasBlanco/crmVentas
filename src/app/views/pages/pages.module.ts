@@ -9,10 +9,13 @@ import { PartialsModule } from '../partials/partials.module';
 import { ECommerceModule } from './apps/e-commerce/e-commerce.module';
 import { MailModule } from './apps/mail/mail.module';
 import { AsignacionBasesModule } from './asignacion-bases/asignacion-bases.module';
+import { ControlOperadorasModule } from './control-operadoras/control-operadoras.module';
 import { CrmModule } from './crm/crm.module';
+import { DashboardPostaModule } from './dashboard-posta/dashboard-posta.module';
 import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
-import { DashboardPostaModule } from './dashboard-posta/dashboard-posta.module';
+import { VisualizarSeguimientosModule } from './visualizar-seguimientos/visualizar-seguimientos.module';
+
 
 // Partials
 // Pages
@@ -30,7 +33,10 @@ import { DashboardPostaModule } from './dashboard-posta/dashboard-posta.module';
 		UserManagementModule,
 		CrmModule,
 		DashboardPostaModule,
-		AsignacionBasesModule
+		AsignacionBasesModule,
+		AsignacionBasesModule,
+		ControlOperadorasModule,
+		VisualizarSeguimientosModule
 	],
 	providers: []
 })

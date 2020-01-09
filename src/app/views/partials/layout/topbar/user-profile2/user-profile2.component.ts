@@ -8,6 +8,10 @@ import { select, Store } from '@ngrx/store';
 // State
 import { AppState } from '../../../../../core/reducers';
 import { currentUser, Logout, User } from '../../../../../core/auth';
+import {ActividadSesionService} from "@servicios/actividad-sesion.service";
+import {ModalALlamarComponent} from "../../../../pages/crm/grid/columnas/columna-a-llamar/modal-a-llamar/modal-a-llamar.component";
+import {MatDialog} from "@angular/material";
+import {ModalBreakComponent} from "../../../../pages/modal-break/modal-break.component";
 
 @Component({
 	selector: 'kt-user-profile2',
@@ -27,7 +31,7 @@ export class UserProfile2Component implements OnInit {
 	 *
 	 * @param store: Store<AppState>
 	 */
-	constructor(private store: Store<AppState>, private router: Router) {
+	constructor(private store: Store<AppState>, private router: Router, private actividadSesionSrv: ActividadSesionService, private dialog: MatDialog) {
 	}
 
 	/**
@@ -39,8 +43,8 @@ export class UserProfile2Component implements OnInit {
 	 */
 	ngOnInit(): void {
 		//this.user$ = this.store.pipe(select(currentUser));
-		console.log('user', JSON.parse(localStorage.getItem('tokenInfo')))
-		this.user = JSON.parse(localStorage.getItem('tokenInfo'))
+		console.log('user', JSON.parse(sessionStorage.getItem('tokenInfo')))
+		this.user = JSON.parse(sessionStorage.getItem('tokenInfo'))
 	}
 
 	/**
@@ -48,7 +52,18 @@ export class UserProfile2Component implements OnInit {
 	 */
 	logout() {
 		// this.store.dispatch(new Logout());
-		localStorage.setItem('tokenInfo', '');
-		this.router.navigateByUrl('/auth/login');
+		this.actividadSesionSrv.logout();
+
+	}
+
+
+	iniciarBreak(){
+		this.actividadSesionSrv.iniciarBreak();
+		const dialogRef = this.dialog.open(ModalBreakComponent, {
+			width: '60%',
+			panelClass: 'custom',
+			disableClose: true,
+			hasBackdrop:true
+		});
 	}
 }

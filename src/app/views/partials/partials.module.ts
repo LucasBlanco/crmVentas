@@ -73,6 +73,10 @@ import {WidgetModule} from './content/widgets/widget.module';
 // SVG inline
 import {InlineSVGModule} from 'ng-inline-svg';
 import {CartComponent} from './layout/topbar/cart/cart.component';
+import {ModalBreakComponent} from "../pages/modal-break/modal-break.component";
+import {ModalALlamarComponent} from "../pages/crm/grid/columnas/columna-a-llamar/modal-a-llamar/modal-a-llamar.component";
+import {ModalRellamarComponent} from "../pages/crm/grid/columnas/columna-rellamar/modal-rellamar/modal-rellamar.component";
+import {ModalAgendadoComponent} from "../pages/crm/grid/columnas/columna-agendado/modal-agendado/modal-agendado.component";
 
 @NgModule({
 	declarations: [
@@ -107,7 +111,7 @@ import {CartComponent} from './layout/topbar/cart/cart.component';
 		UserProfile2Component,
 		UserProfile3Component,
 		CartComponent,
-
+		ModalBreakComponent,
 		ErrorComponent,
 	],
 	exports: [
@@ -186,6 +190,7 @@ import {CartComponent} from './layout/topbar/cart/cart.component';
 		NgbTabsetModule,
 		NgbTooltipModule,
 	],
+	entryComponents: [ModalBreakComponent],
 })
 export class PartialsModule {
 }

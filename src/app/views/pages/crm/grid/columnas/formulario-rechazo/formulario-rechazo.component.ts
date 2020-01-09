@@ -23,6 +23,13 @@ export class FormularioRechazoComponent implements OnInit {
     'Conforme con obra social',
     'Capita',
     'Convenio de obra social',
+	'No contesta',
+	'Inexistente',
+	'No disponible',
+	'Equivocado',
+	'Falta numero',
+	'Contestador automatico',
+	'Edad',
   ]
 
   constructor(private carmSrv: CrmService) { }

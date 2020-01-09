@@ -29,6 +29,14 @@ const routes: Routes = [
 				loadChildren: () => import('app/views/pages/dashboard-posta/dashboard-posta.module').then(m => m.DashboardPostaModule)
 			},
 			{
+				path: 'controlOperadoras',
+				loadChildren: () => import('app/views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
+			},
+			{
+				path: 'visualizarSeguimientos',
+				loadChildren: () => import('app/views/pages/visualizar-seguimientos/visualizar-seguimientos.module').then(m => m.VisualizarSeguimientosModule)
+			},
+			{
 				path: 'mail',
 				loadChildren: () => import('app/views/pages/apps/mail/mail.module').then(m => m.MailModule)
 			},
@@ -67,8 +75,9 @@ const routes: Routes = [
 				}
 			},
 			{ path: 'error/:type', component: ErrorPageComponent },
-			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-			{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+			{ path: '', redirectTo: 'landing', pathMatch: 'full' },
+			{ path: '**', redirectTo: 'landing', pathMatch: 'full' },
+			{ path: 'landing', redirectTo: 'dashboard/landing', pathMatch: 'full' },
 		]
 	},
 

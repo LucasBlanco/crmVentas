@@ -17,8 +17,12 @@
 	position: static;
 }
 
+.overflow-hidden .mat-dialog-container{
+
+}
 .custom .mat-dialog-container {
 	padding: 0;
+	overflow-x: hidden;
   }
 
 .custom .mat-dialog-title {

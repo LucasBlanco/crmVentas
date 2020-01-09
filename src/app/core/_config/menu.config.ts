@@ -3,18 +3,29 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases()];
+
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras(), ...this.getVisualizacionSeguimientos()]
 
 	}
 
 	getPermisos() {
-		const token = localStorage.getItem('token');
+		const token = sessionStorage.getItem('token');
 		const user = jwtDecode(token);
 		return user.permisos;
 	}
 
+	getPerfiles() {
+		const token = sessionStorage.getItem('token');
+		const user = jwtDecode(token);
+		return user.perfiles;
+	}
+
 	tienePermiso(permiso: string) {
 		return this.getPermisos().some(p => p === permiso);
+	}
+
+	tienePerfil(perfil: string) {
+		return this.getPerfiles().some(p => p === perfil)
 	}
 
 	getCrm() {
@@ -44,6 +55,32 @@ export class MenuConfig {
 
 	}
 
+
+	getVisualizacionSeguimientos() {
+		if(this.tienePermiso('ventas')){
+			return [{
+				title: 'Seguimientos',
+				root: true,
+				alignment: 'left',
+				page: '/visualizarSeguimientos',
+			}]
+			} else {
+				return []
+			}
+	}
+
+	getControlOperadoras() {
+		if (this.tienePerfil('SUPERVISOR CALL')) {
+			return [{
+				title: 'Control',
+				root: true,
+				alignment: 'left',
+				page: '/controlOperadoras/',
+			}]
+		} else {
+			return []
+		}
+	}
 	public defaults: any = {
 		header: {
 			self: {},
