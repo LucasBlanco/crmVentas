@@ -34,18 +34,18 @@ class Guard implements CanActivate {
       const esOperador = user.perfiles.some(p => p.toLocaleLowerCase() === 'operador venta');
       const id = user.id;
       if (esSupervisor) {
-        if (state.url === 'dashboard/supervisorcall') {
+        if (state.url === '/dashboard/supervisorcall') {
           return of(true);
         }
         this.router.navigateByUrl('/dashboard/supervisorcall');
       }
       if (esOperador) {
-        if (state.url === 'dashboard/vendedora') {
+        if (state.url.includes('/dashboard/vendedora/')) {
           return of(true);
         }
         this.router.navigateByUrl('/dashboard/vendedora/' + id);
       }
-      if (state.url === 'dashboard/landing') {
+      if (state.url === '/dashboard/landing') {
         return of(true);
       }
       this.router.navigateByUrl('/dashboard/landing');
