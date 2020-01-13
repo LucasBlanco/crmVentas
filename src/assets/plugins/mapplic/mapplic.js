@@ -4,10 +4,10 @@
  * http://www.mapplic.com/
  */
 
-;(function($) {
+; (function ($) {
 	"use strict";
 
-	var Mapplic = function(element) {
+	var Mapplic = function (element) {
 
 		var self = this;
 
@@ -39,7 +39,7 @@
 		};
 		self.el = element;
 
-		self.init = function(options) {
+		self.init = function (options) {
 			// Merging options with defaults
 			self.o = $.extend(self.o, options);
 
@@ -47,11 +47,11 @@
 
 			if (typeof self.o.source === 'string') {
 				// Loading .json file with AJAX
-				$.getJSON(self.o.source, function(data) { // Success
+				$.getJSON(self.o.source, function (data) { // Success
 					processData(data);
 					self.el.removeClass('mapplic-loading');
 
-				}).fail(function() { // Failure: couldn't load JSON file or it is invalid.
+				}).fail(function () { // Failure: couldn't load JSON file or it is invalid.
 					console.error('Couldn\'t load map data. (Make sure to run the script through web server)');
 					self.el.removeClass('mapplic-loading').addClass('mapplic-error');
 					alert('Data file missing or invalid!\nMake sure to run the script through web server.');
@@ -76,13 +76,13 @@
 			this.tooltipthumb = true;
 			this.tooltiplink = true;
 
-			this.init = function() {
+			this.init = function () {
 				var s = this;
 
 				// Construct
 				this.el = $('<div></div>').addClass('mapplic-tooltip');
 				this.close = $('<a></a>').addClass('mapplic-tooltip-close').attr('href', '#').appendTo(this.el);
-				this.close.on('click touchend', function(e) {
+				this.close.on('click touchend', function (e) {
 					e.preventDefault();
 					self.hideLocation();
 					if (!self.o.zoom || self.o.zoomoutclose) self.moveTo(0.5, 0.5, self.fitscale, 400, 'easeInOutCubic');
@@ -100,7 +100,7 @@
 				return this;
 			}
 
-			this.show = function(location) {
+			this.show = function (location) {
 				if (location) {
 					var s = this;
 
@@ -128,19 +128,19 @@
 					else this.shift = Math.abs(parseFloat(this.pin.css('margin-top'))) + 20;
 
 					// Loading & positioning
-					$('img', this.el).off('load').on('load', function() {
+					$('img', this.el).off('load').on('load', function () {
 						s.position();
 						s.zoom(location);
 					});
 					this.position();
-				
+
 					// Making it visible
 					this.el.stop().show();
 					this.zoom(location);
 				}
 			}
 
-			this.position = function() {
+			this.position = function () {
 				if (this.location) {
 					var cx = self.map.offset().left + self.map.width() * this.location.x - self.container.offset().left,
 						cy = self.map.offset().top + self.map.height() * this.location.y - self.container.offset().top;
@@ -162,10 +162,10 @@
 						else this.el.removeClass('mapplic-bottom');
 
 						// Left-right check
-						if (this.el.outerWidth()/2 > cx)
-							verticalPos = 0.5 - (this.el.outerWidth()/2 - cx)/this.el.outerWidth();
-						else if ((self.container.width() - cx - this.el.outerWidth()/2) < 0)
-							verticalPos = 0.5 + (cx + this.el.outerWidth()/2 - self.container.width())/this.el.outerWidth(); 
+						if (this.el.outerWidth() / 2 > cx)
+							verticalPos = 0.5 - (this.el.outerWidth() / 2 - cx) / this.el.outerWidth();
+						else if ((self.container.width() - cx - this.el.outerWidth() / 2) < 0)
+							verticalPos = 0.5 + (cx + this.el.outerWidth() / 2 - self.container.width()) / this.el.outerWidth();
 
 						verticalPos = Math.max(0, Math.min(1, verticalPos));
 						ml = -this.el.outerWidth() * verticalPos;
@@ -182,19 +182,19 @@
 				}
 			}
 
-			this.zoom = function(location) {
+			this.zoom = function (location) {
 				var ry = 0.5,
 					zoom = location.zoom ? parseFloat(location.zoom) : self.o.maxscale;
-				
+
 				ry = ((self.container.height() - this.drop) / 2 + this.drop) / self.container.height();
 				self.moveTo(location.x, location.y, zoom, 600, 'easeInOutCubic', ry);
 			}
 
-			this.hide = function() {
+			this.hide = function () {
 				var s = this;
 
 				this.location = null;
-				this.el.stop().fadeOut(300, function() {
+				this.el.stop().fadeOut(300, function () {
 					if (s.desc) s.desc.empty();
 				});
 			}
@@ -204,7 +204,7 @@
 		function Lightbox() {
 			this.el = null;
 
-			this.init = function() {
+			this.init = function () {
 				// Construct
 				this.el = $('<div></div>').addClass('mapplic-lightbox mfp-hide');
 				this.title = $('<h2></h2>').addClass('mapplic-lightbox-title').appendTo(this.el);
@@ -225,7 +225,7 @@
 				return this;
 			}
 
-			this.show = function(location) {
+			this.show = function (location) {
 				this.location = location;
 
 				this.title.text(location.title);
@@ -244,7 +244,7 @@
 					removalDelay: 300,
 					mainClass: 'mfp-fade',
 					callbacks: {
-						beforeClose: function() {
+						beforeClose: function () {
 							s.hide();
 						}
 					}
@@ -258,7 +258,7 @@
 				if (self.tooltip) self.tooltip.hide();
 			}
 
-			this.hide = function() {
+			this.hide = function () {
 				this.location = null;
 				self.hideLocation();
 				if (!self.o.zoom || self.o.zoomoutclose) self.moveTo(0.5, 0.5, self.fitscale, 400, 'easeInOutCubic');
@@ -272,7 +272,7 @@
 			this.shift = 6;
 			this.hovertipdesc = false;
 
-			this.init = function() {
+			this.init = function () {
 				var s = this;
 
 				// Construct
@@ -283,7 +283,7 @@
 
 				// Events 
 				// pins + old svg
-				$(self.map).on('mouseover', '.mapplic-layer a', function() {
+				$(self.map).on('mouseover', '.mapplic-layer a', function () {
 					var id = '';
 					if ($(this).hasClass('mapplic-pin')) {
 						id = $(this).data('location');
@@ -297,17 +297,17 @@
 
 					var location = self.getLocationData(id);
 					if (location) s.show(location);
-				}).on('mouseout', function() {
+				}).on('mouseout', function () {
 					s.hide();
 				});
 
 				// new svg
 				if (self.o.selector) {
-					$(self.map).on('mouseover', self.o.selector, function() {
+					$(self.map).on('mouseover', self.o.selector, function () {
 						var location = self.getLocationData($(this).attr('id'));
 						s.shift = 20;
 						if (location) s.show(location);
-					}).on('mouseout', function() {
+					}).on('mouseout', function () {
 						s.hide();
 					});
 				}
@@ -317,7 +317,7 @@
 				return this;
 			}
 
-			this.show = function(location) {
+			this.show = function (location) {
 				if (self.tooltip.location != location) {
 					this.title.text(location.title);
 					if (this.hovertipdesc) this.desc.html(location.description);
@@ -327,7 +327,7 @@
 				}
 			}
 
-			this.position = function(location) {
+			this.position = function (location) {
 				var cx = self.map.offset().left + self.map.width() * location.x - self.container.offset().left,
 					cy = self.map.offset().top + self.map.height() * location.y - self.container.offset().top;
 
@@ -347,10 +347,10 @@
 				else this.el.removeClass('mapplic-bottom');
 
 				// Left-right check
-				if (this.el.outerWidth()/2 > cx)
-					verticalPos = 0.5 - (this.el.outerWidth()/2 - cx)/this.el.outerWidth();
-				else if ((self.container.width() - cx - this.el.outerWidth()/2) < 0)
-					verticalPos = 0.5 + (cx + this.el.outerWidth()/2 - self.container.width())/this.el.outerWidth(); 
+				if (this.el.outerWidth() / 2 > cx)
+					verticalPos = 0.5 - (this.el.outerWidth() / 2 - cx) / this.el.outerWidth();
+				else if ((self.container.width() - cx - this.el.outerWidth() / 2) < 0)
+					verticalPos = 0.5 + (cx + this.el.outerWidth() / 2 - self.container.width()) / this.el.outerWidth();
 
 				ml = -this.el.outerWidth() * verticalPos;
 				this.triangle.css('left', Math.max(10, Math.min(90, verticalPos * 100)) + '%');
@@ -362,7 +362,7 @@
 				});
 			}
 
-			this.hide = function() {
+			this.hide = function () {
 				this.el.stop().fadeOut(200);
 			}
 		}
@@ -371,11 +371,11 @@
 		function Deeplinking() {
 			this.param = 'location';
 
-			this.init = function() {
+			this.init = function () {
 				var s = this;
 				this.check(0);
 
-				window.onpopstate = function(e) {
+				window.onpopstate = function (e) {
 					if (e.state) {
 						s.check(600);
 					}
@@ -383,25 +383,25 @@
 				}
 			}
 
-			this.check = function(easing) {
+			this.check = function (easing) {
 				var id = this.getUrlParam(this.param);
 				self.showLocation(id, easing, true);
 			}
 
-			this.getUrlParam = function(name) {
+			this.getUrlParam = function (name) {
 				name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 					results = regex.exec(location.search);
 				return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 			}
 
-			this.update = function(id) {
+			this.update = function (id) {
 				var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + this.param + '=' + id;
-				window.history.pushState({path: url}, '', url);
+				window.history.pushState({ path: url }, '', url);
 			}
 
 			// Clear
-			this.clear = function() {
+			this.clear = function () {
 				history.pushState('', document.title, window.location.pathname);
 			}
 		}
@@ -410,25 +410,25 @@
 		function DeeplinkingHash() {
 			this.param = 'location';
 
-			this.init = function() {
+			this.init = function () {
 				var s = this;
 				this.check(0);
 
-				$(window).on('hashchange', function() {
+				$(window).on('hashchange', function () {
 					s.check(600);
 				});
 			}
 
-			this.check = function(easing) {
+			this.check = function (easing) {
 				var id = location.hash.slice(this.param.length + 2);
 				self.showLocation(id, easing, true);
 			}
 
-			this.update = function(id) {
+			this.update = function (id) {
 				window.location.hash = this.param + '-' + id;
 			}
 
-			this.clear = function() {
+			this.clear = function () {
 				window.location.hash = this.param;
 			}
 		}
@@ -438,9 +438,9 @@
 			this.el = null;
 			this.opacity = null;
 
-			this.init = function() {
+			this.init = function () {
 				this.el = $('<div></div>').addClass('mapplic-minimap').appendTo(self.container);
-				this.el.click(function(e) {
+				this.el.click(function (e) {
 					e.preventDefault();
 
 					var x = (e.pageX - $(this).offset().left) / $(this).width(),
@@ -450,24 +450,24 @@
 				});
 			}
 
-			this.addLayer = function(data) {
+			this.addLayer = function (data) {
 				var layer = $('<div></div>').addClass('mapplic-minimap-layer').attr('data-floor', data.id).appendTo(this.el),
 					s = this;
 
 				$('<img>').attr('src', data.minimap).addClass('mapplic-minimap-background').appendTo(layer);
 				$('<div></div>').addClass('mapplic-minimap-overlay').appendTo(layer);
-				$('<img>').attr('src', data.minimap).addClass('mapplic-minimap-active').on('load', function() {
+				$('<img>').attr('src', data.minimap).addClass('mapplic-minimap-active').on('load', function () {
 					s.update();
 					$(this).addClass('mapplic-clip-transition');
 				}).appendTo(layer);
 			}
 
-			this.show = function(target) {
+			this.show = function (target) {
 				$('.mapplic-minimap-layer', this.el).hide();
 				$('.mapplic-minimap-layer[data-floor="' + target + '"]', this.el).show();
 			}
 
-			this.update = function(x, y) {
+			this.update = function (x, y) {
 				var active = $('.mapplic-minimap-active', this.el);
 
 				if (x === undefined) x = self.x;
@@ -480,7 +480,7 @@
 					right = left + width,
 					bottom = top + height;
 
-				active.each(function() {
+				active.each(function () {
 					$(this)[0].style.clip = 'rect(' + top + 'px, ' + right + 'px, ' + bottom + 'px, ' + left + 'px)';
 				});
 
@@ -489,9 +489,9 @@
 				this.el.show();
 				this.el.css('opacity', 1.0);
 				clearTimeout(this.opacity);
-				this.opacity = setTimeout(function() {
+				this.opacity = setTimeout(function () {
 					s.el.css('opacity', 0);
-					setTimeout(function() { s.el.hide(); }, 600);
+					setTimeout(function () { s.el.hide(); }, 600);
 				}, 2000);
 			}
 		}
@@ -501,20 +501,20 @@
 			this.el = null;
 			this.list = null;
 
-			this.init = function() {
+			this.init = function () {
 				var s = this;
 
 				this.el = $('<div></div>').addClass('mapplic-sidebar').appendTo(self.el);
 
 				if (self.o.search) {
-					var form = $('<form></form>').addClass('mapplic-search-form').submit(function() {
+					var form = $('<form></form>').addClass('mapplic-search-form').submit(function () {
 						return false;
 					}).appendTo(this.el);
-					self.clear = $('<button></button>').attr('type', 'button').addClass('mapplic-search-clear').click(function() {
+					self.clear = $('<button></button>').attr('type', 'button').addClass('mapplic-search-clear').click(function () {
 						input.val('');
 						input.keyup();
 					}).appendTo(form);
-					var input = $('<input>').attr({'type': 'text', 'spellcheck': 'false', 'placeholder': 'Search...'}).addClass('mapplic-search-input').keyup(function() {
+					var input = $('<input>').attr({ 'type': 'text', 'spellcheck': 'false', 'placeholder': 'Search...' }).addClass('mapplic-search-input').keyup(function () {
 						var keyword = $(this).val();
 						s.search(keyword);
 					}).prependTo(form);
@@ -527,17 +527,17 @@
 				if (!self.o.search) listContainer.css('padding-top', '0');
 			}
 
-			this.addCategories = function(categories) {
+			this.addCategories = function (categories) {
 				var list = this.list;
 
 				if (categories) {
-					$.each(categories, function(index, category) {
+					$.each(categories, function (index, category) {
 						var item = $('<li></li>').addClass('mapplic-list-category').attr('data-category', category.id);
 						var ol = $('<ol></ol>').css('border-color', category.color).appendTo(item);
 						if (category.show == 'false') ol.hide();
 						else item.addClass('mapplic-opened');
 						var link = $('<a></a>').attr('href', '#').attr('title', category.title).css('background-color', category.color).text(category.title).prependTo(item);
-						link.on('click', function(e) {
+						link.on('click', function (e) {
 							e.preventDefault();
 							item.toggleClass('mapplic-opened');
 							ol.slideToggle(200);
@@ -549,9 +549,9 @@
 				}
 			}
 
-			this.addLocation = function(data) {
+			this.addLocation = function (data) {
 				var item = $('<li></li>').addClass('mapplic-list-location').addClass('mapplic-list-shown').attr('data-location', data.id);
-				var link = $('<a></a>').attr('href', '#').click(function(e) {
+				var link = $('<a></a>').attr('href', '#').click(function (e) {
 					e.preventDefault();
 					self.showLocation(data.id, 600);
 
@@ -575,11 +575,11 @@
 				$('.mapplic-list-count', category).text($('.mapplic-list-shown', category).length);
 			}
 
-			this.search = function(keyword) {
+			this.search = function (keyword) {
 				if (keyword) self.clear.fadeIn(100);
 				else self.clear.fadeOut(100);
 
-				$('.mapplic-list li', self.el).each(function() {
+				$('.mapplic-list li', self.el).each(function () {
 					if ($(this).text().search(new RegExp(keyword, "i")) < 0) {
 						$(this).removeClass('mapplic-list-shown');
 						$(this).slideUp(200);
@@ -589,7 +589,7 @@
 					}
 				});
 
-				$('.mapplic-list > li', self.el).each(function() {
+				$('.mapplic-list > li', self.el).each(function () {
 					var count = $('.mapplic-list-shown', this).length;
 					$('.mapplic-list-count', this).text(count);
 				});
@@ -604,14 +604,14 @@
 		function DevTools() {
 			this.el = null;
 
-			this.init = function() {
+			this.init = function () {
 				this.el = $('<div></div>').addClass('mapplic-coordinates').appendTo(self.container);
 				this.el.append('x: ');
 				$('<code></code>').addClass('mapplic-coordinates-x').appendTo(this.el);
 				this.el.append(' y: ');
 				$('<code></code>').addClass('mapplic-coordinates-y').appendTo(this.el);
 
-				$('.mapplic-layer', self.map).on('mousemove', function(e) {
+				$('.mapplic-layer', self.map).on('mousemove', function (e) {
 					var x = (e.pageX - self.map.offset().left) / self.map.width(),
 						y = (e.pageY - self.map.offset().top) / self.map.height();
 					$('.mapplic-coordinates-x').text(parseFloat(x).toFixed(4));
@@ -625,11 +625,11 @@
 		// Clear Button
 		function ClearButton() {
 			this.el = null;
-			
-			this.init = function() {
+
+			this.init = function () {
 				this.el = $('<a></a>').attr('href', '#').addClass('mapplic-clear-button').appendTo(self.container);
 
-				this.el.on('click touchstart', function(e) {
+				this.el.on('click touchstart', function (e) {
 					e.preventDefault();
 					self.hideLocation();
 					self.moveTo(0.5, 0.5, self.fitscale, 400, 'easeInOutCubic');
@@ -642,15 +642,15 @@
 		// Zoom Buttons
 		function ZoomButtons() {
 			this.el = null;
-		
-			this.init = function() {
+
+			this.init = function () {
 				this.el = $('<div></div>').addClass('mapplic-zoom-buttons').appendTo(self.container);
 
 				if (!self.o.clearbutton) this.el.css('bottom', '0');
 
 				// Zoom in button
 				this.zoomin = $('<a></ha>').attr('href', '#').addClass('mapplic-zoomin-button').appendTo(this.el);
-				this.zoomin.on('click touchstart', function(e) {
+				this.zoomin.on('click touchstart', function (e) {
 					e.preventDefault();
 
 					var scale = self.scale;
@@ -664,7 +664,7 @@
 
 				// Zoom out button
 				this.zoomout = $('<a></ha>').attr('href', '#').addClass('mapplic-zoomout-button').appendTo(this.el);
-				this.zoomout.on('click touchstart', function(e) {
+				this.zoomout.on('click touchstart', function (e) {
 					e.preventDefault();
 
 					var scale = self.scale;
@@ -679,7 +679,7 @@
 				return this;
 			}
 
-			this.update = function(scale) {
+			this.update = function (scale) {
 				this.zoomin.removeClass('mapplic-disabled');
 				this.zoomout.removeClass('mapplic-disabled');
 				if (scale == self.fitscale) this.zoomout.addClass('mapplic-disabled');
@@ -691,16 +691,16 @@
 		function Fullscreen() {
 			this.el = null;
 
-			this.init = function() {
+			this.init = function () {
 				// Fullscreen Button
-				$('<a></a>').attr('href', '#').attr('href', '#').addClass('mapplic-fullscreen-button').click(function(e) {
+				$('<a></a>').attr('href', '#').attr('href', '#').addClass('mapplic-fullscreen-button').click(function (e) {
 					e.preventDefault();
 					self.el.toggleClass('mapplic-fullscreen');
 					$(document).resize();
 				}).appendTo(self.container);
 
 				// Esc key
-				$(document).keyup(function(e) {
+				$(document).keyup(function (e) {
 					if (e.keyCode === 27) {
 						$('.mapplic-element.mapplic-fullscreen').removeClass('mapplic-fullscreen');
 						$(document).resize();
@@ -710,7 +710,7 @@
 		}
 
 		// Functions
-		var processData = function(data) {
+		var processData = function (data) {
 			self.data = data;
 			var shownLevel = null;
 
@@ -749,7 +749,7 @@
 			var nrlevels = 0;
 
 			if (data.levels) {
-				$.each(data.levels, function(index, level) {
+				$.each(data.levels, function (index, level) {
 					var source = level.map,
 						extension = source.substr((source.lastIndexOf('.') + 1)).toLowerCase();
 
@@ -764,9 +764,9 @@
 
 						// Vector format
 						case 'svg':
-							$('<div></div>').addClass('mapplic-map-image').load(source, function() {
+							$('<div></div>').addClass('mapplic-map-image').load(source, function () {
 								// Setting up the locations on the map
-								$(self.o.selector, this).each(function() {
+								$(self.o.selector, this).each(function () {
 									var location = self.getLocationData($(this).attr('id'));
 									if (location) {
 										$(this).attr('class', 'mapplic-clickable');
@@ -782,25 +782,25 @@
 										}
 
 										// Landmark mode
-										if (self.o.landmark === location.id) $(this).attr('class', 'mapplic-active'); 
+										if (self.o.landmark === location.id) $(this).attr('class', 'mapplic-active');
 									}
 								});
 
 								// Click event
-								$(self.o.selector, this).on('click touchend', function() {
+								$(self.o.selector, this).on('click touchend', function () {
 									if (!self.dragging) self.showLocation($(this).attr('id'), 600);
 								});
 
 								// Support for the old map format
-								$('svg a', this).each(function() {
-									var location = self.getLocationData($(this).attr('xlink:href').substr(1)); 
+								$('svg a', this).each(function () {
+									var location = self.getLocationData($(this).attr('xlink:href').substr(1));
 									if (location) {
 										$(this).attr('class', 'mapplic-clickable');
 										location.el = $(this);
 									}
 								});
 
-								$('svg a', this).click(function(e) {
+								$('svg a', this).click(function (e) {
 									var id = $(this).attr('xlink:href').substr(1);
 									self.showLocation(id, 600);
 									e.preventDefault();
@@ -820,10 +820,10 @@
 					self.levelselect.prepend($('<option></option>').attr('value', level.id).text(level.title));
 
 					// Shown level
-					if (!shownLevel || level.show)	shownLevel = level.id;
-					
+					if (!shownLevel || level.show) shownLevel = level.id;
+
 					// Iterate through locations
-					$.each(level.locations, function(index, location) {
+					$.each(level.locations, function (index, location) {
 						// Geolocation
 						if (location.lat && location.lng) {
 							var pos = latlngToPos(location.lat, location.lng);
@@ -837,8 +837,8 @@
 						if (!location.pin) location.pin = 'default';
 						if (location.pin.indexOf('hidden') == -1) {
 							if (self.o.markers) {
-								var pin = $('<a></a>').attr('href', '#').addClass('mapplic-pin').css({'top': top + '%', 'left': left + '%'}).appendTo(layer);
-								pin.on('click touchend', function(e) {
+								var pin = $('<a></a>').attr('href', '#').addClass('mapplic-pin').css({ 'top': top + '%', 'left': left + '%' }).appendTo(layer);
+								pin.on('click touchend', function (e) {
 									e.preventDefault();
 									self.showLocation(location.id, 600);
 								});
@@ -888,18 +888,18 @@
 				self.levelselect.appendTo(self.levels);
 				var down = $('<a href="#"></a>').addClass('mapplic-levels-down').appendTo(self.levels);
 				self.container.append(self.levels);
-			
-				self.levelselect.change(function() {
+
+				self.levelselect.change(function () {
 					var value = $(this).val();
 					self.switchLevel(value);
 				});
-			
-				up.click(function(e) {
+
+				up.click(function (e) {
 					e.preventDefault();
 					if (!$(this).hasClass('mapplic-disabled')) self.switchLevel('+');
 				});
 
-				down.click(function(e) {
+				down.click(function (e) {
 					e.preventDefault();
 					if (!$(this).hasClass('mapplic-disabled')) self.switchLevel('-');
 				});
@@ -907,12 +907,12 @@
 			self.switchLevel(shownLevel);
 
 			// Browser resize
-			$(window).resize(function() {
+			$(window).resize(function () {
 				// Mobile
 				if ($(window).width() < 668) {
 					if (self.el.hasClass('mapplic-fullscreen')) self.container.height($(window).height());
 					else {
-						var height = Math.min(Math.max(self.container.width() * self.contentHeight / self.contentWidth, $(window).height() * 2/3), $(window).height() - 66); 
+						var height = Math.min(Math.max(self.container.width() * self.contentHeight / self.contentWidth, $(window).height() * 2 / 3), $(window).height() - 66);
 						self.container.height(height);
 					}
 				}
@@ -964,14 +964,14 @@
 			if (self.o.zoom) addControls();
 		}
 
-		var addControls = function() {
+		var addControls = function () {
 			var map = self.map,
 				mapbody = $('.mapplic-map-image', self.map);
 
-			document.ondragstart = function() { return false; } // IE drag fix
+			document.ondragstart = function () { return false; } // IE drag fix
 
 			// Drag & drop
-			mapbody.on('mousedown', function(e) {
+			mapbody.on('mousedown', function (e) {
 				self.dragging = false;
 
 				map.data('mouseX', e.pageX);
@@ -984,7 +984,7 @@
 				}
 				map.addClass('mapplic-dragging');
 
-				self.map.on('mousemove', function(e) {
+				self.map.on('mousemove', function (e) {
 					self.dragging = true;
 
 					var x = e.pageX - map.data('mouseX') + self.x,
@@ -997,8 +997,8 @@
 					map.data('lastX', x);
 					map.data('lastY', y);
 				});
-			
-				$(document).on('mouseup', function() {
+
+				$(document).on('mouseup', function () {
 					self.x = map.data('lastX');
 					self.y = map.data('lastY');
 
@@ -1010,21 +1010,21 @@
 			});
 
 			// Double click
-			self.el.on('dblclick', '.mapplic-map-image', function(e) {
+			self.el.on('dblclick', '.mapplic-map-image', function (e) {
 				e.preventDefault();
 
 				var scale = self.scale;
 				self.scale = normalizeScale(scale * 2);
 
-				self.x = normalizeX(self.x - (e.pageX - self.container.offset().left - self.x) * (self.scale/scale - 1));
-				self.y = normalizeY(self.y - (e.pageY - self.container.offset().top - self.y) * (self.scale/scale - 1));
+				self.x = normalizeX(self.x - (e.pageX - self.container.offset().left - self.x) * (self.scale / scale - 1));
+				self.y = normalizeY(self.y - (e.pageY - self.container.offset().top - self.y) * (self.scale / scale - 1));
 
 				zoomTo(self.x, self.y, self.scale, 400, 'easeInOutCubic');
 			});
 
 			// Mousewheel
 			if (self.o.mousewheel) {
-				$('.mapplic-layer', self.el).bind('mousewheel DOMMouseScroll', function(e, delta) {
+				$('.mapplic-layer', self.el).bind('mousewheel DOMMouseScroll', function (e, delta) {
 					var scale = self.scale;
 
 					self.scale = normalizeScale(scale + scale * delta / 5);
@@ -1033,8 +1033,8 @@
 					//if (scale != self.scale)
 					e.preventDefault();
 
-					self.x = normalizeX(self.x - (e.pageX - self.container.offset().left - self.x) * (self.scale/scale - 1));
-					self.y = normalizeY(self.y - (e.pageY - self.container.offset().top - self.y) * (self.scale/scale - 1));
+					self.x = normalizeX(self.x - (e.pageX - self.container.offset().left - self.x) * (self.scale / scale - 1));
+					self.y = normalizeY(self.y - (e.pageY - self.container.offset().top - self.y) * (self.scale / scale - 1));
 
 					zoomTo(self.x, self.y, self.scale, 200, 'easeOutCubic');
 				});
@@ -1042,7 +1042,7 @@
 
 			// Touch support
 			if (!('ontouchstart' in window || 'onmsgesturechange' in window)) return true;
-			mapbody.on('touchstart', function(e) {
+			mapbody.on('touchstart', function (e) {
 				self.dragging = false;
 
 				var orig = e.originalEvent,
@@ -1051,7 +1051,7 @@
 				map.data('touchY', orig.changedTouches[0].pageY - pos.top);
 				map.data('touchX', orig.changedTouches[0].pageX - pos.left);
 
-				mapbody.on('touchmove', function(e) {
+				mapbody.on('touchmove', function (e) {
 					e.preventDefault();
 					self.dragging = true;
 
@@ -1069,11 +1069,11 @@
 					}
 				});
 
-				mapbody.on('touchend', function(e) {
+				mapbody.on('touchend', function (e) {
 					mapbody.off('touchmove touchend');
 				});
 			});
-			
+
 			// Pinch zoom
 			var hammer = new Hammer(self.map[0], {
 				transform_always_block: true,
@@ -1083,18 +1083,18 @@
 			hammer.get('pinch').set({ enable: true });
 
 			var scale = 1, last_scale;
-			hammer.on('pinchstart', function(e) {
+			hammer.on('pinchstart', function (e) {
 				self.dragging = false;
 
 				scale = self.scale / self.fitscale;
 				last_scale = scale;
 			});
 
-			hammer.on('pinch', function(e) {
+			hammer.on('pinch', function (e) {
 				self.dragging = true;
 
 				if (e.scale != 1) scale = Math.max(1, Math.min(last_scale * e.scale, 100));
-				
+
 				var oldscale = self.scale;
 				self.scale = normalizeScale(scale * self.fitscale);
 
@@ -1108,7 +1108,7 @@
 		/* PRIVATE METHODS */
 
 		// Web Mercator (EPSG:3857) lat/lng projection
-		var latlngToPos = function(lat, lng) {
+		var latlngToPos = function (lat, lng) {
 			var deltaLng = self.data.rightLng - self.data.leftLng,
 				bottomLatDegree = self.data.bottomLat * Math.PI / 180,
 				mapWidth = ((self.data.mapwidth / deltaLng) * 360) / (2 * Math.PI),
@@ -1123,47 +1123,47 @@
 		}
 
 		// jQuery bug add/remove class workaround (will be fixed in jQuery 3)
-		var addClass = function(element, c) {
+		var addClass = function (element, c) {
 			var classes = element.attr('class');
 			if (classes.indexOf(c) == -1) element.attr('class', classes + ' ' + c);
 		}
 
-		var removeClass = function(element, c) {
+		var removeClass = function (element, c) {
 			var classes = element.attr('class');
 			if (classes) element.attr('class', classes.replace(c, '').trim());
 		}
 
-		var hasClass = function(element, c) {
+		var hasClass = function (element, c) {
 			var classes = element.attr('class');
 			return (classes.indexOf(c) > -1);
 		}
 
 		// Normalizing x, y and scale
-		var normalizeX = function(x) {
+		var normalizeX = function (x) {
 			var minX = self.container.width() - self.contentWidth * self.scale;
 
 			if (minX < 0) {
 				if (x > 0) x = 0;
 				else if (x < minX) x = minX;
 			}
-			else x = minX/2;
+			else x = minX / 2;
 
 			return x;
 		}
 
-		var normalizeY = function(y) {
+		var normalizeY = function (y) {
 			var minY = self.container.height() - self.contentHeight * self.scale;
 
 			if (minY < 0) {
 				if (y >= 0) y = 0;
 				else if (y < minY) y = minY;
 			}
-			else y = minY/2;
+			else y = minY / 2;
 
 			return y;
 		}
 
-		var normalizeScale = function(scale) {
+		var normalizeScale = function (scale) {
 			if (scale < self.fitscale) scale = self.fitscale;
 			else if (scale > self.o.maxscale) scale = self.o.maxscale;
 
@@ -1172,14 +1172,14 @@
 			return scale;
 		}
 
-		var zoomTo = function(x, y, scale, d, easing) {
+		var zoomTo = function (x, y, scale, d, easing) {
 			if (scale !== undefined) {
 				self.map.stop().animate({
 					'left': x,
 					'top': y,
 					'width': self.contentWidth * scale,
 					'height': self.contentHeight * scale
-				}, d, easing, function() {
+				}, d, easing, function () {
 					if (self.tooltip) self.tooltip.position();
 				});
 			}
@@ -1197,7 +1197,7 @@
 		}
 
 		/* PUBLIC METHODS */
-		self.switchLevel = function(target) {
+		self.switchLevel = function (target) {
 			switch (target) {
 				case '+':
 					target = $('option:selected', self.levelselect).removeAttr('selected').prev().prop('selected', 'selected').val();
@@ -1241,10 +1241,10 @@
 			self.el.trigger('levelswitched', target);
 		}
 
-		self.moveTo = function(x, y, s, duration, easing, ry) {
+		self.moveTo = function (x, y, s, duration, easing, ry) {
 			duration = typeof duration !== 'undefined' ? duration : 400;
 			ry = typeof ry !== 'undefined' ? ry : 0.5;
-			s = typeof s !== 'undefined' ? s : self.scale/self.fitscale;
+			s = typeof s !== 'undefined' ? s : self.scale / self.fitscale;
 
 			self.scale = normalizeScale(s);
 
@@ -1254,10 +1254,10 @@
 			zoomTo(self.x, self.y, self.scale, duration, easing);
 		}
 
-		self.getLocationData = function(id) {
+		self.getLocationData = function (id) {
 			var data = null;
-			$.each(self.data.levels, function(index, level) {
-				$.each(level.locations, function(index, location) {
+			$.each(self.data.levels, function (index, level) {
+				$.each(level.locations, function (index, location) {
 					if (location.id == id) {
 						data = location;
 					}
@@ -1266,13 +1266,13 @@
 			return data;
 		}
 
-		self.showLocation = function(id, duration, check) {
-			$.each(self.data.levels, function(index, level) {
+		self.showLocation = function (id, duration, check) {
+			$.each(self.data.levels, function (index, level) {
 				if (level.id == id) {
 					self.switchLevel(level.id);
 					return false;
 				}
-				$.each(level.locations, function(index, location) {
+				$.each(level.locations, function (index, location) {
 					if (location.id == id) {
 						var action = (location.action && location.action != 'default') ? location.action : self.o.action;
 						switch (action) {
@@ -1316,7 +1316,7 @@
 			});
 		}
 
-		self.hideLocation = function() {
+		self.hideLocation = function () {
 			removeClass($('.mapplic-active', self.el), 'mapplic-active');
 			if (self.deeplinking) self.deeplinking.clear();
 			if (self.tooltip) self.tooltip.hide();
@@ -1325,10 +1325,10 @@
 			self.el.trigger('locationclosed');
 		}
 
-		self.updateLocation = function(id) {
+		self.updateLocation = function (id) {
 			var location = self.getLocationData(id);
 
-			if ((location.id == id) && (location.el.is('a')))  {
+			if ((location.id == id) && (location.el.is('a'))) {
 				// Geolocation
 				if (location.lat && location.lng) {
 					var pos = latlngToPos(location.lat, location.lng);
@@ -1339,7 +1339,7 @@
 				var top = location.y * 100,
 					left = location.x * 100;
 
-				location.el.css({'top': top + '%', 'left': left + '%'});
+				location.el.css({ 'top': top + '%', 'left': left + '%' });
 			}
 		}
 
@@ -1348,28 +1348,28 @@
 	// Easing functions used by default
 	// For the full list of easing functions use jQuery Easing Plugin
 	$.extend($.easing,
-	{
-		def: 'easeOutQuad',
-		swing: function (x, t, b, c, d) {
-			//alert(jQuery.easing.default);
-			return jQuery.easing[jQuery.easing.def](x, t, b, c, d);
-		},
-		easeOutQuad: function (x, t, b, c, d) {
-			return -c *(t/=d)*(t-2) + b;
-		},
-		easeOutCubic: function (x, t, b, c, d) {
-			return c*((t=t/d-1)*t*t + 1) + b;
-		},
-		easeInOutCubic: function (x, t, b, c, d) {
-			if ((t/=d/2) < 1) return c/2*t*t*t + b;
-			return c/2*((t-=2)*t*t + 2) + b;
-		}
-	});
+		{
+			def: 'easeOutQuad',
+			swing: function (x, t, b, c, d) {
+				//alert(jQuery.easing.default);
+				return jQuery.easing[jQuery.easing.def](x, t, b, c, d);
+			},
+			easeOutQuad: function (x, t, b, c, d) {
+				return -c * (t /= d) * (t - 2) + b;
+			},
+			easeOutCubic: function (x, t, b, c, d) {
+				return c * ((t = t / d - 1) * t * t + 1) + b;
+			},
+			easeInOutCubic: function (x, t, b, c, d) {
+				if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
+				return c / 2 * ((t -= 2) * t * t + 2) + b;
+			}
+		});
 
 	// jQuery Plugin
-	$.fn.mapplic = function(options) {
+	$.fn.mapplic = function (options) {
 
-		return this.each(function() {
+		return this.each(function () {
 			var element = $(this);
 
 			// Plugin already initiated on element

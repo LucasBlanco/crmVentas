@@ -1,0 +1,42 @@
+<mat-card class="col-12">
+    <div class="row">
+        <div class="col-11">
+            <mat-card-title>Lista de configuraciones</mat-card-title>
+        </div>
+        <div class="col-1">
+            <button mat-icon-button matTooltip="Crear Configuración" (click)="openAdd()">
+                <mat-icon class="icon-green">add_circle</mat-icon>
+            </button>
+        </div>
+    </div>
+    <mat-selection-list #configs>
+        <mat-list-item *ngFor="let config of adminSrv.listaConfigs" [ngStyle]="styleSelected(config.selected)">
+            <div class="col-9">{{config.nombre}}</div>
+            <div class="col-2">
+                <button mat-icon-button matTooltip="Modificar" (click)="openEdit(config)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="config.selected == false" matTooltip="Borrar"
+                    (click)="openDelete(config)">
+                    <mat-icon class="icon-red">delete_forever</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="config.selected == true" disabled matTooltip="Borrar"
+                    (click)="openDelete(config)">
+                    <mat-icon class="icon-disabled">delete_forever</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Información" (click)="openInfo(config)">
+                    <mat-icon class="icon-blue">info</mat-icon>
+                </button>
+            </div>
+            <div class="col-1">
+                <button mat-icon-button matTooltip="Configuración actual" *ngIf="config.selected == true">
+                    <mat-icon class="icon">radio_button_checked</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Cambiar configuración" *ngIf="config.selected == false"
+                    (click)="openChange(config)">
+                    <mat-icon class="icon">radio_button_unchecked</mat-icon>
+                </button>
+            </div>
+        </mat-list-item>
+    </mat-selection-list>
+</mat-card>

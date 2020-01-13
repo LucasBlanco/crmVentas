@@ -1,0 +1,39 @@
+<div class="row" style="padding-left: 10px; margin-bottom: 20px; margin-top: 10px">
+    <div class="col-10">
+        <h2>Configuración <span style="color: blue"> {{data.nombre}}</span></h2>
+    </div>
+</div>
+<div mat-dialog-content>
+    <div class="row justify-content-center">
+        <mat-card class="col-10" style="box-shadow: none;">
+            <div class="row justify-content-center">
+                <div class="col-8 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    Nombre de la base
+                </div>
+                <div class="col-2 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    % Actual</div>
+                <div class="col-2 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    Cant. Datos</div>
+            </div>
+            <mat-divider></mat-divider>
+        </mat-card>
+    </div>
+    <div *ngFor="let db of adminSrv.listaDatabases; let i = index" class="row justify-content-center">
+        <mat-card class="col-10" style="margin-bottom: 10px;box-shadow: none;">
+            <div class="row justify-content-center">
+                <div class="col-8 align-self-center h5">
+                    {{db.nombre}}
+                </div>
+                <div class="col-2 align-self-center">
+                    {{adminSrv.listaConfigs[data.id_front].values[i] + '%'}}
+                </div>
+                <div class="col-2 align-self-center">
+                    {{ Math.floor(newPercentages[i] * 250 / 100) }} Datos
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
+<div mat-dialog-actions class="row justify-content-center">
+    <button mat-button [mat-dialog-close]="">Cerrar</button>
+</div>

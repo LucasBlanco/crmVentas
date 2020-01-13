@@ -1,0 +1,54 @@
+<div class="row" style="padding-left: 10px; margin-bottom: 20px; margin-top: 10px">
+    <div class="col-1 align-self-center h2">Crear</div>
+    <div class="col-7 align-self-center" style="margin-left: 10px;">
+        <input id="nombre" placeholder="Nombre" type="text" style="color: blue; font-weight: 500; font-size: 1.7rem;">
+    </div>
+    <div class="col-1"></div>
+    <div class="col-2 align-self-center">
+        <mat-icon *ngIf="total > 100 || total < 100" style="color: red">warning</mat-icon>
+        <mat-icon *ngIf="total == 100" style="color: green">done</mat-icon>
+        <span class="h5">Total: {{total}} %</span>
+    </div>
+</div>
+<div mat-dialog-content>
+    <div class="row justify-content-center">
+        <mat-card class="col-10" style="box-shadow: none;">
+            <div class="row justify-content-center">
+                <div class="col-4 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    Nombre de la base
+                </div>
+                <div class="col-2 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    % Actual</div>
+                <div class="col-2 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    % Nuevo</div>
+                <div class="col-2 align-self-center" style="font-size: 16px !important; font-weight: 600 !important;">
+                    Cant. Datos</div>
+            </div>
+            <mat-divider></mat-divider>
+        </mat-card>
+    </div>
+    <div *ngFor="let db of adminSrv.listaDatabases; let i = index" class="row justify-content-center">
+        <mat-card class="col-10" style="margin-bottom: 10px;box-shadow: none;">
+            <div class="row justify-content-center">
+                <div class="col-4 align-self-center h5">
+                    {{db.nombre}}
+                </div>
+                <div class="col-2 align-self-center">
+                    0%
+                </div>
+                <div class="col-2 align-self-center">
+                    <input type="number" [value]="newPercentages[i]" style="width: 50px;"
+                        (input)="changePercentage($event.target.value, i)" min="0" max="100" maxLength="3">
+                    %
+                </div>
+                <div class="col-2 align-self-center">
+                    {{ Math.floor(newPercentages[i] * 250 / 100) }} Datos
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
+<div mat-dialog-actions class="row justify-content-center">
+    <button mat-button (click)="onYesClick(data)">Aplicar</button>
+    <button mat-button [mat-dialog-close]="">Cancelar</button>
+</div>

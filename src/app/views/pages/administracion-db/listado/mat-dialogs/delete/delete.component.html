@@ -1,0 +1,14 @@
+<div class="container">
+    <div style="padding-left: 10px; margin-bottom: 20px; margin-top: 10px">
+        <h2>Borrar <span style="color: blue"> {{data.nombre}}</span></h2>
+    </div>
+    <div mat-dialog-content>
+        <div class="row justify-content-center">
+            <span style="font-size: 14px;">¿Está segura que desea borrar esta configuración?</span>
+        </div>
+    </div>
+    <div mat-dialog-actions class="row justify-content-center">
+        <button mat-button (click)="onYesClick(data)">Si</button>
+        <button mat-button [mat-dialog-close]="">No</button>
+    </div>
+</div>
