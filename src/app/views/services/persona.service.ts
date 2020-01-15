@@ -1,45 +1,50 @@
-import { Injectable } from '@angular/core';
-import { Persona } from '@modelos/persona';
+import {Injectable} from '@angular/core';
+import {Persona} from '@modelos/persona';
 
-import { Domicilio } from './../models/domicilio';
+import {Domicilio} from './../models/domicilio';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class PersonaService {
 
-  constructor() { }
+	constructor() {
+	}
 
-  mapToFront(persona) {
-    return new Persona({
-      nombre: persona.nombre,
-      apellido: persona.apellido,
-      cuil: persona.cuil,
-      dni: persona.dni,
-      nacionalidad: persona.nacionalidad,
-      estadoCivil: persona.estadoCivil,
-      fechaNacimiento: persona.fechaNacimiento,
-      capitas: persona.capitas,
-      id: persona.id,
-      sexo: persona.sexo,
-      domicilio: persona.domicilios[0] && this.mapDomicilioToFront(persona.domicilios[0]),
-      telefonos: [
-        { nombre: 'celular', numero: persona.celular, horarioContacto: persona.horaContactoCel },
-        { nombre: 'telefono', numero: persona.telefono, horarioContacto: persona.horaContactoTel }
-      ]
-    });
-  }
+	mapToFront({persona, telefonos}) {
+		return new Persona({
+			nombre: persona.nombre,
+			apellido: persona.apellido,
+			cuil: persona.cuil,
+			dni: persona.dni,
+			nacionalidad: persona.nacionalidad,
+			estadoCivil: persona.estadoCivil,
+			fechaNacimiento: persona.fechaNacimiento,
+			capitas: persona.capitas,
+			id: persona.id,
+			sexo: persona.sexo,
+			domicilio: persona.domicilios[0] && this.mapDomicilioToFront(persona.domicilios[0]),
+			telefonos: telefonos.map(telefono => ({
+				numero: telefono.numero,
+				horarioContacto: {desde: telefono.horarioContactoDesde, hasta: telefono.horarioContactoHasta}
+			}))
+		})
+	}
 
-  mapDomicilioToFront(domicilio) {
-    return new Domicilio({
-      calle: domicilio.calle,
-      codigoPostal: domicilio.codigoPostal,
-      codigoPostalNuevo: domicilio.codigoPostalNuevo,
-      departamento: domicilio.departamento,
-      id: domicilio.id,
-      numero: domicilio.numero,
-      piso: domicilio.piso,
-      idLocalidad: domicilio.idLocalidad
-    })
-  }
+
+
+
+mapDomicilioToFront(domicilio)
+{
+	return new Domicilio({
+		calle: domicilio.calle,
+		codigoPostal: domicilio.codigoPostal,
+		codigoPostalNuevo: domicilio.codigoPostalNuevo,
+		departamento: domicilio.departamento,
+		id: domicilio.id,
+		numero: domicilio.numero,
+		piso: domicilio.piso,
+		idLocalidad: domicilio.idLocalidad
+	})
+}
 }

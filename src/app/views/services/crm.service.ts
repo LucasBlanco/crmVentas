@@ -68,7 +68,7 @@ export class CrmService {
   mapContactoToFront = (contacto) => {
     return new Contacto({
       id: contacto.id,
-      persona: this.personaSrv.mapToFront(contacto.persona)
+      persona: this.personaSrv.mapToFront(contacto)
     });
   }
 
