@@ -9,6 +9,7 @@ import { DashboardChartService } from '../../../services/dashboard-chart.service
 import { OperadoresService } from './../../../services/operadores.service';
 
 
+
 @Component({
 	selector: 'crm-supervisor-call',
 	templateUrl: './supervisor-call.component.html',
@@ -16,7 +17,7 @@ import { OperadoresService } from './../../../services/operadores.service';
 })
 export class SupervisorCallComponent implements AfterViewInit {
 	private showBackButton = false;
-	opcionesPosibles = [
+	periodosRechazo = [
 		{ value: 'hoy', nombre: 'Hoy' },
 		{ value: 'ultimaSemana', nombre: 'Ultima semana' },
 		{ value: 'ultimoMes', nombre: 'Ultimos 30 dias' },
@@ -90,15 +91,12 @@ export class SupervisorCallComponent implements AfterViewInit {
 
 
 	ngAfterViewInit() {
-		this.chartSrv.trarDatosDashboardSupervisorCall().subscribe(dashboard => {
-			this.rechazos.next(dashboard.rechazos);
-			this.ventas.next(dashboard.indicadores.ventas);
-			this.agendados.next(dashboard.indicadores.agendados);
-			this.rellamados.next(dashboard.indicadores.rellamados);
-			this.dashboardData.next(dashboard);
-			this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, this.supervisorChart);
-			this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, this.vendedorasChart);
-		});
+		this.chartSrv.traerVentasUltimaSemana().subscribe(ventas => this.ventas.next(ventas));
+		this.chartSrv.traerAgendadosUltimaSemana().subscribe(ventas => this.agendados.next(ventas));
+		this.chartSrv.traerRellamadosUltimaSemana().subscribe(ventas => this.rellamados.next(ventas));
+		this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => this.cargarChart(this.supervisorChart, ventas));
+		this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
+		this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
 		this.operadorSrv.traerTodos().subscribe(operadores => {
 			this.vendedoras = operadores;
 			this.vendedorasFiltradas = this.vendedoraCtrl.valueChanges.pipe(
@@ -106,60 +104,73 @@ export class SupervisorCallComponent implements AfterViewInit {
 				map(vendedora => this.vendedoras.filter(v => v.nombre.toLowerCase().includes(vendedora.toLowerCase())))
 			);
 		});
-
 	}
+
+	cargarChart = (observable, data) => observable.next({ ...observable.value, data });
 
 	cambiarGeneral(value) {
 		if (value == 'dia') {
-			this.llenarChart(this.dashboardData.value.porDia.labels, this.dashboardData.value.porDia.datasets, this.supervisorChart);
+			this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => {
+				const chart = this.supervisorChart.value;
+				chart.data = ventas;
+				this.supervisorChart.next(chart);
+			});
 		} else {
-			this.llenarChart(this.dashboardData.value.porMes.labels, this.dashboardData.value.porMes.datasets, this.supervisorChart);
+			this.chartSrv.traerVentasPorEstadoUltimoAño().subscribe(ventas => {
+				const chart = this.supervisorChart.value;
+				chart.data = ventas;
+				this.supervisorChart.next(chart);
+			});
 		}
-	}
-
-	cambiarVendedoras(value) {
-		if (this.showBackButton == false) {
-			this.llenarChart(
-				this.dashboardData.value.vendedoras[value].labels,
-				this.dashboardData.value.vendedoras[value].datasets,
-				this.vendedorasChart
-			);
-		} else {
-			if (value == 'dia') {
-				// this.chartSrv.charts.find(v => v.id === 'vendedoras').config.data = this.carlitaDia;
-			} else {
-				// this.chartSrv.charts.find(v => v.id === 'vendedoras').config.data = this.carlitaMes;
-			}
-		}
-		// this.chartSrv.charts.find(v => v.id === 'vendedoras').update();
-	}
-
-
-
-	cambiarAVendedora(clickedElementindex, label) {
-		this.showBackButton = true;
-		document.getElementById('titulo').innerHTML = label;
-		document.getElementById('subtitulo').innerHTML = 'Gráfico de vendedora';
-	}
-
-	backButton() {
-		this.showBackButton = false;
-		this.cambiarVendedoras('hoy');
-		document.getElementById('titulo').innerHTML = 'Vendedoras';
-		document.getElementById('subtitulo').innerHTML = 'Estadísticas por vendedora';
-	}
-
-
-	llenarChart(labels, dataset, observable) {
-		const chart = observable.value;
-		chart.data.labels = labels;
-		chart.data.datasets = dataset;
-		observable.next(chart);
 	}
 
 	redireccionarAVendedora() {
 		const id = this.vendedoras.find(v => v.nombre === this.vendedoraCtrl.value).id;
 		this.router.navigate(['/dashboard/vendedora/' + id]);
+	}
+
+	cambiarPeriodoRechazo(periodo) {
+		let rechazos$;
+		switch (periodo) {
+			case 'hoy':
+				rechazos$ = this.chartSrv.traerRechazosHoy();
+				break;
+			case 'ultimaSemana':
+				rechazos$ = this.chartSrv.traerRechazosUltimaSemana();
+				break;
+			case 'ultimoMes':
+				rechazos$ = this.chartSrv.traerRechazosUltimoMes();
+				break;
+			case 'ultimos3Meses':
+				rechazos$ = this.chartSrv.traerRechazosUltimos3Meses();
+				break;
+			case 'ultimos6Meses':
+				rechazos$ = this.chartSrv.traerRechazosUltimos6Meses();
+				break;
+		}
+		rechazos$.subscribe(rechazos => this.rechazos.next(rechazos));
+	}
+
+	cambiarPeriodoVendedoras(periodo) {
+		let ventas$;
+		switch (periodo) {
+			case 'hoy':
+				ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraHoy();
+				break;
+			case 'ultimaSemana':
+				ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimaSemana();
+				break;
+			case 'ultimoMes':
+				ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimoMes();
+				break;
+			case 'ultimos3Meses':
+				ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimos3Meses();
+				break;
+			case 'ultimos6Meses':
+				ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimos6Meses();
+				break;
+		}
+		ventas$.subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
 	}
 
 }

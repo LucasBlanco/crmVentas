@@ -26,7 +26,6 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
   reload(config) {
     this.chart.destroy();
-    config.options.onClick = config.options.onClick && config.options.onClick(this.chart);
     this.chart = new Chart(this.chartElementRef.nativeElement, config);
   }
 

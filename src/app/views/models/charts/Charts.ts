@@ -1,4 +1,4 @@
-import {Persona} from "../persona";
+/*import {Persona} from "../persona";
 import {IContacto} from "../contacto";
 
 export interface IChartEjeXTiempo{
@@ -55,6 +55,6 @@ export interface IChartData{
 	labels: string[],
 	datasets: ChartDataSet[]
 }
-
+*/
 
 

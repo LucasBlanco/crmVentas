@@ -88,7 +88,7 @@ export class VendedoraComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.chartSrv.traerDatosDashboardVendedora(params['id']).subscribe(dashboard => {
+      /*this.chartSrv.traerDatosDashboardVendedora(params['id']).subscribe(dashboard => {
         this.rechazos.next(dashboard.rechazos);
         this.ventas.next(dashboard.indicadores.ventas);
         this.agendados.next(dashboard.indicadores.agendados);
@@ -96,7 +96,7 @@ export class VendedoraComponent implements OnInit {
         this.dashboardData.next(dashboard);
         this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, this.supervisorChart);
         this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, this.vendedorasChart);
-      });
+      });*/
     });
 
   }

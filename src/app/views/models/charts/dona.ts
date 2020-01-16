@@ -1,4 +1,4 @@
-export interface IDonaChartData{
+/*export interface IDonaChartData{
 	labels: string[],
 	datasets: DonaChartDataSet[]
 }
@@ -31,3 +31,4 @@ export class DonaChartDataSet{
 	}
 }
 
+*/

@@ -21,8 +21,9 @@
             </mat-card>
         </div>
         <div class="col-4 align-self-center" style="margin-bottom: 10px">
-            <crm-widget titulo="Rechazos" icon="image-rechazos" id="widgetRechazos" [selectOptions]="opcionesPosibles"
-                [data]="dashboardData.value?.rechazos"></crm-widget>
+            <crm-widget titulo="Rechazos" icon="image-rechazos" id="widgetRechazos" [opciones]="periodosRechazo"
+                [data]="rechazos" (opcionSeleccionada)="cambiarPeriodoRechazo($event)" tipo="doughnut">
+            </crm-widget>
         </div>
     </div>
 
@@ -54,32 +55,19 @@
                 </div>
 
                 <div class="col-2 align-end">
-                    <mat-select *ngIf="showBackButton == false" class="row" value="hoy"
-                        (selectionChange)="cambiarVendedoras($event.value)">
+                    <mat-select class="row" value="hoy" (selectionChange)="cambiarPeriodoVendedoras($event.value)">
                         <mat-option value="hoy">Hoy</mat-option>
                         <mat-option value="ultimaSemana">Últimos 7 días</mat-option>
                         <mat-option value="ultimoMes">Últimos 30 días</mat-option>
                         <mat-option value="ultimos3Meses">Últimos 3 meses</mat-option>
                         <mat-option value="ultimos6Meses">Últimos 6 meses</mat-option>
                     </mat-select>
-
-                    <mat-select *ngIf="showBackButton == true" class="row" value="dia"
-                        (selectionChange)="cambiarVendedoras($event.value)">
-                        <mat-option value="dia">Dia</mat-option>
-                        <mat-option value="mes">Mes</mat-option>
-                    </mat-select>
-                    <div class="row justify-content-end">
-                        <button *ngIf="showBackButton == true" mat-icon-button color="primary" class="col-3"
-                            (click)="backButton()">
-                            <mat-icon>arrow_back</mat-icon>
-                        </button>
-                    </div>
                 </div>
             </mat-card-header>
             <mat-card-content>
                 <div class="row">
                     <div class="col-12">
-                        <crm-chart id="vendedoras" [config]="this.vendedorasChart" height="300px">
+                        <crm-chart id="vendedoras" [config]="vendedorasChart" height="300px">
                         </crm-chart>
                     </div>
                     <div class="col">

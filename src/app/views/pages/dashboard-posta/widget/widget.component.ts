@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DashboardChartService } from '@servicios/dashboard-chart.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -15,7 +15,9 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 	@Input() data = new BehaviorSubject(null);
 	@Input() id = '';
 	@Input() tieneOpciones = false;
-	@Input() selectOptions = [];
+	@Input() tipo: 'bar' | 'doughnut' = 'bar';
+	@Input() opciones = [];
+	@Output() opcionSeleccionada = new EventEmitter();
 	cantidad = 0;
 	trend = { color: '', icon: '', number: '' };
 	showTrend = false;
@@ -23,8 +25,8 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 	constructor(public chartSrv: DashboardChartService) {
 	}
 
-	chartWidget = new BehaviorSubject({
-		type: 'doughnut',
+	chartWidget = new BehaviorSubject<any>({
+		type: 'bar',
 		data: {
 			labels: [],
 			datasets: []
@@ -85,11 +87,12 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 	};
 
 	cambiarDeOpcion(value) {
-		const chartWidget = this.chartWidget.value;
+		/*const chartWidget = this.chartWidget.value;
 		chartWidget.data.labels = this.data[value].historico.data.labels;
 		chartWidget.data.datasets = this.data[value].historico.data.datasets;
 		this.cantidad = this.data[value].actual;
-		this.chartWidget.next(chartWidget);
+		this.chartWidget.next(chartWidget);*/
+		this.opcionSeleccionada.emit(value);
 	}
 
 
@@ -99,29 +102,12 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 
 	cargarChart(data) {
 		if (!data) { return; }
-		const chartWidget = this.chartWidget.value;
-		if (this.selectOptions.length > 0) {
-			this.showTrend = false;
-			this.cantidad = data[this.selectOptions[0].value].actual;
-			chartWidget.options = data[this.selectOptions[0].value].historico.type === 'doughnut' ? this.optionsDona : this.optionsChart;
-			chartWidget.type = data[this.selectOptions[0].value].historico.type;
-			chartWidget.data.labels = data[this.selectOptions[0].value].historico.data.labels;
-			chartWidget.data.datasets = data[this.selectOptions[0].value].historico.data.datasets;
-		} else {
-			this.showTrend = true;
-			this.cantidad = data.actual;
-			const trendNumber =
-				this.cantidadDiaAnterior() === 0 ?
-					0 : Math.round(100 * Math.abs(this.cantidadDiaAnterior() - data.actual) / this.cantidadDiaAnterior()) / 100;
-			this.trend.icon = this.cantidadDiaAnterior() - data.actual > 0 ? 'trending_up' : 'trending_down';
-			this.trend.number = this.cantidadDiaAnterior() - data.actual > 0 ? '+' + trendNumber : '-' + trendNumber;
-			this.trend.color = this.cantidadDiaAnterior() - data.actual > 0 ? '#4caf50' : '#b6111a';
-			chartWidget.options = data.historico.type === 'doughnut' ? this.optionsDona : this.optionsChart;
-			chartWidget.type = data.historico.type;
-			chartWidget.data.labels = data.historico.data.labels;
-			chartWidget.data.datasets = data.historico.data.datasets;
-		}
-		this.chartWidget.next(chartWidget);
+		this.cantidad = data.valorActual;
+		const chart = this.chartWidget.value;
+		chart.data = { labels: data.labels, datasets: data.datasets };
+		chart.type = this.tipo;
+		chart.options = this.tipo === 'bar' ? this.optionsChart : this.optionsDona;
+		this.chartWidget.next(chart);
 	}
 
 	ngAfterViewInit() {

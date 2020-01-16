@@ -1,4 +1,4 @@
-import {Chart, ChartDataSet,} from "@modelos/charts/Charts";
+/*import {Chart, ChartDataSet,} from "@modelos/charts/Charts";
 
 export interface ILineChart{
 	type:string
@@ -38,3 +38,4 @@ export class LineChartDataSet extends ChartDataSet{
 		this.clip = contacto.clip;
 	}
 }
+*/

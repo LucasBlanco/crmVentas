@@ -1,4 +1,4 @@
-import {Chart, ChartDataSet} from "@modelos/charts/Charts";
+/*import {Chart, ChartDataSet} from "@modelos/charts/Charts";
 import {ILineChartData} from "@modelos/charts/line";
 
 export interface IBarChartData{
@@ -35,3 +35,4 @@ export class BarChartDataSet extends ChartDataSet{
 		this.minBarLength= contacto.minBarLength;
 	}
 }
+*/

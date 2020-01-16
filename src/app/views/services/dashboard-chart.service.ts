@@ -1,12 +1,20 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BarChart } from '@modelos/charts/bar';
-import { Chart, ChartDataSet, ChartEjeXTiempo } from '@modelos/charts/Charts';
-import { DonaChart } from '@modelos/charts/dona';
-import { LineChart } from '@modelos/charts/line';
+import { Operador } from '@modelos/operador';
+import * as moment from 'moment';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
+import {
+    Estados,
+    EstadosRechazoAgrupados,
+    nombreEstadoAgrupado,
+    nombreEstadoAgrupadoConDetalleRechazo,
+} from '../enums/estados';
+import { Perfiles } from './../enums/perfiles';
+import { OperadoresService } from './operadores.service';
+
 
 class ColorPalette {
 	constructor(private nroColores: number) { }
@@ -32,297 +40,337 @@ class ColorPalette {
 	}
 }
 
+export class WidgetData {
+
+	labels: string[];
+	datasets: any[];
+	constructor(chart) {
+		this.labels = chart.labels;
+		this.datasets = chart.datasets;
+	}
+
+	get valorActual() {
+		const index = this.labels.findIndex(l => l === moment().format('YYYY-MM-DD'));
+		return this.datasets[0].data[index];
+	}
+}
+
 @Injectable({
 	providedIn: 'root'
 })
 export class DashboardChartService {
 	public charts = [];
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private operadorSrv: OperadoresService) { }
+	ventas = new Subject();
+	estados = [
+		Estados.CREADO,
+		Estados.AGENDADO,
+		Estados.RELLAMADO,
+		EstadosRechazoAgrupados.NO_INTERESA,
+		EstadosRechazoAgrupados.INCONTACTABLE,
+		EstadosRechazoAgrupados.OTRO_RECHAZO
+	];
 
-	trarDatosDashboardSupervisorCall() {
-		return this.http.get<ChartEjeXTiempo>(environment.ip + '/dashboard/supervisorCall?XDEBUG_SESSION_START=PHPSTORM').pipe(
-			map(fuentes => this.mapDashboard(fuentes))
+	traerVentas({ fechaDesde, fechaHasta }) {
+		const params = {
+			desde: fechaDesde,
+			hasta: fechaHasta,
+			'groupBy[]': 'porDia',
+			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
+		};
+		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadEstados`, { params }).pipe(
+			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
+		);
+	}
+	traerVentasUltimaSemana = () => this.traerVentas(this.rangoUltimaSemana());
+
+	traerAgendados({ fechaDesde, fechaHasta }) {
+		const params = {
+			desde: fechaDesde,
+			hasta: fechaHasta,
+			rellamados: 'false',
+			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
+		};
+		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
+			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
+		);
+	}
+	traerAgendadosUltimaSemana = () => this.traerAgendados(this.rangoUltimaSemana());
+
+	traerRellamados({ fechaDesde, fechaHasta }) {
+		const params = {
+			desde: fechaDesde,
+			hasta: fechaHasta,
+			rellamados: 'true',
+			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
+		};
+		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
+			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
+		);
+	}
+	traerRellamadosUltimaSemana = () => this.traerRellamados(this.rangoUltimaSemana());
+
+	traerVentasPorEstado({ fechaDesde, fechaHasta }, periodo: 'porDia' | 'porMes') {
+		const params = new HttpParams()
+			.append('desde', fechaDesde)
+			.append('hasta', fechaHasta)
+			.append('groupBy[]', 'ultimoEstado')
+			.append('groupBy[]', periodo)
+			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		return this.http.get<{ cantidad: number, ultimoEstado: Estados, fecha: string; }[]>(
+			`${environment.ip}/estadistica/cantidadEstados`, { params }
+		).pipe(
+			map(ventas => this.mapVentasPorEstado(ventas, periodo === 'porDia' ? this.diasUltimaSemana() : this.mesesUltimoAño()))
 		);
 	}
 
-	traerDatosDashboardVendedora(id) {
-		return this.http.get<ChartEjeXTiempo>(environment.ip + '/dashboard/operadorCall/' + id).pipe(
-			map(fuentes => this.mapDashboard(fuentes))
+	traerVentasPorEstadoUltimaSemana = () => this.traerVentasPorEstado(this.rangoUltimaSemana(), 'porDia');
+	traerVentasPorEstadoUltimoAño = () => this.traerVentasPorEstado(this.rangoUltimoAño(), 'porMes');
+
+	mapVentasPorEstado(ventas: { cantidad: number, ultimoEstado: Estados; fecha: string; }[], labels) {
+		const datasetsLabels = this.estados;
+		const dataALlenar = labels.map(s => {
+			return this.estados.map(e => ({ cantidad: 0, ultimoEstado: e, fecha: s }));
+		}).flat();
+		const dataConRechazosAgrupados = ventas
+			.map(v => ({ ...v, ultimoEstado: nombreEstadoAgrupado(v.ultimoEstado) }))
+			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado', 'fecha']), []);
+		dataConRechazosAgrupados.forEach(d => {
+			const indice = dataALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado && e.fecha === d.fecha);
+			if (indice !== -1) {
+				dataALlenar[indice] = d;
+			}
+		});
+		const colorPalette = new ColorPalette(datasetsLabels.length);
+		const datasets = datasetsLabels.map(label => {
+			const color = colorPalette.proximoColor();
+			return {
+				label,
+				data: dataALlenar.filter(d => d.ultimoEstado === label).map(d => d.cantidad),
+				backgroundColor: color,
+				borderColor: color
+			};
+		});
+		return { labels, datasets };
+	}
+
+	traerRechazos({ fechaDesde, fechaHasta }) {
+		const params = new HttpParams()
+			.append('desde', fechaDesde)
+			.append('hasta', fechaHasta)
+			.append('groupBy[]', 'ultimoEstado')
+			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		return this.http.get<{ cantidad: number, ultimoEstado: Estados; }[]>(
+			`${environment.ip}/estadistica/cantidadEstados`, { params }
+		).pipe(
+			map(this.mapRechazos.bind(this))
 		);
 	}
 
-	mapDashboard(data) {
-		const porMes = this.mapChartPorMes(data);
-		const porDia = this.mapChartPodDia(data);
-		const indicadorVentas = this.mapWidgetVentas(data);
-		const indicadorAgendados = this.mapWidgetAgendados(data);
-		const indicadorRellamados = this.mapWidgetRellamados(data);
-		const rechazos = this.mapWidgetRechazos(data);
-		const vendedoras = this.mapChartVendedoras(data);
-		return new DashboardSupervisoraCall({
-			porMes,
-			porDia,
-			indicadores: { ventas: indicadorVentas, rellamados: indicadorRellamados, agendados: indicadorAgendados },
-			rechazos,
-			vendedoras
+	mapRechazos(ventas: { cantidad: number, ultimoEstado: Estados; }[]) {
+		const rechazos = ventas.filter(v => v.ultimoEstado.toLowerCase().includes('rechazo'));
+		const estados = [
+			Estados.RECHAZO_NO_DISPONIBLE,
+			Estados.RECHAZO_INEXISTENTE,
+			Estados.RECHAZO_NO_CONTESTA,
+			Estados.RECHAZO_EQUIVOCADO,
+			Estados.RECHAZO_NO_LE_INTERESA,
+			EstadosRechazoAgrupados.OTRO_RECHAZO
+		];
+		const rechazosALlenar = estados.map(e => ({ ultimoEstado: e, cantidad: 0 }));
+		const rechazosAgrupados = rechazos
+			.map(r => ({ ...r, ultimoEstado: nombreEstadoAgrupadoConDetalleRechazo(r.ultimoEstado) }))
+			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado']), []);
+		rechazosAgrupados.forEach(d => {
+			const indice = rechazosALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado);
+			if (indice !== -1) {
+				rechazosALlenar[indice] = d;
+			}
 		});
+		const colorPalette = new ColorPalette(rechazosALlenar.length);
+		const colores = rechazosALlenar.map(() => colorPalette.proximoColor());
+		const labels = rechazosALlenar.map(r => r.ultimoEstado);
+		const datasets = {
+			label: 'cantidad',
+			data: rechazosALlenar.map(d => d.cantidad),
+			backgroundColor: colores,
+			borderColor: colores
+		};
+		return { labels, datasets: [datasets] };
 	}
 
-	mapChartPorMes(data) {
-		const porMes = data.datosTratados.tiempo.porMes;
-		const labelsDuplicadas = porMes.map(datosPorDia => datosPorDia.nombreMes);
-		const labels = labelsDuplicadas.filter((e, i) => labelsDuplicadas.indexOf(e) === i);
-		const labelsDataSetDuplicadas = porMes.map(datosPorDia => datosPorDia.estadoNuevo);
-		const labelsDataSet = labelsDataSetDuplicadas.filter((e, i) => labelsDataSetDuplicadas.indexOf(e) === i);
-		const colorPalette = new ColorPalette(labelsDataSet.length);
-		const dataSet = labelsDataSet.map(estado => {
+	traerRechazosHoy = () => this.traerRechazos(this.rangoHoy());
+	traerRechazosUltimaSemana = () => this.traerRechazos(this.rangoUltimaSemana());
+	traerRechazosUltimoMes = () => this.traerRechazos(this.rangoUltimoMes());
+	traerRechazosUltimos3Meses = () => this.traerRechazos(this.rangoUltimos3Meses());
+	traerRechazosUltimos6Meses = () => this.traerRechazos(this.rangoUltimos6Meses());
+
+	traerVentasPorEstadoPorVendedora({ fechaDesde, fechaHasta }): Observable<{ labels: any[], datasets: any[]; }> {
+		const params = new HttpParams()
+			.append('desde', fechaDesde)
+			.append('hasta', fechaHasta)
+			.append('groupBy[]', 'ultimoEstado')
+			.append('groupBy[]', 'usuario')
+			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, usuario: string; }[]>(
+			`${environment.ip}/estadistica/cantidadEstados`, { params }
+		);
+		const vendedoras$ = this.operadorSrv.traerTodos();
+		return combineLatest([ventas$, vendedoras$]).pipe(
+			map(([ventas, vendedoras]) => this.mapVentasPorEstadoPorVendedora(ventas, vendedoras))
+		);
+	}
+
+	traerVentasPorEstadoPorVendedoraHoy = () => this.traerVentasPorEstadoPorVendedora(this.rangoHoy());
+	traerVentasPorEstadoPorVendedoraUltimaSemana = () => this.traerVentasPorEstadoPorVendedora(this.rangoUltimaSemana());
+	traerVentasPorEstadoPorVendedoraUltimoMes = () => this.traerVentasPorEstadoPorVendedora(this.rangoUltimoMes());
+	traerVentasPorEstadoPorVendedoraUltimos3Meses = () => this.traerVentasPorEstadoPorVendedora(this.rangoUltimos3Meses());
+	traerVentasPorEstadoPorVendedoraUltimos6Meses = () => this.traerVentasPorEstadoPorVendedora(this.rangoUltimos6Meses());
+
+	mapVentasPorEstadoPorVendedora(ventas: { cantidad: number, ultimoEstado: Estados, usuario: string; }[], vendedoras: Operador[]) {
+		const datasetsLabels = this.estados;
+		const usuarios = vendedoras.map(v => v.nombre); // sin repetidos
+		const dataALlenar = usuarios.map(usuario => {
+			return this.estados.map(e => ({ cantidad: 0, ultimoEstado: e, usuario }));
+		}).flat();
+		const dataConRechazosAgrupados = ventas
+			.map(v => ({ ...v, ultimoEstado: nombreEstadoAgrupado(v.ultimoEstado) }))
+			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado', 'usuario']), []);
+		dataConRechazosAgrupados.forEach(d => {
+			const indice = dataALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado && e.usuario === d.usuario);
+			if (indice !== -1) {
+				dataALlenar[indice] = d;
+			}
+		});
+		const colorPalette = new ColorPalette(datasetsLabels.length);
+		const datasets = datasetsLabels.map(label => {
 			const color = colorPalette.proximoColor();
-			return new ChartDataSet({
-				label: estado,
-				data: porMes
-					.filter(x => x.estadoNuevo === estado)
-					.map(x => x.cantidad),
+			return {
+				label,
+				data: usuarios.map(u => dataALlenar.find(d => d.usuario === u && d.ultimoEstado === label)).map(d => d.cantidad),
 				backgroundColor: color,
 				borderColor: color
-			});
+			};
 		});
-		return new ChartEjeXTiempo({ labels, datasets: dataSet });
+		return { labels: usuarios, datasets };
 	}
 
-	mapChartPodDia(data) {
-		const porTiempo = data.datosTratados.tiempo;
-		const labelsDuplicadas = porTiempo.porDia.map(datosPorDia => datosPorDia.dia);
-		const labelsDataSetDuplicadas = porTiempo.porDia.map(datosPorDia => datosPorDia.estadoNuevo);
-		const labels = porTiempo.porDia.map(datosPorDia => datosPorDia.dia).filter((e, i) => labelsDuplicadas.indexOf(e) === i);
-		const labelsDataSet = porTiempo.porDia.map(d => d.estadoNuevo).filter((e, i) => labelsDataSetDuplicadas.indexOf(e) === i);
-		const colorPalette = new ColorPalette(labelsDataSet.length);
-		const dataSet = labelsDataSet.map(estado => {
-			const color = colorPalette.proximoColor();
-			return new ChartDataSet({
-				label: estado,
-				data: labels.map(dia => {
-					const _dia = porTiempo.porDia.find(d => d.dia === dia && d.estadoNuevo === estado);
-					return _dia ? _dia.cantidad : 0;
-				}),
-				backgroundColor: color,
-				borderColor: color
-			});
-		});
-		return new ChartEjeXTiempo({ labels, datasets: dataSet });
+
+
+	ordenarPorFecha(a, b) {
+		if (moment(a, 'YYYY-MM-DD').isBefore(moment(b, 'YYYY-MM-DD'))) {
+			return -1;
+		}
+		return 1;
 	}
 
-	mapWidgetVentas(data) {
-		const valorActual = data.indicador.cantidadVentasDelDia.actual;
-		const historico = data.indicador.cantidadVentasDelDia.historico;
-		const labels = historico.map(x => x.dia);
-		const dataset = historico.map(x => x.cantidad);
-		const ventasChart = new LineChart({
-			type: 'line',
-			data: {
-				labels,
-				datasets: [{
-					label: 'ventas',
-					fill: 'false',
-					borderColor: '#92ff86',
-					clip: 0,
-					backgroundColor: '#92ff86',
-					data: dataset
-				}]
-			}
-		});
-		return new Indicador({ actual: valorActual, historico: ventasChart });
-	}
-
-	mapWidgetAgendados(data) {
-		const valorActual = data.indicador.agendadosPendientesDelDia.actual;
-		const historico = data.indicador.agendadosPendientesDelDia.historico;
-		const labels = historico.map(x => x.dia);
-		const dataset = historico.map(x => x.cantidad);
-		const ventasChart = new BarChart({
-			type: 'bar',
-			data: {
-				labels: labels,
-				datasets: [{
-					label: 'ventas',
-					borderColor: '#3dc892',
-					backgroundColor: '#3dc892',
-					data: dataset, minBarLength: 2
-				}]
-			}
-		});
-		return new Indicador({ actual: valorActual, historico: ventasChart });
-	}
-
-	mapWidgetRellamados(data) {
-		const valorActual = data.indicador.rellamadosPendientesDelDia.actual;
-		const historico = data.indicador.rellamadosPendientesDelDia.historico;
-		const labels = historico.map(x => x.dia);
-		const dataset = historico.map(x => x.cantidad);
-		const ventasChart = new BarChart({
-			type: 'bar',
-			data: {
-				labels,
-				datasets: [{
-					label: 'ventas',
-					borderColor: '#4b70b4',
-					backgroundColor: '#4b70b4',
-					data: dataset,
-					minBarLength: 2
-				}]
-			}
-		});
-		return new Indicador({ actual: valorActual, historico: ventasChart });
-	}
-
-	mapWidgetRechazos(data) {
-		const hoy = new IndicadorDona(this.mapRechazos(data, 'hoy'));
-		const ultimaSemana = new IndicadorDona(this.mapRechazos(data, 'ultimaSemana'));
-		const ultimoMes = new IndicadorDona(this.mapRechazos(data, 'ultimoMes'));
-		const ultimos3Meses = new IndicadorDona(this.mapRechazos(data, 'ultimos3Meses'));
-		const ultimos6Meses = new IndicadorDona(this.mapRechazos(data, 'ultimos6Meses'));
-		return { hoy, ultimaSemana, ultimoMes, ultimos3Meses, ultimos6Meses };
-	}
-
-	mapRechazos(data, index) {
-		const valor = data.rechazos[index].map(rechazos => rechazos.cantidad).reduce((a, b) => a + b, 0);
-		const labels = data.rechazos[index].map(rechazos => rechazos.estadoNuevo);
-		const cantidad = data.rechazos[index].map(rechazos => rechazos.cantidad);
-		const colorPalette = new ColorPalette(cantidad.length);
-		const chart = new DonaChart({
-			type: 'doughnut',
-			data: {
-				labels,
-				datasets: [{
-					data: cantidad,
-					backgroundColor: cantidad.map(() => colorPalette.proximoColor())
-				}]
-			}
-		});
-		return { actual: valor, historico: chart };
-	}
-
-	mapChartVendedoras(data) {
-		const hoy = this.mapChartVendedorasPorTiempo(data, 'hoy');
-		const ultimaSemana = this.mapChartVendedorasPorTiempo(data, 'ultimaSemana');
-		const ultimoMes = this.mapChartVendedorasPorTiempo(data, 'ultimoMes');
-		const ultimos3Meses = this.mapChartVendedorasPorTiempo(data, 'ultimos3Meses');
-		const ultimos6Meses = this.mapChartVendedorasPorTiempo(data, 'ultimos6Meses');
-		return { hoy, ultimos6Meses, ultimaSemana, ultimoMes, ultimos3Meses };
-	}
-
-	mapChartVendedorasPorTiempo(data, tiempo) {
-		const datos = data.datosTratados.vendedoras[tiempo];
-		const labelsDuplicadas = datos.map(d => d.nombre);
-		const labels = labelsDuplicadas.filter((e, i) => labelsDuplicadas.indexOf(e) === i);
-		const labelsDataSetDuplicadas = datos.map(datosPorDia => datosPorDia.estadoNuevo);
-		const labelsDataSet = labelsDataSetDuplicadas.filter((e, i) => labelsDataSetDuplicadas.indexOf(e) === i);
-		const colorPalette = new ColorPalette(labelsDataSet.length);
-		const dataSet = labelsDataSet.map(estado => {
-			const color = colorPalette.proximoColor();
-			return new ChartDataSet({
-				label: estado,
-				data: datos
-					.filter(x => x.estadoNuevo === estado)
-					.map(x => x.cantidad),
-				backgroundColor: color,
-				borderColor: color
-			});
-		});
-		return new ChartEjeXTiempo({ labels, datasets: dataSet });
-	}
-}
-
-export interface IDashboardSupervisoraCall {
-	porDia: ChartEjeXTiempo;
-	porMes: ChartEjeXTiempo;
-	indicadores: { ventas: Indicador, agendados: Indicador, rellamados: Indicador; };
-	rechazos: {
-		hoy: IndicadorDona,
-		ultimaSemana: IndicadorDona,
-		ultimoMes: IndicadorDona,
-		ultimos3Meses: IndicadorDona,
-		ultimos6Meses: IndicadorDona;
+	sumarCantidadEstadosRepetidos = (identificadores: string[]) => (array, valorActual) => {
+		const condicion = e => identificadores.every(id => e[id] === valorActual[id]);
+		const index = array.findIndex(condicion);
+		if (index !== -1) {
+			array[index].cantidad += valorActual.cantidad;
+		} else {
+			array.push(valorActual);
+		}
+		return array;
 	};
-	vendedoras: {
-		hoy: ChartEjeXTiempo,
-		ultimaSemana: ChartEjeXTiempo,
-		ultimoMes: ChartEjeXTiempo,
-		ultimos3Meses: ChartEjeXTiempo,
-		ultimos6Meses: ChartEjeXTiempo;
-	};
-}
 
-export class DashboardSupervisoraCall implements IDashboardSupervisoraCall {
-	porDia: ChartEjeXTiempo;
-	porMes: ChartEjeXTiempo;
-	indicadores: { ventas: Indicador, agendados: Indicador, rellamados: Indicador; };
-	rechazos: {
-		hoy: IndicadorDona,
-		ultimaSemana: IndicadorDona,
-		ultimoMes: IndicadorDona,
-		ultimos3Meses: IndicadorDona,
-		ultimos6Meses: IndicadorDona;
-	};
-	vendedoras: {
-		hoy: ChartEjeXTiempo,
-		ultimaSemana: ChartEjeXTiempo,
-		ultimoMes: ChartEjeXTiempo,
-		ultimos3Meses: ChartEjeXTiempo,
-		ultimos6Meses: ChartEjeXTiempo;
-	};
-	constructor(contacto: IDashboardSupervisoraCall) {
-		this.porDia = contacto.porDia;
-		this.porMes = contacto.porMes;
-		this.indicadores = {
-			ventas: contacto.indicadores.ventas,
-			agendados: contacto.indicadores.agendados,
-			rellamados: contacto.indicadores.rellamados
+
+
+
+	completarUltimaSemana(dias: { cantidad: number, fecha: string; }[]) {
+		const labels = this.diasUltimaSemana();
+		const data = this.diasUltimaSemana().map(dia => {
+			const diaBack = dias.find(d => d.fecha === dia);
+			return diaBack ? diaBack.cantidad : 0;
+		});
+		const color = new ColorPalette(1).proximoColor();
+		return { labels, datasets: [{ label: 'cantidad', data, backgroundColor: color, borderColor: color }] };
+	}
+
+	rangoHoy() {
+		return {
+			fechaDesde: moment().format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
 		};
-		this.rechazos = {
-			hoy: contacto.rechazos.hoy,
-			ultimaSemana: contacto.rechazos.ultimaSemana,
-			ultimoMes: contacto.rechazos.ultimoMes,
-			ultimos3Meses: contacto.rechazos.ultimos3Meses,
-			ultimos6Meses: contacto.rechazos.ultimos6Meses
+	}
+
+	rangoUltimaSemana(): { fechaDesde: string, fechaHasta: string; } {
+		return {
+			fechaDesde: moment().add(-6, 'days').format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
 		};
-		this.vendedoras = {
-			hoy: contacto.vendedoras.hoy,
-			ultimaSemana: contacto.vendedoras.ultimaSemana,
-			ultimoMes: contacto.vendedoras.ultimoMes,
-			ultimos3Meses: contacto.vendedoras.ultimos3Meses,
-			ultimos6Meses: contacto.vendedoras.ultimos6Meses
+	}
+
+	rangoUltimoMes(): { fechaDesde: string, fechaHasta: string; } {
+		return {
+			fechaDesde: moment().add(-1, 'month').format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
 		};
-
 	}
-}
 
-export interface IIndicador {
-	actual: number;
-	historico: Chart;
-}
-
-export class Indicador implements IIndicador {
-	actual: number;
-	historico: Chart;
-	constructor(contacto: IIndicador) {
-		this.actual = contacto.actual;
-		this.historico = contacto.historico;
+	rangoUltimos3Meses(): { fechaDesde: string, fechaHasta: string; } {
+		return {
+			fechaDesde: moment().add(-3, 'months').format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
+		};
 	}
-}
 
-export interface IIndicadorDona {
-	actual: number;
-	historico: DonaChart;
-}
-
-export class IndicadorDona implements IIndicadorDona {
-	actual: number;
-	historico: DonaChart;
-	constructor(contacto: IIndicadorDona) {
-		this.actual = contacto.actual;
-		this.historico = contacto.historico;
+	rangoUltimos6Meses(): { fechaDesde: string, fechaHasta: string; } {
+		return {
+			fechaDesde: moment().add(-6, 'months').format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
+		};
 	}
+
+	rangoUltimoAño(): { fechaDesde: string, fechaHasta: string; } {
+		return {
+			fechaDesde: moment().add(-12, 'months').format('YYYY-MM-DD'),
+			fechaHasta: moment().format('YYYY-MM-DD')
+		};
+	}
+	diasUltimaSemana(): string[] {
+		/*let diasUltimaSemana = [];
+		for (let i = 0; i < 7; i++) {
+			diasUltimaSemana = [moment().add(-i, 'days').format('YYYY-MM-DD'), ...diasUltimaSemana];
+		}*/
+		const diasUltimaSemana = [
+			moment('2020-01-01', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-02', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-03', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-04', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-05', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-06', 'YYYY-MM-DD').format('YYYY-MM-DD'),
+			moment('2020-01-07', 'YYYY-MM-DD').format('YYYY-MM-DD')
+		];
+		return diasUltimaSemana;
+	}
+
+	mesesUltimoAño(): string[] {
+		/*let mesesUltimoAño = [];
+		for (let i = 0; i < 12; i++) {
+			mesesUltimoAño = [moment().add(-i, 'month').format('YYYY-MM-DD'), ...mesesUltimoAño];
+		}*/
+		const mesesUltimoAño = [
+			moment('2019-01', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-02', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-03', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-04', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-05', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-06', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-07', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-08', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-09', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-10', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-11', 'YYYY-MM').format('YYYY-MM'),
+			moment('2019-12', 'YYYY-MM').format('YYYY-MM'),
+			moment('2020-01', 'YYYY-MM').format('YYYY-MM')
+		];
+		return mesesUltimoAño;
+	}
+
 }
+
 
 
 

@@ -22,9 +22,9 @@
 			<crm-chart width="2" height="1" [id]="id" [config]="chartWidget"></crm-chart>
 		</div>
 	</div>
-	<div *ngIf="selectOptions.length > 0" class="row">
-		<mat-select class="col" [value]="selectOptions[0].value" (selectionChange)="cambiarDeOpcion($event.value)">
-			<mat-option *ngFor="let opcion of selectOptions" [value]="opcion.value">{{opcion.nombre}}</mat-option>
+	<div *ngIf="opciones.length > 0" class="row">
+		<mat-select class="col" [value]="opciones[0].value" (selectionChange)="cambiarDeOpcion($event.value)">
+			<mat-option *ngFor="let opcion of opciones" [value]="opcion.value">{{opcion.nombre}}</mat-option>
 		</mat-select>
 	</div>
 </mat-card>
