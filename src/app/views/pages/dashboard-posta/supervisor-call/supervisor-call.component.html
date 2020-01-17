@@ -44,7 +44,7 @@
     </div>
 
     <div class="row justify-content-start">
-        <mat-card style="height: 500px;" class="col-9" [style.margin-top]="'10px'">
+        <mat-card style="height: 500px;" class="col-12" [style.margin-top]="'10px'">
             <mat-card-header class="row align-items-start">
                 <div class="col-1">
                     <div mat-card-avatar class="vendedora-image" style="border-radius:0px !important;"></div>
@@ -100,6 +100,24 @@
 
             </mat-card-content>
         </mat-card>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-12">
+            <mat-card style="height: auto;" class="row justify-content-start" [style.margin-bottom]="'10px'">
+                <mat-card-header class=" align-items-start">
+                    <div class="col-1">
+                        <div mat-card-avatar class="general-image" style="border-radius:0px !important;"></div>
+                    </div>
+                    <div class="col">
+                        <mat-card-title>Bases</mat-card-title>
+                        <mat-card-subtitle>Estadisticas por base</mat-card-subtitle>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <crm-chart height="1500px" id="general" [config]="basesChart"></crm-chart>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </div>
 
 </div>

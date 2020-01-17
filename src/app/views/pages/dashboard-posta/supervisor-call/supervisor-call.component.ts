@@ -31,6 +31,34 @@ export class SupervisorCallComponent implements AfterViewInit {
 	ventas = new BehaviorSubject<any>(null);
 	rellamados = new BehaviorSubject<any>(null);
 	agendados = new BehaviorSubject<any>(null);
+	basesChart = new BehaviorSubject<any>({
+		type: 'horizontalBar',
+		data: {
+			labels: [],
+			datasets: []
+		},
+		options: {
+			maintainAspectRatio: false,
+			scales: {
+				yAxes: [{
+					stacked: true,
+					ticks: {
+						beginAtZero: true,
+						scaleLabel: 1,
+						fontSize: 10
+					}
+				}],
+				xAxes: [{
+					stacked: true,
+					ticks: {
+						beginAtZero: true,
+						scaleLabel: 1,
+						fontSize: 10
+					}
+				}]
+			}
+		}
+	});
 	dashboardData = new BehaviorSubject<any>(null);
 	supervisorChart = new BehaviorSubject<any>({
 		type: 'bar',
@@ -97,6 +125,7 @@ export class SupervisorCallComponent implements AfterViewInit {
 		this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => this.cargarChart(this.supervisorChart, ventas));
 		this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
 		this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
+		this.chartSrv.traerVentasPorBaseUltimoAño().subscribe(ventas => this.cargarChart(this.basesChart, ventas));
 		this.operadorSrv.traerTodos().subscribe(operadores => {
 			this.vendedoras = operadores;
 			this.vendedorasFiltradas = this.vendedoraCtrl.valueChanges.pipe(

@@ -13,6 +13,8 @@ import {
     nombreEstadoAgrupadoConDetalleRechazo,
 } from '../enums/estados';
 import { Perfiles } from './../enums/perfiles';
+import { Fuente } from './../models/fuente';
+import { FuentesService } from './fuentes.service';
 import { OperadoresService } from './operadores.service';
 
 
@@ -55,13 +57,56 @@ export class WidgetData {
 	}
 }
 
+export class Combinatoria {
+	combinatoria;
+	constructor(
+		...elemsParaLaCombinatoria: { data: (string | number)[], nombre: string; }[]
+	) {
+		const [head, ...tail] = elemsParaLaCombinatoria.map(this.toArrayDeObjectos);
+		this.combinatoria = tail.reduce((arrayFinal, elemActual) => {
+			return arrayFinal.map(elem =>
+				elemActual.map(otroElem => ({ ...elem, ...otroElem }))
+			).flat();
+		}, head);
+	}
+
+	private toArrayDeObjectos({ data, nombre }): object[] {
+		// transforma cada elemento de la combinatoria en un array de objectos con el nombre correcspondiente
+		return data.map(e => ({ [nombre]: e }));
+	}
+
+	agregarPropiedades(propiedades: { [key: string]: (string | number); }) {
+		this.combinatoria = this.combinatoria.map(comb => ({ ...comb, ...propiedades }));
+	}
+
+	mergeBy(identificadores: string[], data: any[]) {
+		this.combinatoria = this.combinatoria.map(comb => {
+			const elemRepetido = data.find(d => identificadores.every(i => d[i] === comb[i]));
+			return elemRepetido ? elemRepetido : comb;
+		});
+	}
+}
+
+
+
+
+
 @Injectable({
 	providedIn: 'root'
 })
 export class DashboardChartService {
+	constructor(private http: HttpClient, private operadorSrv: OperadoresService, private baseSrv: FuentesService) {
+		const estados = { data: ['unEstado', 'otroEstado'], nombre: 'estado' };
+		const fechas = { data: ['2020-10-02', '2019-02-02'], nombre: 'fecha' };
+		const combinatoria = new Combinatoria(estados, fechas);
+		combinatoria.agregarPropiedades({ cantidad: 0, usuario: 'joaquin' });
+		const aMergear = [{ estado: 'unEstado', fecha: '2020-10-02', cantidad: 100 }];
+		combinatoria.mergeBy(['estado', 'fecha'], aMergear);
+		console.log('combinatoria', combinatoria.combinatoria);
+	}
 	public charts = [];
-	constructor(private http: HttpClient, private operadorSrv: OperadoresService) { }
 	ventas = new Subject();
+
 	estados = [
 		Estados.CREADO,
 		Estados.AGENDADO,
@@ -71,6 +116,30 @@ export class DashboardChartService {
 		EstadosRechazoAgrupados.OTRO_RECHAZO
 	];
 
+	estadosRechazo = [
+		Estados.RECHAZO_NO_DISPONIBLE,
+		Estados.RECHAZO_INEXISTENTE,
+		Estados.RECHAZO_NO_CONTESTA,
+		Estados.RECHAZO_EQUIVOCADO,
+		Estados.RECHAZO_NO_LE_INTERESA,
+		EstadosRechazoAgrupados.OTRO_RECHAZO
+
+	];
+
+	renombrarUltimoEstadoRechazo = venta => ({ ...venta, ultimoEstado: nombreEstadoAgrupado(venta.ultimoEstado) });
+	renombrarUltimoEstadoRechazoConDetalle = venta => ({ ...venta, ultimoEstado: nombreEstadoAgrupadoConDetalleRechazo(venta.ultimoEstado) });
+
+	agruparEstados = (funcionRenombre) => (identificadores: string[]) => (data: any[]) => {
+		const dataRenombrada = data.map(funcionRenombre);
+		return dataRenombrada.reduce(this.combinarEstadosRepetidosSumandoCantidad(identificadores), []) as any[];
+	};
+	// tslint:disable-next-line: member-ordering
+	agruparEstadosPorUltimoEstadoRechazoBy = this.agruparEstados(this.renombrarUltimoEstadoRechazo);
+	// tslint:disable-next-line: member-ordering
+	agruparEstadosPorUltimoEstadoRechazoConDetalleBy = this.agruparEstados(this.renombrarUltimoEstadoRechazoConDetalle);
+
+
+	/* VENTAS */
 	traerVentas({ fechaDesde, fechaHasta }) {
 		const params = {
 			desde: fechaDesde,
@@ -84,6 +153,8 @@ export class DashboardChartService {
 	}
 	traerVentasUltimaSemana = () => this.traerVentas(this.rangoUltimaSemana());
 
+
+	/* AGENDADOS */
 	traerAgendados({ fechaDesde, fechaHasta }) {
 		const params = {
 			desde: fechaDesde,
@@ -97,6 +168,8 @@ export class DashboardChartService {
 	}
 	traerAgendadosUltimaSemana = () => this.traerAgendados(this.rangoUltimaSemana());
 
+
+	/* RELLAMADOS */
 	traerRellamados({ fechaDesde, fechaHasta }) {
 		const params = {
 			desde: fechaDesde,
@@ -110,6 +183,7 @@ export class DashboardChartService {
 	}
 	traerRellamadosUltimaSemana = () => this.traerRellamados(this.rangoUltimaSemana());
 
+	/* POR ESTADO */
 	traerVentasPorEstado({ fechaDesde, fechaHasta }, periodo: 'porDia' | 'porMes') {
 		const params = new HttpParams()
 			.append('desde', fechaDesde)
@@ -129,24 +203,19 @@ export class DashboardChartService {
 
 	mapVentasPorEstado(ventas: { cantidad: number, ultimoEstado: Estados; fecha: string; }[], labels) {
 		const datasetsLabels = this.estados;
-		const dataALlenar = labels.map(s => {
-			return this.estados.map(e => ({ cantidad: 0, ultimoEstado: e, fecha: s }));
-		}).flat();
-		const dataConRechazosAgrupados = ventas
-			.map(v => ({ ...v, ultimoEstado: nombreEstadoAgrupado(v.ultimoEstado) }))
-			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado', 'fecha']), []);
-		dataConRechazosAgrupados.forEach(d => {
-			const indice = dataALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado && e.fecha === d.fecha);
-			if (indice !== -1) {
-				dataALlenar[indice] = d;
-			}
-		});
+		const unaCombinatoria = new Combinatoria(
+			{ data: this.estados, nombre: 'ultimoEstado' },
+			{ data: labels, nombre: 'fecha' },
+			{ data: [0], nombre: 'cantidad' }
+		);
+		const dataConRechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado', 'fecha'])(ventas);
+		unaCombinatoria.mergeBy(['ultimoEstado', 'fecha'], dataConRechazosAgrupados);
 		const colorPalette = new ColorPalette(datasetsLabels.length);
 		const datasets = datasetsLabels.map(label => {
 			const color = colorPalette.proximoColor();
 			return {
 				label,
-				data: dataALlenar.filter(d => d.ultimoEstado === label).map(d => d.cantidad),
+				data: unaCombinatoria.combinatoria.filter(d => d.ultimoEstado === label).map(d => d.cantidad),
 				backgroundColor: color,
 				borderColor: color
 			};
@@ -154,6 +223,48 @@ export class DashboardChartService {
 		return { labels, datasets };
 	}
 
+	/* POR BASE */
+	traerVentasPorBase({ fechaDesde, fechaHasta }) {
+		const params = new HttpParams()
+			.append('desde', fechaDesde)
+			.append('hasta', fechaHasta)
+			.append('groupBy[]', 'ultimoEstado')
+			.append('groupBy[]', 'base')
+			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, base: string; }[]>(
+			`${environment.ip}/estadistica/cantidadEstados`, { params }
+		);
+		const bases$ = this.baseSrv.traerTodos();
+		return combineLatest([ventas$, bases$]).pipe(
+			map(([ventas, bases]) => this.mapVentasPorBase(ventas, bases))
+		);
+	}
+	traerVentasPorBaseUltimoAño = () => this.traerVentasPorBase(this.rangoUltimoAño());
+
+	mapVentasPorBase(ventas: { cantidad: number, ultimoEstado: Estados, base: string; }[], bases: Fuente[]) {
+		const nombreBases = bases.map(base => base.nombre);
+		const labels = nombreBases;
+		const unaCombinatoria = new Combinatoria(
+			{ data: this.estados, nombre: 'ultimoEstado' },
+			{ data: nombreBases, nombre: 'base' },
+			{ data: [0], nombre: 'cantidad' }
+		);
+		unaCombinatoria.mergeBy(['ultimoEstado', 'base'], ventas);
+		const ventasPorBase = unaCombinatoria.combinatoria;
+		const colorPalette = new ColorPalette(labels.length);
+		const datasets = this.estados.map(estado => {
+			const color = colorPalette.proximoColor();
+			return {
+				label: estado,
+				data: unaCombinatoria.combinatoria.filter(d => d.ultimoEstado === estado).map(d => d.cantidad),
+				backgroundColor: color,
+				borderColor: color
+			};
+		});
+		return { labels, datasets };
+	}
+
+	/* RECHAZOS */
 	traerRechazos({ fechaDesde, fechaHasta }) {
 		const params = new HttpParams()
 			.append('desde', fechaDesde)
@@ -169,30 +280,19 @@ export class DashboardChartService {
 
 	mapRechazos(ventas: { cantidad: number, ultimoEstado: Estados; }[]) {
 		const rechazos = ventas.filter(v => v.ultimoEstado.toLowerCase().includes('rechazo'));
-		const estados = [
-			Estados.RECHAZO_NO_DISPONIBLE,
-			Estados.RECHAZO_INEXISTENTE,
-			Estados.RECHAZO_NO_CONTESTA,
-			Estados.RECHAZO_EQUIVOCADO,
-			Estados.RECHAZO_NO_LE_INTERESA,
-			EstadosRechazoAgrupados.OTRO_RECHAZO
-		];
-		const rechazosALlenar = estados.map(e => ({ ultimoEstado: e, cantidad: 0 }));
-		const rechazosAgrupados = rechazos
-			.map(r => ({ ...r, ultimoEstado: nombreEstadoAgrupadoConDetalleRechazo(r.ultimoEstado) }))
-			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado']), []);
-		rechazosAgrupados.forEach(d => {
-			const indice = rechazosALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado);
-			if (indice !== -1) {
-				rechazosALlenar[indice] = d;
-			}
-		});
-		const colorPalette = new ColorPalette(rechazosALlenar.length);
-		const colores = rechazosALlenar.map(() => colorPalette.proximoColor());
-		const labels = rechazosALlenar.map(r => r.ultimoEstado);
+		const unaCombinatoria = new Combinatoria(
+			{ data: this.estadosRechazo, nombre: 'ultimoEstado' },
+			{ data: [0], nombre: 'cantidad' }
+		);
+		const rechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado'])(rechazos);
+		unaCombinatoria.mergeBy(['ultimoEstado'], rechazosAgrupados);
+		const rechazosFinales = unaCombinatoria.combinatoria;
+		const colorPalette = new ColorPalette(rechazosFinales.length);
+		const colores = rechazosFinales.map(() => colorPalette.proximoColor());
+		const labels = rechazosFinales.map(r => r.ultimoEstado);
 		const datasets = {
 			label: 'cantidad',
-			data: rechazosALlenar.map(d => d.cantidad),
+			data: rechazosFinales.map(d => d.cantidad),
 			backgroundColor: colores,
 			borderColor: colores
 		};
@@ -205,6 +305,7 @@ export class DashboardChartService {
 	traerRechazosUltimos3Meses = () => this.traerRechazos(this.rangoUltimos3Meses());
 	traerRechazosUltimos6Meses = () => this.traerRechazos(this.rangoUltimos6Meses());
 
+	/* POR ESTADO POR VENDEDORA */
 	traerVentasPorEstadoPorVendedora({ fechaDesde, fechaHasta }): Observable<{ labels: any[], datasets: any[]; }> {
 		const params = new HttpParams()
 			.append('desde', fechaDesde)
@@ -230,24 +331,20 @@ export class DashboardChartService {
 	mapVentasPorEstadoPorVendedora(ventas: { cantidad: number, ultimoEstado: Estados, usuario: string; }[], vendedoras: Operador[]) {
 		const datasetsLabels = this.estados;
 		const usuarios = vendedoras.map(v => v.nombre); // sin repetidos
-		const dataALlenar = usuarios.map(usuario => {
-			return this.estados.map(e => ({ cantidad: 0, ultimoEstado: e, usuario }));
-		}).flat();
-		const dataConRechazosAgrupados = ventas
-			.map(v => ({ ...v, ultimoEstado: nombreEstadoAgrupado(v.ultimoEstado) }))
-			.reduce(this.sumarCantidadEstadosRepetidos(['ultimoEstado', 'usuario']), []);
-		dataConRechazosAgrupados.forEach(d => {
-			const indice = dataALlenar.findIndex(e => e.ultimoEstado === d.ultimoEstado && e.usuario === d.usuario);
-			if (indice !== -1) {
-				dataALlenar[indice] = d;
-			}
-		});
+		const ventasConRechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado', 'usuario'])(ventas);
+		const unaCombinatoria = new Combinatoria(
+			{ data: usuarios, nombre: 'usuario' },
+			{ data: this.estados, nombre: 'ultimoEstado' },
+			{ data: [0], nombre: 'cantidad' }
+		);
+		unaCombinatoria.mergeBy(['ultimoEstado', 'usuario'], ventasConRechazosAgrupados);
+		const ventasFinales = unaCombinatoria.combinatoria;
 		const colorPalette = new ColorPalette(datasetsLabels.length);
 		const datasets = datasetsLabels.map(label => {
 			const color = colorPalette.proximoColor();
 			return {
 				label,
-				data: usuarios.map(u => dataALlenar.find(d => d.usuario === u && d.ultimoEstado === label)).map(d => d.cantidad),
+				data: usuarios.map(u => ventasFinales.find(d => d.usuario === u && d.ultimoEstado === label)).map(d => d.cantidad),
 				backgroundColor: color,
 				borderColor: color
 			};
@@ -255,18 +352,10 @@ export class DashboardChartService {
 		return { labels: usuarios, datasets };
 	}
 
-
-
-	ordenarPorFecha(a, b) {
-		if (moment(a, 'YYYY-MM-DD').isBefore(moment(b, 'YYYY-MM-DD'))) {
-			return -1;
-		}
-		return 1;
-	}
-
-	sumarCantidadEstadosRepetidos = (identificadores: string[]) => (array, valorActual) => {
-		const condicion = e => identificadores.every(id => e[id] === valorActual[id]);
-		const index = array.findIndex(condicion);
+	/* HELPERS */
+	combinarEstadosRepetidosSumandoCantidad = (identificadores: string[]) => (array, valorActual) => {
+		const esElMismoElemento = e => identificadores.every(id => e[id] === valorActual[id]);
+		const index = array.findIndex(esElMismoElemento);
 		if (index !== -1) {
 			array[index].cantidad += valorActual.cantidad;
 		} else {
@@ -275,17 +364,16 @@ export class DashboardChartService {
 		return array;
 	};
 
-
-
-
 	completarUltimaSemana(dias: { cantidad: number, fecha: string; }[]) {
 		const labels = this.diasUltimaSemana();
-		const data = this.diasUltimaSemana().map(dia => {
-			const diaBack = dias.find(d => d.fecha === dia);
-			return diaBack ? diaBack.cantidad : 0;
-		});
+		const unaCombinatoria = new Combinatoria(
+			{ data: this.diasUltimaSemana(), nombre: 'fecha' },
+			{ data: [0], nombre: 'cantidad' }
+		);
+		unaCombinatoria.mergeBy(['fecha'], dias);
+		const diasFinal = unaCombinatoria.combinatoria;
 		const color = new ColorPalette(1).proximoColor();
-		return { labels, datasets: [{ label: 'cantidad', data, backgroundColor: color, borderColor: color }] };
+		return { labels, datasets: [{ label: 'cantidad', data: diasFinal, backgroundColor: color, borderColor: color }] };
 	}
 
 	rangoHoy() {
@@ -370,12 +458,3 @@ export class DashboardChartService {
 	}
 
 }
-
-
-
-
-
-
-
-
-
