@@ -87,10 +87,6 @@ export class Combinatoria {
 	}
 }
 
-
-
-
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -123,8 +119,17 @@ export class DashboardChartService {
 		Estados.RECHAZO_EQUIVOCADO,
 		Estados.RECHAZO_NO_LE_INTERESA,
 		EstadosRechazoAgrupados.OTRO_RECHAZO
-
 	];
+
+	defaultHttpParams(fechaDesde, fechaHasta) {
+		return new HttpParams()
+			.append('desde', fechaDesde)
+			.append('hasta', fechaHasta)
+			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+	}
+	defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta) {
+		return this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'ultimoEstado');
+	}
 
 	renombrarUltimoEstadoRechazo = venta => ({ ...venta, ultimoEstado: nombreEstadoAgrupado(venta.ultimoEstado) });
 	renombrarUltimoEstadoRechazoConDetalle = venta => ({ ...venta, ultimoEstado: nombreEstadoAgrupadoConDetalleRechazo(venta.ultimoEstado) });
@@ -141,12 +146,8 @@ export class DashboardChartService {
 
 	/* VENTAS */
 	traerVentas({ fechaDesde, fechaHasta }) {
-		const params = {
-			desde: fechaDesde,
-			hasta: fechaHasta,
-			'groupBy[]': 'porDia',
-			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
-		};
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
+		params.append('groupBy[]', 'porDia');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadEstados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -156,12 +157,8 @@ export class DashboardChartService {
 
 	/* AGENDADOS */
 	traerAgendados({ fechaDesde, fechaHasta }) {
-		const params = {
-			desde: fechaDesde,
-			hasta: fechaHasta,
-			rellamados: 'false',
-			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
-		};
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
+		params.append('rellamados', 'false');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -171,12 +168,8 @@ export class DashboardChartService {
 
 	/* RELLAMADOS */
 	traerRellamados({ fechaDesde, fechaHasta }) {
-		const params = {
-			desde: fechaDesde,
-			hasta: fechaHasta,
-			rellamados: 'true',
-			'filters[perfiles][]': Perfiles.OPERADOR_VENTA
-		};
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
+		params.append('rellamados', 'true');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -185,12 +178,8 @@ export class DashboardChartService {
 
 	/* POR ESTADO */
 	traerVentasPorEstado({ fechaDesde, fechaHasta }, periodo: 'porDia' | 'porMes') {
-		const params = new HttpParams()
-			.append('desde', fechaDesde)
-			.append('hasta', fechaHasta)
-			.append('groupBy[]', 'ultimoEstado')
-			.append('groupBy[]', periodo)
-			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
+		params.append('groupBy[]', periodo);
 		return this.http.get<{ cantidad: number, ultimoEstado: Estados, fecha: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		).pipe(
@@ -225,12 +214,8 @@ export class DashboardChartService {
 
 	/* POR BASE */
 	traerVentasPorBase({ fechaDesde, fechaHasta }) {
-		const params = new HttpParams()
-			.append('desde', fechaDesde)
-			.append('hasta', fechaHasta)
-			.append('groupBy[]', 'ultimoEstado')
-			.append('groupBy[]', 'base')
-			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
+		params.append('groupBy[]', 'base');
 		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, base: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		);
@@ -266,11 +251,7 @@ export class DashboardChartService {
 
 	/* RECHAZOS */
 	traerRechazos({ fechaDesde, fechaHasta }) {
-		const params = new HttpParams()
-			.append('desde', fechaDesde)
-			.append('hasta', fechaHasta)
-			.append('groupBy[]', 'ultimoEstado')
-			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
 		return this.http.get<{ cantidad: number, ultimoEstado: Estados; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		).pipe(
@@ -307,12 +288,8 @@ export class DashboardChartService {
 
 	/* POR ESTADO POR VENDEDORA */
 	traerVentasPorEstadoPorVendedora({ fechaDesde, fechaHasta }): Observable<{ labels: any[], datasets: any[]; }> {
-		const params = new HttpParams()
-			.append('desde', fechaDesde)
-			.append('hasta', fechaHasta)
-			.append('groupBy[]', 'ultimoEstado')
-			.append('groupBy[]', 'usuario')
-			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
+		params.append('groupBy[]', 'usuario');
 		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, usuario: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		);
@@ -413,7 +390,7 @@ export class DashboardChartService {
 
 	rangoUltimoAño(): { fechaDesde: string, fechaHasta: string; } {
 		return {
-			fechaDesde: moment().add(-12, 'months').format('YYYY-MM-DD'),
+			fechaDesde: moment().add(-1, 'years').format('YYYY-MM-DD'),
 			fechaHasta: moment().format('YYYY-MM-DD')
 		};
 	}
