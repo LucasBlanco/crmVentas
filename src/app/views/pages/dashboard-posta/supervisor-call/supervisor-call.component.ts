@@ -115,6 +115,7 @@ export class SupervisorCallComponent implements AfterViewInit {
 	});
 
 	constructor(public chartSrv: DashboardChartService, private operadorSrv: OperadoresService, private router: Router) {
+		chartSrv.dashboard = 'supervisoraCall';
 	}
 
 

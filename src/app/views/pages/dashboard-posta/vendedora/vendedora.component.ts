@@ -83,74 +83,83 @@ export class VendedoraComponent implements OnInit {
   });
 
   constructor(public chartSrv: DashboardChartService, private route: ActivatedRoute) {
+    chartSrv.dashboard = 'vendedora';
   }
 
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      /*this.chartSrv.traerDatosDashboardVendedora(params['id']).subscribe(dashboard => {
-        this.rechazos.next(dashboard.rechazos);
-        this.ventas.next(dashboard.indicadores.ventas);
-        this.agendados.next(dashboard.indicadores.agendados);
-        this.rellamados.next(dashboard.indicadores.rellamados);
-        this.dashboardData.next(dashboard);
-        this.llenarChart(dashboard.porDia.labels, dashboard.porDia.datasets, this.supervisorChart);
-        this.llenarChart(dashboard.vendedoras.hoy.labels, dashboard.vendedoras.hoy.datasets, this.vendedorasChart);
-      });*/
+      // tslint:disable-next-line: no-string-literal
+      this.chartSrv.usuario = params['id'];
+      this.chartSrv.traerVentasUltimaSemana().subscribe(ventas => this.ventas.next(ventas));
+      this.chartSrv.traerAgendadosUltimaSemana().subscribe(ventas => this.agendados.next(ventas));
+      this.chartSrv.traerRellamadosUltimaSemana().subscribe(ventas => this.rellamados.next(ventas));
+      this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => this.cargarChart(this.supervisorChart, ventas));
+      this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
+      this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
     });
 
   }
 
+  cargarChart = (observable, data) => observable.next({ ...observable.value, data });
+
   cambiarGeneral(value) {
     if (value == 'dia') {
-      this.llenarChart(this.dashboardData.value.porDia.labels, this.dashboardData.value.porDia.datasets, this.supervisorChart);
+      this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => {
+        const chart = this.supervisorChart.value;
+        chart.data = ventas;
+        this.supervisorChart.next(chart);
+      });
     } else {
-      this.llenarChart(this.dashboardData.value.porMes.labels, this.dashboardData.value.porMes.datasets, this.supervisorChart);
+      this.chartSrv.traerVentasPorEstadoUltimoAño().subscribe(ventas => {
+        const chart = this.supervisorChart.value;
+        chart.data = ventas;
+        this.supervisorChart.next(chart);
+      });
     }
   }
 
-  cambiarVendedoras(value) {
-    if (this.showBackButton == false) {
-      this.llenarChart(
-        this.dashboardData.value.vendedoras[value].labels,
-        this.dashboardData.value.vendedoras[value].datasets,
-        this.vendedorasChart
-      );
-    } else {
-      if (value == 'dia') {
-        // this.chartSrv.charts.find(v => v.id === 'vendedoras').config.data = this.carlitaDia;
-      } else {
-        // this.chartSrv.charts.find(v => v.id === 'vendedoras').config.data = this.carlitaMes;
-      }
+  cambiarPeriodoRechazo(periodo) {
+    let rechazos$;
+    switch (periodo) {
+      case 'hoy':
+        rechazos$ = this.chartSrv.traerRechazosHoy();
+        break;
+      case 'ultimaSemana':
+        rechazos$ = this.chartSrv.traerRechazosUltimaSemana();
+        break;
+      case 'ultimoMes':
+        rechazos$ = this.chartSrv.traerRechazosUltimoMes();
+        break;
+      case 'ultimos3Meses':
+        rechazos$ = this.chartSrv.traerRechazosUltimos3Meses();
+        break;
+      case 'ultimos6Meses':
+        rechazos$ = this.chartSrv.traerRechazosUltimos6Meses();
+        break;
     }
-    // this.chartSrv.charts.find(v => v.id === 'vendedoras').update();
+    rechazos$.subscribe(rechazos => this.rechazos.next(rechazos));
   }
 
-
-
-  cambiarAVendedora(clickedElementindex, label) {
-    this.showBackButton = true;
-    document.getElementById('titulo').innerHTML = label;
-    document.getElementById('subtitulo').innerHTML = 'Gráfico de vendedora';
-  }
-
-  backButton() {
-    this.showBackButton = false;
-    this.cambiarVendedoras('hoy');
-    document.getElementById('titulo').innerHTML = 'Vendedoras';
-    document.getElementById('subtitulo').innerHTML = 'Estadísticas por vendedora';
-  }
-
-
-  llenarChart(labels, dataset, observable) {
-    const chart = observable.value;
-    chart.data.labels = labels;
-    chart.data.datasets = dataset;
-    observable.next(chart);
-  }
-
-  redireccionarAVendedora() {
-    const id = this.vendedoras.find(v => v.nombre === this.vendedoraCtrl.value).id;
-    console.log(id);
+  cambiarPeriodoVendedoras(periodo) {
+    let ventas$;
+    switch (periodo) {
+      case 'hoy':
+        ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraHoy();
+        break;
+      case 'ultimaSemana':
+        ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimaSemana();
+        break;
+      case 'ultimoMes':
+        ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimoMes();
+        break;
+      case 'ultimos3Meses':
+        ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimos3Meses();
+        break;
+      case 'ultimos6Meses':
+        ventas$ = this.chartSrv.traerVentasPorEstadoPorVendedoraUltimos6Meses();
+        break;
+    }
+    ventas$.subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
   }
 }

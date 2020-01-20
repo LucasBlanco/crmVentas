@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-8">
+        <div class="col-12">
             <mat-card style="height: auto;" class="row justify-content-start" [style.margin-bottom]="'10px'">
                 <mat-card-header class=" align-items-start">
                     <div class="col-1">
@@ -20,25 +20,24 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div class="col-4 align-self-center" style="margin-bottom: 10px">
-            <crm-widget titulo="Rechazos" icon="image-rechazos" id="widgetRechazos" [opciones]="periodosRechazo"
-                [data]="rechazos" (opcionSeleccionada)="cambiarPeriodoRechazo($event)" tipo="doughnut">
-            </crm-widget>
-        </div>
     </div>
 
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-6">
+            <crm-widget titulo="Rechazos" icon="image-rechazos" [opciones]="periodosRechazo" [data]="rechazos"
+                (opcionSeleccionada)="cambiarPeriodoRechazo($event)" tipo="doughnut">
+            </crm-widget>
+        </div>
+        <div class="col-6">
             <crm-widget titulo="Ventas" icon="image-ventas" id="widgetVentas" [data]="ventas"></crm-widget>
         </div>
-        <div class="col-4">
-            <crm-widget titulo="Rellamados" cantidad="200" icon="image-llamadas" id="widgetRellamados"
-                [data]="rellamados"></crm-widget>
+        <div class="col-6" style="margin-top: 10px">
+            <crm-widget titulo="Rellamados" icon="image-llamadas" id="widgetRellamados" [data]="rellamados">
+            </crm-widget>
         </div>
-        <div class="col-4">
-            <crm-widget titulo="Agendados" cantidad="350" icon="image-agendados" id="widgetAgendados"
-                [data]="agendados"></crm-widget>
+        <div class="col-6" style="margin-top: 10px">
+            <crm-widget titulo="Agendados" icon="image-agendados" id="widgetAgendados" [data]="agendados"></crm-widget>
         </div>
 
     </div>
@@ -103,7 +102,7 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-12">
-            <mat-card style="height: auto;" class="row justify-content-start" [style.margin-bottom]="'10px'">
+            <mat-card style="height: auto;" class="row justify-content-start" [style.margin-top]="'10px'">
                 <mat-card-header class=" align-items-start">
                     <div class="col-1">
                         <div mat-card-avatar class="general-image" style="border-radius:0px !important;"></div>
@@ -114,7 +113,7 @@
                     </div>
                 </mat-card-header>
                 <mat-card-content>
-                    <crm-chart height="1500px" id="general" [config]="basesChart"></crm-chart>
+                    <crm-chart height="200px" id="general" [config]="basesChart"></crm-chart>
                 </mat-card-content>
             </mat-card>
         </div>

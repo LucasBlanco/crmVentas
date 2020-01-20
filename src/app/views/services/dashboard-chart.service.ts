@@ -92,16 +92,11 @@ export class Combinatoria {
 })
 export class DashboardChartService {
 	constructor(private http: HttpClient, private operadorSrv: OperadoresService, private baseSrv: FuentesService) {
-		const estados = { data: ['unEstado', 'otroEstado'], nombre: 'estado' };
-		const fechas = { data: ['2020-10-02', '2019-02-02'], nombre: 'fecha' };
-		const combinatoria = new Combinatoria(estados, fechas);
-		combinatoria.agregarPropiedades({ cantidad: 0, usuario: 'joaquin' });
-		const aMergear = [{ estado: 'unEstado', fecha: '2020-10-02', cantidad: 100 }];
-		combinatoria.mergeBy(['estado', 'fecha'], aMergear);
-		console.log('combinatoria', combinatoria.combinatoria);
 	}
 	public charts = [];
 	ventas = new Subject();
+	dashboard: 'supervisoraCall' | 'vendedora';
+	usuario;
 
 	estados = [
 		Estados.CREADO,
@@ -121,11 +116,17 @@ export class DashboardChartService {
 		EstadosRechazoAgrupados.OTRO_RECHAZO
 	];
 
+
 	defaultHttpParams(fechaDesde, fechaHasta) {
-		return new HttpParams()
+		const params = new HttpParams()
 			.append('desde', fechaDesde)
-			.append('hasta', fechaHasta)
-			.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
+			.append('hasta', fechaHasta);
+		if (this.dashboard === 'supervisoraCall') {
+			params.append('filters[perfiles][]', Perfiles.SUPERVISOR_CALL);
+		} else if (this.dashboard === 'vendedora') {
+			params.append('filters[usuarios][]', this.usuario);
+		}
+		return params;
 	}
 	defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta) {
 		return this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'ultimoEstado');
@@ -219,7 +220,7 @@ export class DashboardChartService {
 		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, base: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		);
-		const bases$ = this.baseSrv.traerTodos();
+		const bases$ = this.baseSrv.traerTodos('interna');
 		return combineLatest([ventas$, bases$]).pipe(
 			map(([ventas, bases]) => this.mapVentasPorBase(ventas, bases))
 		);
@@ -306,12 +307,13 @@ export class DashboardChartService {
 	traerVentasPorEstadoPorVendedoraUltimos6Meses = () => this.traerVentasPorEstadoPorVendedora(this.rangoUltimos6Meses());
 
 	mapVentasPorEstadoPorVendedora(ventas: { cantidad: number, ultimoEstado: Estados, usuario: string; }[], vendedoras: Operador[]) {
-		const datasetsLabels = this.estados;
+		const estados = this.dashboard === 'supervisoraCall' ? this.estados : [Estados.CREADO];
+		const datasetsLabels = estados;
 		const usuarios = vendedoras.map(v => v.nombre); // sin repetidos
 		const ventasConRechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado', 'usuario'])(ventas);
 		const unaCombinatoria = new Combinatoria(
 			{ data: usuarios, nombre: 'usuario' },
-			{ data: this.estados, nombre: 'ultimoEstado' },
+			{ data: estados, nombre: 'ultimoEstado' },
 			{ data: [0], nombre: 'cantidad' }
 		);
 		unaCombinatoria.mergeBy(['ultimoEstado', 'usuario'], ventasConRechazosAgrupados);
