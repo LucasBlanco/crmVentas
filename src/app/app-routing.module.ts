@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
-import {LandingComponent} from "./views/pages/landing/landing.component";
+import { LandingComponent } from "./views/pages/landing/landing.component";
 
 // Angular
 // Components
@@ -36,6 +36,10 @@ const routes: Routes = [
 			{
 				path: 'controlOperadoras',
 				loadChildren: () => import('app/views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
+			},
+			{
+				path: 'cargarDatos',
+				loadChildren: () => import('app/views/pages/cargar-datos/cargar-datos.module').then(m => m.CargarDatosModule)
 			},
 			{
 				path: 'mail',

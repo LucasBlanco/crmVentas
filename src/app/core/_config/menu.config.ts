@@ -3,7 +3,7 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras()]
+		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras(), ...this.getCargarDatos()]
 	}
 
 	getPermisos() {
@@ -64,6 +64,18 @@ export class MenuConfig {
 			return []
 		}
 	}
+
+	getCargarDatos() {
+		return [{
+			title: 'Cargar Datos',
+			root: true,
+			alignment: 'left',
+			page: '/cargarDatos',
+		}];
+	}
+
+
+
 	public defaults: any = {
 		header: {
 			self: {},

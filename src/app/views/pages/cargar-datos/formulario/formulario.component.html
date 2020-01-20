@@ -1,0 +1,180 @@
+<form [formGroup]="form" (submit)="vender()">
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+                <mat-error *ngIf="nombre.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="apellido">
+                <mat-error *ngIf="apellido.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Pais de origen</mat-label>
+                <mat-select formControlName="nacionalidad">
+                    <mat-option value="ARGENTINA">Argentina</mat-option>
+                    <mat-option value="BOLIVIA">Bolivia</mat-option>
+                    <mat-option value="BRASIL">Brasil</mat-option>
+                    <mat-option value="CHILE">Chile</mat-option>
+                    <mat-option value="COLOMBIA">Colombia</mat-option>
+                    <mat-option value="PERU">Peru</mat-option>
+                    <mat-option value="URUGUAY">Uruguay</mat-option>
+                    <mat-option value="VENEZUELA">Venezuela</mat-option>
+                    <mat-option value="PARAGUAY">Paraguay</mat-option>
+                </mat-select>
+                <mat-error *ngIf="nacionalidad.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col">
+            <div class="row">
+                <div class="col-auto">Sexo:</div>
+                <div class="col">
+                    <mat-radio-group aria-label="Select an option" formControlName="sexo">
+                        <mat-radio-button value="M">M</mat-radio-button>
+                        <mat-radio-button value="F">F</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Estado civil</mat-label>
+                <mat-select formControlName="estadoCivil">
+                    <mat-option value="SOLTERO">Soltero</mat-option>
+                    <mat-option value="CASADO">Casado</mat-option>
+                    <mat-option value="CONCUBINATO">Concubinato</mat-option>
+                    <mat-option value="DIVORSIADO">Divorsiado</mat-option>
+                    <mat-option value="VIUDO">Viudo</mat-option>
+                </mat-select>
+                <mat-error *ngIf="estadoCivil.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha nacimiento</mat-label>
+                <input type="date" matInput formControlName="fechaNacimiento" [max]="fechaHoy()">
+                <mat-error *ngIf="fechaNacimiento.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Cuil</mat-label>
+                <input type="number" matInput formControlName="cuil">
+                <mat-error *ngIf="cuil.hasError('required')">El campo es requerido</mat-error>
+                <mat-error *ngIf="cuil.hasError('min') || cuil.hasError('max') ">El campo debe tener 11 digitos
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Capitas</mat-label>
+                <input matInput formControlName="capitas">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Calle</mat-label>
+                <input matInput formControlName="calle">
+                <mat-error *ngIf="calle.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Numero</mat-label>
+                <input type="number" matInput formControlName="numero">
+                <mat-error *ngIf="numero.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Localidad</mat-label>
+                <mat-select formControlName="localidad">
+                    <mat-option *ngFor="let localidad of localidades" [value]="localidad.id">{{localidad.nombre}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="localidad.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Piso</mat-label>
+                <input matInput formControlName="piso">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Departamento</mat-label>
+                <input matInput formControlName="departamento">
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Codigo postal</mat-label>
+                <input matInput formControlName="codigoPostal">
+                <mat-error *ngIf="codigoPostal.invalid">El campo es requerido</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <mat-card class="row">
+        <mat-card-title>
+            <div class="row">
+                <div class="col-10">
+                    Teléfonos
+                </div>
+            </div>
+        </mat-card-title>
+        <mat-card-content>
+            <div class="row" *ngFor="let contacto of listaContactos; let i = index">
+                <div class="col-5 align-self-center">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Telefono {{i+1}}</mat-label>
+                        <input matInput [formControlName]="'telefono' + contacto.id" [value]="contacto.telefono">
+                        <mat-error>El campo es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-3 align-self-center">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Horario contacto {{i+1}}</mat-label>
+                        <input matInput [formControlName]="'horaDesde' + contacto.id" [value]="contacto.desde">
+                        <mat-error>El campo es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-3 align-self-center">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Horario contacto {{i+1}}</mat-label>
+                        <input matInput [formControlName]="'horaHasta' + contacto.id" [value]="contacto.hasta">
+                        <mat-error>El campo es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button *ngIf="i != 0" mat-icon-button style="color:red" (click)="borrarTelefono(contacto.id)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <button mat-raised-button color="primary" (click)="agregarTelefono()">Agregar teléfono</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <div class="d-flex justify-content-end">
+        <button mat-raised-button color="accent" [disabled]="form.invalid">Vender</button>
+    </div>
+</form>
