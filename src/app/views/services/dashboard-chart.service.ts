@@ -118,13 +118,13 @@ export class DashboardChartService {
 
 
 	defaultHttpParams(fechaDesde, fechaHasta) {
-		const params = new HttpParams()
+		let params = new HttpParams()
 			.append('desde', fechaDesde)
 			.append('hasta', fechaHasta);
 		if (this.dashboard === 'supervisoraCall') {
-			params.append('filters[perfiles][]', Perfiles.SUPERVISOR_CALL);
+			params = params.append('filters[perfiles][]', Perfiles.OPERADOR_VENTA);
 		} else if (this.dashboard === 'vendedora') {
-			params.append('filters[usuarios][]', this.usuario);
+			params = params.append('filters[usuarios][]', this.usuario);
 		}
 		return params;
 	}
@@ -147,8 +147,7 @@ export class DashboardChartService {
 
 	/* VENTAS */
 	traerVentas({ fechaDesde, fechaHasta }) {
-		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
-		params.append('groupBy[]', 'porDia');
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'porDia');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadEstados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -158,8 +157,7 @@ export class DashboardChartService {
 
 	/* AGENDADOS */
 	traerAgendados({ fechaDesde, fechaHasta }) {
-		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
-		params.append('rellamados', 'false');
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta).append('rellamados', 'false');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -169,8 +167,7 @@ export class DashboardChartService {
 
 	/* RELLAMADOS */
 	traerRellamados({ fechaDesde, fechaHasta }) {
-		const params = this.defaultHttpParams(fechaDesde, fechaHasta);
-		params.append('rellamados', 'true');
+		const params = this.defaultHttpParams(fechaDesde, fechaHasta).append('rellamados', 'true');
 		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadAgendados`, { params }).pipe(
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
@@ -179,8 +176,7 @@ export class DashboardChartService {
 
 	/* POR ESTADO */
 	traerVentasPorEstado({ fechaDesde, fechaHasta }, periodo: 'porDia' | 'porMes') {
-		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
-		params.append('groupBy[]', periodo);
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta).append('groupBy[]', periodo);
 		return this.http.get<{ cantidad: number, ultimoEstado: Estados, fecha: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		).pipe(
@@ -215,8 +211,7 @@ export class DashboardChartService {
 
 	/* POR BASE */
 	traerVentasPorBase({ fechaDesde, fechaHasta }) {
-		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
-		params.append('groupBy[]', 'base');
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta).append('groupBy[]', 'base');
 		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, base: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		);
@@ -289,8 +284,8 @@ export class DashboardChartService {
 
 	/* POR ESTADO POR VENDEDORA */
 	traerVentasPorEstadoPorVendedora({ fechaDesde, fechaHasta }): Observable<{ labels: any[], datasets: any[]; }> {
-		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta);
-		params.append('groupBy[]', 'usuario');
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta).append('groupBy[]', 'usuario');
+		console.log('params', params.toString());
 		const ventas$ = this.http.get<{ cantidad: number, ultimoEstado: Estados, usuario: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		);
@@ -318,17 +313,26 @@ export class DashboardChartService {
 		);
 		unaCombinatoria.mergeBy(['ultimoEstado', 'usuario'], ventasConRechazosAgrupados);
 		const ventasFinales = unaCombinatoria.combinatoria;
+		const usuariosOrdenadosPorCantidad = usuarios.sort((usuario, otroUsuario) => {
+			const cantidadUsuario = ventasFinales
+				.filter(v => v.usuario === usuario)
+				.reduce((acum, v) => acum + v.cantidad, 0);
+			const cantidadOtroUsuario = ventasFinales
+				.filter(v => v.usuario === otroUsuario)
+				.reduce((acum, v) => acum + v.cantidad, 0);
+			return cantidadUsuario < cantidadOtroUsuario ? 1 : -1;
+		});
 		const colorPalette = new ColorPalette(datasetsLabels.length);
 		const datasets = datasetsLabels.map(label => {
 			const color = colorPalette.proximoColor();
 			return {
 				label,
-				data: usuarios.map(u => ventasFinales.find(d => d.usuario === u && d.ultimoEstado === label)).map(d => d.cantidad),
+				data: usuariosOrdenadosPorCantidad.map(u => ventasFinales.find(d => d.usuario === u && d.ultimoEstado === label)).map(d => d.cantidad),
 				backgroundColor: color,
 				borderColor: color
 			};
 		});
-		return { labels: usuarios, datasets };
+		return { labels: usuariosOrdenadosPorCantidad, datasets };
 	}
 
 	/* HELPERS */
