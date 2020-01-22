@@ -6,6 +6,8 @@ import { LocalidadesService } from '@servicios/localidades.service';
 import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
 
+import { ChildForm } from './../childForm';
+
 @Component({
   selector: 'crm-formulario',
   templateUrl: './formulario.component.html',
@@ -52,7 +54,13 @@ export class FormularioComponent implements OnInit {
   localidades: Localidad[] = [];
   indiceTelefonoEditandose: number = null;
   indiceTelefonoCreandose: number = null;
+  childForm: ChildForm;
   constructor(private localidadSrv: LocalidadesService, private personaSrv: PersonaService) { }
+
+
+  onActivate(childForm) {
+    this.childForm = childForm;
+  }
 
   ngOnInit() {
     this.localidadSrv.traerTodos().subscribe(localidades => this.localidades = localidades);

@@ -210,6 +210,10 @@
                     <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid">Vender</button>
                 </div>
             </div>
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
         </form>
     </mat-card-content>
 </mat-card>
+
+Datos: {{childForm.form.value | json
+}}

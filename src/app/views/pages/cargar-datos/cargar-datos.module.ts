@@ -15,15 +15,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AltaTelefonosComponent } from './alta-telefonos/alta-telefonos.component';
+import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/formulario-abm-telefonos.component';
 import { FormularioComponent } from './formulario/formulario.component';
 
 const routes: Routes = [
-  { path: '', component: FormularioComponent }
+  {
+    path: '', component: FormularioComponent,
+    children: [
+      { path: '', redirectTo: 'abmTelefonos', pathMatch: 'full' },
+      { path: 'abmTelefonos', component: FormularioAbmTelefonosComponent },
+    ]
+  }
 ];
 
 @NgModule({
-  declarations: [FormularioComponent, AltaTelefonosComponent],
+  declarations: [FormularioComponent, FormularioAbmTelefonosComponent],
   imports: [
     CommonModule,
     MatGridListModule,
