@@ -142,78 +142,17 @@
                         <h3>Telefonos</h3>
                     </div>
                 </div>
-                <div *ngFor="let contacto of telefonos.controls; let i = index" formArrayName="telefonos">
-                    <div class="row" [formGroupName]="i">
-                        <div class="col">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Telefono {{i+1}}</mat-label>
-                                <input matInput formControlName="telefono" type="text" [readonly]="!inputEditable(i)">
-                                <mat-error>El campo es requerido</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Inicio horario contacto</mat-label>
-                                <input matInput formControlName="horaDesde" type="time" [readonly]="!inputEditable(i)">
-                                <mat-error>El campo es requerido</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Fin horario contacto</mat-label>
-                                <input matInput formControlName="horaHasta" type="time" [readonly]="!inputEditable(i)">
-                                <mat-error>El campo es requerido</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-2">
-                            <ng-container *ngIf="telefonosGuardados">
-                                <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                                    (click)="seleccionarTelefonoParaEditar(i)" title="Editar">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button mat-mini-fab color="warn" type="button" style="margin: 0 10px;"
-                                    (click)="borrarTelefono(i)" title="Borrar">
-                                    <mat-icon>delete_forever</mat-icon>
-                                </button>
-                            </ng-container>
-                            <ng-container *ngIf="indiceTelefonoEditandose === i">
-                                <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                                    (click)="editarTelefono()" title="Guardar">
-                                    <mat-icon>save</mat-icon>
-                                </button>
-                                <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                                    (click)="cancelarEdicion()" title="Cancelar">
-                                    <mat-icon>clear</mat-icon>
-                                </button>
-                            </ng-container>
-                            <ng-container *ngIf="esUnTelefonoNuevo(i)">
-                                <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                                    (click)="crearTelefono()" title="Guardar">
-                                    <mat-icon>save</mat-icon>
-                                </button>
-                                <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                                    (click)="cancelarCreacion()" title="Cancelar">
-                                    <mat-icon>clear</mat-icon>
-                                </button>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-end">
-                    <button mat-raised-button color="primary" type="button" (click)="agregarTelefono()"
-                        [disabled]="!telefonosGuardados">Agregar
-                        teléfono</button>
-                </div>
+
+                <router-outlet (activate)="onActivate($event)"></router-outlet>
             </div>
             <div class="row">
                 <div class="col">
-                    <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid">Vender</button>
+                    <button mat-raised-button color="accent" type="submit"
+                        [disabled]="form.invalid || childForm?.form.invalid">Vender</button>
                 </div>
             </div>
-            <router-outlet (activate)="onActivate($event)"></router-outlet>
         </form>
     </mat-card-content>
 </mat-card>
 
-Datos: {{childForm.form.value | json
-}}
+Invalido: {{childForm?.form.invalid}}

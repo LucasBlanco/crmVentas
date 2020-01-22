@@ -1,30 +1,37 @@
 <form [formGroup]="form">
-    <div class="row">
-        <div class="col">
-            <h3>Telefonos</h3>
-        </div>
-    </div>
     <div *ngFor="let contacto of telefonos.controls; let i = index" formArrayName="telefonos">
         <div class="row" [formGroupName]="i">
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Telefono {{i+1}}</mat-label>
                     <input matInput formControlName="telefono" type="text" [readonly]="!inputEditable(i)">
-                    <mat-error>El campo es requerido</mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                        continuar
+                    </mat-error>
                 </mat-form-field>
             </div>
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Inicio horario contacto</mat-label>
                     <input matInput formControlName="horaDesde" type="time" [readonly]="!inputEditable(i)">
-                    <mat-error>El campo es requerido</mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                        continuar
+                    </mat-error>
                 </mat-form-field>
             </div>
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Fin horario contacto</mat-label>
                     <input matInput formControlName="horaHasta" type="time" [readonly]="!inputEditable(i)">
-                    <mat-error>El campo es requerido</mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                        continuar
+                    </mat-error>
                 </mat-form-field>
             </div>
             <div class="col-2">

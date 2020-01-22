@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PersonaService } from '@servicios/persona.service';
 
 import { ChildForm } from '../childForm';
@@ -19,15 +19,26 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
     telefonos: new FormArray([this.crearTelefonoVacio()]),
   });
 
+
+  validarTelefonoGuardado(control: AbstractControl) {
+    if (this.indiceTelefonoCreandose !== null || this.indiceTelefonoEditandose !== null) {
+      return { pendienteGuardado: true };
+    }
+    return null;
+  }
+
   crearTelefonoVacio() {
     return new FormGroup({
-      telefono: new FormControl(null, Validators.required),
-      horaDesde: new FormControl(null, Validators.required),
-      horaHasta: new FormControl(null, Validators.required)
+      telefono: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
+      horaDesde: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
+      horaHasta: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)])
     });
   }
 
   get telefonos() { return this.form.get('telefonos') as FormArray; }
+  telefono(index) { return this.telefonos.controls[index].get('telefono'); }
+  horaDesde(index) { return this.telefonos.controls[index].get('horaDesde'); }
+  horaHasta(index) { return this.telefonos.controls[index].get('horaHasta'); }
 
   ngOnInit() {
   }
@@ -77,8 +88,8 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   };
 
   editarTelefono = () => {
-    const telefono = this.telefonos.at(this.indiceTelefonoEditandose);
     const index = this.indiceTelefonoEditandose;
+    const telefono = this.telefonos.at(index).value;
     this.personaSrv.editarTelefono(index, telefono).subscribe(
       () => {
         this.telefonos.removeAt(index);
@@ -91,11 +102,14 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   };
 
   crearTelefono = () => {
-    const telefono = this.telefonos.at(this.indiceTelefonoEditandose);
-    const index = this.indiceTelefonoEditandose;
+    const telefono = this.telefonos.at(this.indiceTelefonoCreandose);
+    const index = this.indiceTelefonoCreandose;
     this.personaSrv.editarTelefono(index, telefono).subscribe(
       () => {
         this.indiceTelefonoCreandose = null;
+        this.telefono(index).updateValueAndValidity({ onlySelf: true });
+        this.horaDesde(index).updateValueAndValidity({ onlySelf: true });
+        this.horaHasta(index).updateValueAndValidity({ onlySelf: true });
       }
     );
   };
