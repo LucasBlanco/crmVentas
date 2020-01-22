@@ -4,13 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
-import { LandingComponent } from "./views/pages/landing/landing.component";
+
 
 // Angular
 // Components
 // Auth
 const routes: Routes = [
-	{ path: 'auth', loadChildren: () => import('app/views/pages/auth/auth.module').then(m => m.AuthModule) },
+	{ path: 'auth', loadChildren: () => import('./views/pages/auth/auth.module').then(m => m.AuthModule) },
 
 	{
 		path: '',
@@ -18,56 +18,57 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{
-				path: 'landing',
-				component: LandingComponent
-			},
-			{
 				path: 'crm',
-				loadChildren: () => import('app/views/pages/crm/crm.module').then(m => m.CrmModule)
+				loadChildren: () => import('./views/pages/crm/crm.module').then(m => m.CrmModule)
 			},
 			{
 				path: 'asignacionBases',
-				loadChildren: () => import('app/views/pages/asignacion-bases/asignacion-bases.module').then(m => m.AsignacionBasesModule)
+				loadChildren: () => import('./views/pages/asignacion-bases/asignacion-bases.module').then(m => m.AsignacionBasesModule)
 			},
 			{
 				path: 'dashboard',
-				loadChildren: () => import('app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
+				loadChildren: () => import('./views/pages/dashboard-posta/dashboard-posta.module').then(m => m.DashboardPostaModule)
 			},
 			{
 				path: 'controlOperadoras',
-				loadChildren: () => import('app/views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
+				loadChildren: () => import('./views/pages/control-operadoras/control-operadoras.module').then(m => m.ControlOperadorasModule)
 			},
 			{
 				path: 'cargarDatos',
-				loadChildren: () => import('app/views/pages/cargar-datos/cargar-datos.module').then(m => m.CargarDatosModule)
+				loadChildren: () => import('./views/pages/cargar-datos/cargar-datos.module').then(m => m.CargarDatosModule)
+			},
+			{
+				path: 'visualizarSeguimientos',
+				loadChildren: () => import('./views/pages/visualizar-seguimientos/visualizar-seguimientos.module')
+					.then(m => m.VisualizarSeguimientosModule)
 			},
 			{
 				path: 'mail',
-				loadChildren: () => import('app/views/pages/apps/mail/mail.module').then(m => m.MailModule)
+				loadChildren: () => import('./views/pages/apps/mail/mail.module').then(m => m.MailModule)
 			},
 			{
 				path: 'ecommerce',
-				loadChildren: () => import('app/views/pages/apps/e-commerce/e-commerce.module').then(m => m.ECommerceModule),
+				loadChildren: () => import('./views/pages/apps/e-commerce/e-commerce.module').then(m => m.ECommerceModule),
 			},
 			{
 				path: 'ngbootstrap',
-				loadChildren: () => import('app/views/pages/ngbootstrap/ngbootstrap.module').then(m => m.NgbootstrapModule)
+				loadChildren: () => import('./views/pages/ngbootstrap/ngbootstrap.module').then(m => m.NgbootstrapModule)
 			},
 			{
 				path: 'material',
-				loadChildren: () => import('app/views/pages/material/material.module').then(m => m.MaterialModule)
+				loadChildren: () => import('./views/pages/material/material.module').then(m => m.MaterialModule)
 			},
 			{
 				path: 'user-management',
-				loadChildren: () => import('app/views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
+				loadChildren: () => import('./views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
 			},
 			{
 				path: 'wizard',
-				loadChildren: () => import('app/views/pages/wizard/wizard.module').then(m => m.WizardModule)
+				loadChildren: () => import('./views/pages/wizard/wizard.module').then(m => m.WizardModule)
 			},
 			{
 				path: 'builder',
-				loadChildren: () => import('app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
+				loadChildren: () => import('./views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},
 			{
 				path: 'error/403',
@@ -81,7 +82,8 @@ const routes: Routes = [
 			},
 			{ path: 'error/:type', component: ErrorPageComponent },
 			{ path: '', redirectTo: 'landing', pathMatch: 'full' },
-			{ path: '**', redirectTo: 'landing', pathMatch: 'full' }
+			{ path: '**', redirectTo: 'landing', pathMatch: 'full' },
+			{ path: 'landing', redirectTo: 'dashboard/landing', pathMatch: 'full' },
 		]
 	},
 

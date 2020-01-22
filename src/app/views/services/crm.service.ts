@@ -76,7 +76,8 @@ export class CrmService {
     return new ContactoConHorario({
       id: contacto.id,
       persona: this.personaSrv.mapToFront(contacto.persona),
-      horario: contacto.agendados[0].fecha
+      horario: contacto.agendados[contacto.agendados.length -1].fecha,
+	  nota: contacto.agendados[contacto.agendados.length -1].nota
     });
   }
 

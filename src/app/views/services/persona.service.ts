@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Persona } from '@modelos/persona';
+import { of } from 'rxjs';
 
 import { Domicilio } from './../models/domicilio';
 
@@ -9,6 +10,13 @@ import { Domicilio } from './../models/domicilio';
 export class PersonaService {
 
   constructor() { }
+
+  borrarTelefono(id) {
+    return of(true);
+  }
+  editarTelefono(id, telefono) {
+    return of(true);
+  }
 
   mapToFront(persona) {
     return new Persona({
@@ -40,6 +48,6 @@ export class PersonaService {
       numero: domicilio.numero,
       piso: domicilio.piso,
       idLocalidad: domicilio.idLocalidad
-    })
+    });
   }
 }

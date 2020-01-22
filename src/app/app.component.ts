@@ -23,14 +23,15 @@ import { AfkService } from './views/services/afk.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-	mouseMoveObservable = new Subject<any>()
+	mouseMoveObservable = new Subject<any>();
 	@HostListener('mousemove', ['$event'])
 	onMousemove(event: MouseEvent) {
-		this.mouseMoveObservable.next()
+		this.mouseMoveObservable.next();
 	}
 	@HostListener('window:unload', ['$event'])
-	beforeunloadHandler(event) {
-		this.actividadSesion.onWindowClose();
+	async beforeunloadHandler(event) {
+		await this.actividadSesion.onWindowClose();
+		return 'Hola';
 	}
 	// Public properties
 	title = 'Metronic';
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		private actividadSesion: ActividadSesionService) {
 
 		// register translations
-		this.afkService.subscribeToMouseMove(this.mouseMoveObservable)
+		this.afkService.subscribeToMouseMove(this.mouseMoveObservable);
 		this.translationService.loadTranslations(enLang, chLang, esLang, jpLang, deLang, frLang);
 	}
 

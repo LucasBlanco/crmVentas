@@ -3,7 +3,14 @@ import * as jwtDecode from 'jwt-decode';
 export class MenuConfig {
 
 	constructor() {
-		this.defaults.header.items = [...this.getCrm(), ...this.getBases(), ...this.getControlOperadoras(), ...this.getCargarDatos()]
+		this.defaults.header.items = [
+			...this.getCrm(),
+			...this.getBases(),
+			...this.getControlOperadoras(),
+			...this.getVisualizacionSeguimientos(),
+			...this.getDashboard(),
+			...this.getCargarDatos()
+		];
 	}
 
 	getPermisos() {
@@ -19,11 +26,11 @@ export class MenuConfig {
 	}
 
 	tienePermiso(permiso: string) {
-		return this.getPermisos().some(p => p === permiso)
+		return this.getPermisos().some(p => p === permiso);
 	}
 
 	tienePerfil(perfil: string) {
-		return this.getPerfiles().some(p => p === perfil)
+		return this.getPerfiles().some(p => p === perfil);
 	}
 
 	getCrm() {
@@ -33,9 +40,9 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/crm',
-			}]
+			}];
 		} else {
-			return []
+			return [];
 		}
 	}
 
@@ -46,9 +53,24 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/asignacionBases/buscadorPersonas',
-			}]
+			}];
 		} else {
-			return []
+			return [];
+		}
+
+	}
+
+
+	getVisualizacionSeguimientos() {
+		if (this.tienePermiso('ventas')) {
+			return [{
+				title: 'Seguimientos',
+				root: true,
+				alignment: 'left',
+				page: '/visualizarSeguimientos',
+			}];
+		} else {
+			return [];
 		}
 	}
 
@@ -59,9 +81,22 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/controlOperadoras/',
-			}]
+			}];
 		} else {
-			return []
+			return [];
+		}
+	}
+
+	getDashboard() {
+		if (this.tienePerfil('SUPERVISOR CALL') || this.tienePerfil('OPERADOR VENTA')) {
+			return [{
+				title: 'Dashboard',
+				root: true,
+				alignment: 'left',
+				page: '/landing',
+			}];
+		} else {
+			return [];
 		}
 	}
 
@@ -73,8 +108,6 @@ export class MenuConfig {
 			page: '/cargarDatos',
 		}];
 	}
-
-
 
 	public defaults: any = {
 		header: {

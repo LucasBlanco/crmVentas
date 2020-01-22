@@ -29,17 +29,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpUtilsService, LayoutUtilsService, TypesUtilsService } from './core/_base/crud';
 import {
-    DataTableService,
-    FakeApiService,
-    KtDialogService,
-    LayoutConfigService,
-    LayoutRefService,
-    MenuAsideService,
-    MenuConfigService,
-    MenuHorizontalService,
-    PageConfigService,
-    SplashScreenService,
-    SubheaderService,
+	DataTableService,
+	FakeApiService,
+	KtDialogService,
+	LayoutConfigService,
+	LayoutRefService,
+	MenuAsideService,
+	MenuConfigService,
+	MenuHorizontalService,
+	PageConfigService,
+	SplashScreenService,
+	SubheaderService,
 } from './core/_base/layout';
 import { LayoutConfig } from './core/_config/layout.config';
 import { AuthService } from './core/auth';

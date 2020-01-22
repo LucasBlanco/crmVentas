@@ -6,9 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { DashboardChartService } from '../../../services/dashboard-chart.service';
-import { OperadoresService } from './../../../services/operadores.service';
-
-
+import { OperadoresService } from '../../../services/operadores.service';
 
 @Component({
 	selector: 'crm-supervisor-call',

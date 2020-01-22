@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormularioComponent } from './formulario/formulario.component';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,14 +13,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material';
+import { RouterModule, Routes } from '@angular/router';
+
+import { AltaTelefonosComponent } from './alta-telefonos/alta-telefonos.component';
+import { FormularioComponent } from './formulario/formulario.component';
 
 const routes: Routes = [
   { path: '', component: FormularioComponent }
 ];
 
 @NgModule({
-  declarations: [FormularioComponent],
+  declarations: [FormularioComponent, AltaTelefonosComponent],
   imports: [
     CommonModule,
     MatGridListModule,

@@ -1,0 +1,30 @@
+<mat-card>
+	<div class="row">
+		<div class="col-3">
+			<div mat-card-avatar [ngClass]="icon" style="border-radius:0px !important;">
+			</div>
+		</div>
+		<div class="col-9">
+			<div class="row" style="color: rgba(0,0,0,.54); font-weight:400;">
+				<h4>{{titulo}}</h4>
+			</div>
+			<div class="row" style="font-weight:300;">
+				<h2>{{cantidad}}</h2>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="showTrend" class="row" style="padding-left: 25px;">
+		<mat-icon [ngStyle]="{color:trend.color}">{{trend.icon}}</mat-icon>
+		<b [ngStyle]="{color:trend.color}">{{trend.number}}%</b><span>&nbsp;que ayer</span>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<crm-chart width="2" height="1" [id]="id" [config]="chartWidget"></crm-chart>
+		</div>
+	</div>
+	<div *ngIf="opciones.length > 0" class="row">
+		<mat-select class="col" [value]="opciones[0].value" (selectionChange)="cambiarDeOpcion($event.value)">
+			<mat-option *ngFor="let opcion of opciones" [value]="opcion.value">{{opcion.nombre}}</mat-option>
+		</mat-select>
+	</div>
+</mat-card>

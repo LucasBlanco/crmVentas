@@ -12,6 +12,9 @@ export class UserService {
 
   public getCurrentUser(): Usuario {
     const token = sessionStorage.getItem('token');
+    if (!token) {
+      throw new Error('Usuario no encontrado');
+    }
     const user = jwtDecode(token);
     return new Usuario({ ...user, id: user.user_id });
   }

@@ -37,7 +37,10 @@ export class ColumnaRellamarComponent implements OnInit {
     this.contactoSeleccionado = contacto;
     const dialogRef = this.dialog.open(ModalRellamarComponent, {
       width: '60%',
-      panelClass: 'custom'
+      panelClass: 'custom',
+		data:{
+      	contacto
+		}
     });
     dialogRef.componentInstance.agendar.subscribe(form => {
       this.crmService.agendar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
