@@ -16,6 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
 
 import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/formulario-abm-telefonos.component';
+import { FormularioAltaTelefonosComponent } from './formulario-alta-telefonos/formulario-alta-telefonos.component';
 import { FormularioComponent } from './formulario/formulario.component';
 
 const routes: Routes = [
@@ -24,12 +25,13 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'abmTelefonos', pathMatch: 'full' },
       { path: 'abmTelefonos', component: FormularioAbmTelefonosComponent },
+      { path: 'altaTelefonos', component: FormularioAltaTelefonosComponent }
     ]
   }
 ];
 
 @NgModule({
-  declarations: [FormularioComponent, FormularioAbmTelefonosComponent],
+  declarations: [FormularioComponent, FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent],
   imports: [
     CommonModule,
     MatGridListModule,

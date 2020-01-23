@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { PersonaService } from '@servicios/persona.service';
+import * as moment from 'moment';
 
 import { ChildForm } from '../childForm';
 
@@ -14,10 +23,25 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
 
   indiceTelefonoEditandose: number = null;
   indiceTelefonoCreandose: number = null;
+  rollbackTelefono: number = null;
   constructor(private personaSrv: PersonaService) { }
+
+  horaDesdePrevioAHoraHasta: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
+    console.log('funciona');
+    const horaDesde = control.get('horaDesde');
+    const horaHasta = control.get('horaHasta');
+    if (!horaDesde || !horaHasta) { return null; }
+    if (moment(horaDesde.value, 'hh:mm').isAfter(moment(horaHasta.value, 'hh:mm'))) {
+      return { horaDesdeMayorAHoraHasta: true };
+    } else {
+      return null;
+    }
+  };
+
+  // tslint:disable-next-line: member-ordering
   form = new FormGroup({
-    telefonos: new FormArray([this.crearTelefonoVacio()]),
-  });
+    contactos: new FormArray([this.crearTelefonoVacio()]),
+  }, { validators: this.horaDesdePrevioAHoraHasta });
 
 
   validarTelefonoGuardado(control: AbstractControl) {
@@ -32,29 +56,32 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
       telefono: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
       horaDesde: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
       horaHasta: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)])
-    });
+    }, { validators: this.horaDesdePrevioAHoraHasta });
   }
 
-  get telefonos() { return this.form.get('telefonos') as FormArray; }
-  telefono(index) { return this.telefonos.controls[index].get('telefono'); }
-  horaDesde(index) { return this.telefonos.controls[index].get('horaDesde'); }
-  horaHasta(index) { return this.telefonos.controls[index].get('horaHasta'); }
+  get contactos() { return this.form.get('contactos') as FormArray; }
+  telefono(index) { return this.contactos.controls[index].get('telefono'); }
+  horaDesde(index) { return this.contactos.controls[index].get('horaDesde'); }
+  horaHasta(index) { return this.contactos.controls[index].get('horaHasta'); }
+
+  telefonoCompleto(index) {
+    return !this.telefono(index).hasError('required')
+      && !this.horaDesde(index).hasError('required')
+      && !this.horaHasta(index).hasError('required');
+  }
 
   ngOnInit() {
-  }
 
-  sayHello() {
-    console.log('Hola');
   }
 
   agregarTelefono = () => {
-    this.telefonos.push(this.crearTelefonoVacio());
-    this.indiceTelefonoCreandose = this.telefonos.length - 1;
+    this.contactos.push(this.crearTelefonoVacio());
+    this.indiceTelefonoCreandose = this.contactos.length - 1;
   };
 
   borrarTelefono = (index) => {
     this.personaSrv.borrarTelefono(index).subscribe(
-      () => this.telefonos.removeAt(index)
+      () => this.contactos.removeAt(index)
     );
   };
 
@@ -76,42 +103,55 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
 
   seleccionarTelefonoParaEditar = (indice) => {
     this.indiceTelefonoEditandose = indice;
+    this.rollbackTelefono = this.contactos.at(indice).value;
   };
 
   cancelarEdicion = () => {
+    this.contactos.at(this.indiceTelefonoEditandose).setValue(this.rollbackTelefono);
     this.indiceTelefonoEditandose = null;
+    this.rollbackTelefono = null;
+    this.validarContactos();
   };
 
   cancelarCreacion = () => {
-    this.telefonos.removeAt(this.telefonos.length - 1);
+    this.contactos.removeAt(this.contactos.length - 1);
     this.indiceTelefonoCreandose = null;
   };
 
   editarTelefono = () => {
     const index = this.indiceTelefonoEditandose;
-    const telefono = this.telefonos.at(index).value;
+    const telefono = this.contactos.at(index).value;
     this.personaSrv.editarTelefono(index, telefono).subscribe(
       () => {
-        this.telefonos.removeAt(index);
+        this.contactos.removeAt(index);
         const nuevoTelefono = this.crearTelefonoVacio();
         nuevoTelefono.patchValue(telefono);
-        this.telefonos.insert(index, nuevoTelefono);
-        this.cancelarEdicion();
+        this.contactos.insert(index, nuevoTelefono);
+        this.indiceTelefonoEditandose = null;
       }
     );
   };
 
   crearTelefono = () => {
-    const telefono = this.telefonos.at(this.indiceTelefonoCreandose);
+    const telefono = this.contactos.at(this.indiceTelefonoCreandose);
     const index = this.indiceTelefonoCreandose;
     this.personaSrv.editarTelefono(index, telefono).subscribe(
       () => {
         this.indiceTelefonoCreandose = null;
-        this.telefono(index).updateValueAndValidity({ onlySelf: true });
-        this.horaDesde(index).updateValueAndValidity({ onlySelf: true });
-        this.horaHasta(index).updateValueAndValidity({ onlySelf: true });
+        this.validarContactos();
       }
     );
   };
+
+  validarContactos() {
+    this.contactos.value.forEach((_, i) => {
+      this.telefono(i).updateValueAndValidity({ onlySelf: true });
+      this.telefono(i).markAsUntouched();
+      this.horaDesde(i).updateValueAndValidity({ onlySelf: true });
+      this.horaDesde(i).markAsUntouched();
+      this.horaHasta(i).updateValueAndValidity({ onlySelf: true });
+      this.horaHasta(i).markAsUntouched();
+    });
+  }
 
 }

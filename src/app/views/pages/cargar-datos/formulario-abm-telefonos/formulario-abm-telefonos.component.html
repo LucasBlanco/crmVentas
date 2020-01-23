@@ -1,13 +1,13 @@
 <form [formGroup]="form">
-    <div *ngFor="let contacto of telefonos.controls; let i = index" formArrayName="telefonos">
+    <div *ngFor="let contacto of contactos.controls; let i = index" formArrayName="contactos">
         <div class="row" [formGroupName]="i">
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Telefono {{i+1}}</mat-label>
                     <input matInput formControlName="telefono" type="text" [readonly]="!inputEditable(i)">
-                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    <mat-error *ngIf="contacto.get('telefono').hasError('required')">El campo es requerido
                     </mat-error>
-                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                    <mat-error *ngIf="contacto.get('telefono').hasError('pendienteGuardado')">Guarde para
                         continuar
                     </mat-error>
                 </mat-form-field>
@@ -16,10 +16,13 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Inicio horario contacto</mat-label>
                     <input matInput formControlName="horaDesde" type="time" [readonly]="!inputEditable(i)">
-                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    <mat-error *ngIf="contacto.get('horaDesde').hasError('required')">El campo es requerido
                     </mat-error>
-                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                    <mat-error *ngIf="contacto.get('horaDesde').hasError('pendienteGuardado')">Guarde para
                         continuar
+                    </mat-error>
+                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">El horario de
+                        inicio debe ser previo al horario de fin
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -27,10 +30,13 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Fin horario contacto</mat-label>
                     <input matInput formControlName="horaHasta" type="time" [readonly]="!inputEditable(i)">
-                    <mat-error *ngIf="horaDesde(i).hasError('required')">El campo es requerido
+                    <mat-error *ngIf="contacto.get('horaHasta').hasError('required')">El campo es requerido
                     </mat-error>
-                    <mat-error *ngIf="horaDesde(i).hasError('pendienteGuardado')">Guarde para
+                    <mat-error *ngIf="contacto.get('horaHasta').hasError('pendienteGuardado')">Guarde para
                         continuar
+                    </mat-error>
+                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">El horario de
+                        inicio debe ser previo al horario de fin
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -47,7 +53,7 @@
                 </ng-container>
                 <ng-container *ngIf="indiceTelefonoEditandose === i">
                     <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
-                        (click)="editarTelefono()" title="Guardar">
+                        (click)="editarTelefono()" title="Guardar" [disabled]="!telefonoCompleto(i)">
                         <mat-icon>save</mat-icon>
                     </button>
                     <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
@@ -57,7 +63,7 @@
                 </ng-container>
                 <ng-container *ngIf="esUnTelefonoNuevo(i)">
                     <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;" (click)="crearTelefono()"
-                        title="Guardar">
+                        title="Guardar" [disabled]="!telefonoCompleto(i)">
                         <mat-icon>save</mat-icon>
                     </button>
                     <button mat-mini-fab color="dafault" type="button" style="margin: 0 10px;"
