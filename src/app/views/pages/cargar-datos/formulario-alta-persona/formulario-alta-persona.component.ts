@@ -1,4 +1,4 @@
-import { Component, ContentChildren, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Localidad } from '@modelos/localidad';
 import { Persona } from '@modelos/persona';
@@ -13,8 +13,6 @@ import * as moment from 'moment';
 })
 export class FormularioAltaPersonaComponent implements OnInit {
 
-  @Output() guardar = new EventEmitter();
-  @ContentChildren('childContent') childContent;
   @Input() persona: Persona;
   form = new FormGroup({
     nombre: new FormControl(null, Validators.required),

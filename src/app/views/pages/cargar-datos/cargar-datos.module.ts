@@ -19,6 +19,7 @@ import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/form
 import { FormularioAltaPersonaComponent } from './formulario-alta-persona/formulario-alta-persona.component';
 import { FormularioAltaTelefonosComponent } from './formulario-alta-telefonos/formulario-alta-telefonos.component';
 import { FormularioCargaDatosComponent } from './formulario-carga-datos/formulario-carga-datos.component';
+import { FormularioVentaPersonaComponent } from './formulario-venta-persona/formulario-venta-persona.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormularioCargaDatosComponent } from './formulario-carga-datos/formular
     FormularioAbmTelefonosComponent,
     FormularioAltaTelefonosComponent,
     FormularioCargaDatosComponent,
-    FormularioAbmPersonaComponent],
+    FormularioAbmPersonaComponent,
+    FormularioVentaPersonaComponent],
   imports: [
     CommonModule,
     MatGridListModule,
