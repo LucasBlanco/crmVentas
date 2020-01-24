@@ -7,11 +7,11 @@ import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'crm-formulario',
-  templateUrl: './formulario.component.html',
-  styleUrls: ['./formulario.component.scss']
+  selector: 'crm-formulario-alta-persona',
+  templateUrl: './formulario-alta-persona.component.html',
+  styleUrls: ['./formulario-alta-persona.component.scss']
 })
-export class FormularioComponent implements OnInit {
+export class FormularioAltaPersonaComponent implements OnInit {
 
   @Output() guardar = new EventEmitter();
   @ContentChildren('childContent') childContent;

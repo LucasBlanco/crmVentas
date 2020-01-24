@@ -8,7 +8,7 @@ import { ObraSocial } from './../../../../../models/obraSocial';
 import {
     FormularioAbmTelefonosComponent,
 } from './../../../../cargar-datos/formulario-abm-telefonos/formulario-abm-telefonos.component';
-import { FormularioComponent } from './../../../../cargar-datos/formulario/formulario.component';
+import { FormularioComponent } from '../../../../cargar-datos/formulario-alta-persona/formulario-alta-persona.component';
 
 @Component({
 	selector: 'crm-formulario-vender',

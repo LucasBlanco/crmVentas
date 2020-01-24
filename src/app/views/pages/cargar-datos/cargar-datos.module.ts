@@ -14,13 +14,19 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { FormularioAbmPersonaComponent } from './formulario-abm-persona/formulario-abm-persona.component';
 import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/formulario-abm-telefonos.component';
+import { FormularioAltaPersonaComponent } from './formulario-alta-persona/formulario-alta-persona.component';
 import { FormularioAltaTelefonosComponent } from './formulario-alta-telefonos/formulario-alta-telefonos.component';
 import { FormularioCargaDatosComponent } from './formulario-carga-datos/formulario-carga-datos.component';
-import { FormularioComponent } from './formulario/formulario.component';
 
 @NgModule({
-  declarations: [FormularioComponent, FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioCargaDatosComponent],
+  declarations: [
+    FormularioAltaPersonaComponent,
+    FormularioAbmTelefonosComponent,
+    FormularioAltaTelefonosComponent,
+    FormularioCargaDatosComponent,
+    FormularioAbmPersonaComponent],
   imports: [
     CommonModule,
     MatGridListModule,
@@ -38,7 +44,7 @@ import { FormularioComponent } from './formulario/formulario.component';
     MatIconModule
   ],
   exports: [
-    FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioComponent
+    FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioAltaPersona
   ]
 })
 export class CargarDatosModule { }
