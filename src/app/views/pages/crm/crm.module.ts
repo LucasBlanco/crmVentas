@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
@@ -14,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 
+import { CargarDatosModule } from './../cargar-datos/cargar-datos.module';
 import { BaseCardConHorarioComponent } from './grid/columnas/base-card-con-horario/base-card-con-horario.component';
 import { BaseCardComponent } from './grid/columnas/base-card/base-card.component';
 import { BaseModalComponent } from './grid/columnas/base-modal/base-modal.component';
@@ -26,11 +28,10 @@ import { ModalAgendadoComponent } from './grid/columnas/columna-agendado/modal-a
 import { CardRellamarComponent } from './grid/columnas/columna-rellamar/card-rellamar/card-rellamar.component';
 import { ColumnaRellamarComponent } from './grid/columnas/columna-rellamar/columna-rellamar.component';
 import { ModalRellamarComponent } from './grid/columnas/columna-rellamar/modal-rellamar/modal-rellamar.component';
-import { FormularioRechazoComponent } from './grid/columnas/formulario-rechazo/formulario-rechazo.component';
-import { GridComponent } from './grid/grid.component';
 import { FormularioAgendarComponent } from './grid/columnas/formulario-agendar/formulario-agendar.component';
+import { FormularioRechazoComponent } from './grid/columnas/formulario-rechazo/formulario-rechazo.component';
 import { FormularioVenderComponent } from './grid/columnas/formulario-vender/formulario-vender.component';
-import {MatIconModule} from "@angular/material/icon";
+import { GridComponent } from './grid/grid.component';
 
 @NgModule({
   declarations: [
@@ -66,13 +67,14 @@ import {MatIconModule} from "@angular/material/icon";
     MatSelectModule,
     MatRadioModule,
     MatTabsModule,
-	  MatIconModule,
+    MatIconModule,
     RouterModule.forChild([
       {
         path: '',
         component: GridComponent
       },
     ]),
+    CargarDatosModule,
   ]
 })
 export class CrmModule { }

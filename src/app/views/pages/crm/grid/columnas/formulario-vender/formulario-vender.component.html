@@ -1,4 +1,4 @@
-<form [formGroup]="form" (submit)="vender()">
+<!--<form [formGroup]="form" (submit)="vender()">
 	<div class="row">
 		<div class="col">
 			<mat-form-field appearance="outline">
@@ -172,4 +172,37 @@
 	<div class="d-flex justify-content-end">
 		<button mat-raised-button color="accent" [disabled]="form.invalid">Vender</button>
 	</div>
+</form>-->
+
+<crm-formulario></crm-formulario>
+<form [formGroup]="formObraSocial">
+	<div class="row">
+		<div class="col">
+			<mat-form-field appearance="outline">
+				<mat-label>Obra social</mat-label>
+				<mat-select formControlName="obraSocial">
+					<mat-option *ngFor="let obraSocial of obrasSociales" [value]="obraSocial.id">
+						{{obraSocial.nombre}}
+					</mat-option>
+				</mat-select>
+				<mat-error *ngIf="obraSocialCtrl.invalid">El campo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
 </form>
+<mat-divider></mat-divider>
+<div class="pt-2">
+	<div class="row">
+		<div class="col">
+			<h3>Telefonos</h3>
+		</div>
+		<crm-formulario-abm-telefonos></crm-formulario-abm-telefonos>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		<button mat-raised-button color="accent" type="button" (click)="vender()"
+			[disabled]="formPersona?.invalid || formObraSocial.invalid || formTelefonos?.invalid">Vender</button>
+	</div>
+</div>

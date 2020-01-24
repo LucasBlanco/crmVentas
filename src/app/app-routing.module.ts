@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './core/auth';
+import {
+    FormularioCargaDatosComponent,
+} from './views/pages/cargar-datos/formulario-carga-datos/formulario-carga-datos.component';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
 
@@ -35,7 +38,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'cargarDatos',
-				loadChildren: () => import('./views/pages/cargar-datos/cargar-datos.module').then(m => m.CargarDatosModule)
+				component: FormularioCargaDatosComponent
 			},
 			{
 				path: 'visualizarSeguimientos',

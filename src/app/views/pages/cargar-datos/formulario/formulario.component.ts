@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ContentChildren, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Localidad } from '@modelos/localidad';
 import { Persona } from '@modelos/persona';
 import { LocalidadesService } from '@servicios/localidades.service';
 import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
-
-import { ChildForm } from './../childForm';
 
 @Component({
   selector: 'crm-formulario',
@@ -16,6 +14,7 @@ import { ChildForm } from './../childForm';
 export class FormularioComponent implements OnInit {
 
   @Output() guardar = new EventEmitter();
+  @ContentChildren('childContent') childContent;
   @Input() persona: Persona;
   form = new FormGroup({
     nombre: new FormControl(null, Validators.required),
@@ -50,13 +49,12 @@ export class FormularioComponent implements OnInit {
   get codigoPostal() { return this.form.get('codigoPostal'); }
 
   localidades: Localidad[] = [];
-  childForm: ChildForm;
   constructor(private localidadSrv: LocalidadesService, private personaSrv: PersonaService) { }
 
 
-  onActivate(childForm) {
-    this.childForm = childForm;
+  ngAfterContentInit() {
   }
+
 
   ngOnInit() {
     this.localidadSrv.traerTodos().subscribe(localidades => this.localidades = localidades);
@@ -71,14 +69,6 @@ export class FormularioComponent implements OnInit {
   }
 
   fechaHoy = () => moment().format('YYYY-MM-DDThh:mm');
-
-  vender = () => {
-    const persona = this.form.value;
-    const telefonos = this.childForm.form.value;
-    console.log('PERSONA', persona);
-    console.log('TELEGONOS', telefonos);
-    this.guardar.emit();
-  };
 
 
 

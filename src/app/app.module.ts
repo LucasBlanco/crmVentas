@@ -29,23 +29,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpUtilsService, LayoutUtilsService, TypesUtilsService } from './core/_base/crud';
 import {
-	DataTableService,
-	FakeApiService,
-	KtDialogService,
-	LayoutConfigService,
-	LayoutRefService,
-	MenuAsideService,
-	MenuConfigService,
-	MenuHorizontalService,
-	PageConfigService,
-	SplashScreenService,
-	SubheaderService,
+    DataTableService,
+    FakeApiService,
+    KtDialogService,
+    LayoutConfigService,
+    LayoutRefService,
+    MenuAsideService,
+    MenuConfigService,
+    MenuHorizontalService,
+    PageConfigService,
+    SplashScreenService,
+    SubheaderService,
 } from './core/_base/layout';
 import { LayoutConfig } from './core/_config/layout.config';
 import { AuthService } from './core/auth';
 import { CoreModule } from './core/core.module';
 import { metaReducers, reducers } from './core/reducers';
 import { AuthModule } from './views/pages/auth/auth.module';
+import { CargarDatosModule } from './views/pages/cargar-datos/cargar-datos.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
 
@@ -116,7 +117,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 		MatProgressSpinnerModule,
 		InlineSVGModule.forRoot(),
 		ThemeModule,
-		MatSnackBarModule
+		MatSnackBarModule,
+		CargarDatosModule
 
 	],
 	exports: [],

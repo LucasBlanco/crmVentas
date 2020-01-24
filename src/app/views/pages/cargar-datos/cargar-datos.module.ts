@@ -13,25 +13,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule, Routes } from '@angular/router';
 
 import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/formulario-abm-telefonos.component';
 import { FormularioAltaTelefonosComponent } from './formulario-alta-telefonos/formulario-alta-telefonos.component';
+import { FormularioCargaDatosComponent } from './formulario-carga-datos/formulario-carga-datos.component';
 import { FormularioComponent } from './formulario/formulario.component';
 
-const routes: Routes = [
-  {
-    path: '', component: FormularioComponent,
-    children: [
-      { path: '', redirectTo: 'abmTelefonos', pathMatch: 'full' },
-      { path: 'abmTelefonos', component: FormularioAbmTelefonosComponent },
-      { path: 'altaTelefonos', component: FormularioAltaTelefonosComponent }
-    ]
-  }
-];
-
 @NgModule({
-  declarations: [FormularioComponent, FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent],
+  declarations: [FormularioComponent, FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioCargaDatosComponent],
   imports: [
     CommonModule,
     MatGridListModule,
@@ -46,8 +35,10 @@ const routes: Routes = [
     MatSelectModule,
     MatRadioModule,
     MatTabsModule,
-    MatIconModule,
-    RouterModule.forChild(routes)
+    MatIconModule
+  ],
+  exports: [
+    FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioComponent
   ]
 })
 export class CargarDatosModule { }
