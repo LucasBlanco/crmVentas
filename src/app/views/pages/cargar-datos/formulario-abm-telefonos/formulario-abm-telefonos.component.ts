@@ -41,7 +41,7 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   // tslint:disable-next-line: member-ordering
   form = new FormGroup({
     contactos: new FormArray([this.crearTelefonoVacio()]),
-  }, { validators: this.horaDesdePrevioAHoraHasta });
+  });
 
 
   validarTelefonoGuardado(control: AbstractControl) {

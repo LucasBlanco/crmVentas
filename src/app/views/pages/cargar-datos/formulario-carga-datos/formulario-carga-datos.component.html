@@ -1,11 +1,29 @@
-<crm-formulario>
-</crm-formulario>
-<mat-divider></mat-divider>
-<div class="pt-2">
-    <div class="row">
-        <div class="col">
-            <h3>Telefonos</h3>
+<mat-card>
+    <mat-card-title>
+        Carga de persona
+    </mat-card-title>
+    <mat-card-content>
+        <crm-formulario-alta-persona>
+        </crm-formulario-alta-persona>
+        <mat-divider></mat-divider>
+        <div class="p-4">
+            <div class="row">
+                <div class="col-12">
+                    <h3>Telefonos</h3>
+                </div>
+                <div class="col-12">
+                    <crm-formulario-alta-telefonos></crm-formulario-alta-telefonos>
+                </div>
+            </div>
         </div>
-        <crm-formulario-alta-telefonos></crm-formulario-alta-telefonos>
-    </div>
-</div>
+        <div class="row">
+            <div class="col">
+                <button mat-raised-button color="accent" type="button" (click)="guardar()"
+                    [disabled]="formPersona?.invalid || formTelefonos?.invalid">Guardar</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+Persona: {{formPersona.value | json}}
+Telefono: {{formTelefonos.value | json}}

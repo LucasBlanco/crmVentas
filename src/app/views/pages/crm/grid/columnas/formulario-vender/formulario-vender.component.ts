@@ -8,7 +8,9 @@ import { ObraSocial } from './../../../../../models/obraSocial';
 import {
     FormularioAbmTelefonosComponent,
 } from './../../../../cargar-datos/formulario-abm-telefonos/formulario-abm-telefonos.component';
-import { FormularioComponent } from '../../../../cargar-datos/formulario-alta-persona/formulario-alta-persona.component';
+import {
+    FormularioVentaPersonaComponent,
+} from './../../../../cargar-datos/formulario-venta-persona/formulario-venta-persona.component';
 
 @Component({
 	selector: 'crm-formulario-vender',
@@ -19,7 +21,7 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 
 	@Output() guardar = new EventEmitter();
 	@Input() persona: Persona;
-	@ViewChild(FormularioComponent, { static: true }) formPersonaComponent: FormularioComponent;
+	@ViewChild(FormularioVentaPersonaComponent, { static: true }) formPersonaComponent: FormularioVentaPersonaComponent;
 	@ViewChild(FormularioAbmTelefonosComponent, { static: true }) formTelefonosComponent: FormularioAbmTelefonosComponent;
 	formPersona: FormGroup;
 	formTelefonos: FormGroup;
@@ -35,6 +37,37 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.formPersona = this.formPersonaComponent.form;
 		this.formTelefonos = this.formTelefonosComponent.form;
+		this.formObraSocial.patchValue({
+			obraSocial: 1
+		});
+		this.formPersona.patchValue({
+			nombre: 'Lucas',
+			apellido: 'Blanco',
+			nacionalidad: 'ARGENTINA',
+			cuil: 12345678911,
+			sexo: 'M',
+			estadoCivil: 'SOLTERO',
+			fechaNacimiento: '1995-10-27',
+			capitas: 3,
+			calle: 'Dr. Luis Belaustegui',
+			numero: 4043,
+			piso: 3,
+			departamento: 'B',
+			localidad: 1,
+			codigoPostal: 1407,
+		});
+		this.formTelefonos.patchValue({
+			contactos: [{
+				telefono: 45681513,
+				horaDesde: '20:00',
+				horaHasta: '22:00'
+			}, {
+				telefono: 45681514,
+				horaDesde: '21:00',
+				horaHasta: '23:00'
+			}
+			]
+		});
 	}
 	ngOnInit() {
 		this.obraSocialSrv.traerTodos().subscribe(obrasSociales => this.obrasSociales = obrasSociales);

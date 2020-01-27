@@ -10,10 +10,17 @@ import moment from 'moment';
 })
 export class FormularioAltaTelefonosComponent implements OnInit {
 
+  groupErrorMatcher = {
+    isErrorState(control: FormControl): boolean {
+      const controlTouched = !!(control && (control.dirty || control.touched));
+      const controlInvalid = !!(control && control.invalid);
+      const parentInvalid = !!(control && control.parent && control.parent.invalid && (control.parent.dirty || control.parent.touched));
+      return controlTouched && (controlInvalid || parentInvalid);
+    }
+  };
   constructor(private personaSrv: PersonaService) { }
 
   horaDesdePrevioAHoraHasta: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    console.log('funciona');
     const horaDesde = control.get('horaDesde');
     const horaHasta = control.get('horaHasta');
     if (!horaDesde || !horaHasta) { return null; }
@@ -24,10 +31,11 @@ export class FormularioAltaTelefonosComponent implements OnInit {
     }
   };
 
+
   // tslint:disable-next-line: member-ordering
   form = new FormGroup({
     contactos: new FormArray([this.crearTelefonoVacio()]),
-  }, { validators: this.horaDesdePrevioAHoraHasta });
+  });
 
   get contactos() { return this.form.get('contactos') as FormArray; }
 

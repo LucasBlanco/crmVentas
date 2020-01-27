@@ -14,7 +14,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 
-import { FormularioAbmPersonaComponent } from './formulario-abm-persona/formulario-abm-persona.component';
 import { FormularioAbmTelefonosComponent } from './formulario-abm-telefonos/formulario-abm-telefonos.component';
 import { FormularioAltaPersonaComponent } from './formulario-alta-persona/formulario-alta-persona.component';
 import { FormularioAltaTelefonosComponent } from './formulario-alta-telefonos/formulario-alta-telefonos.component';
@@ -27,7 +26,6 @@ import { FormularioVentaPersonaComponent } from './formulario-venta-persona/form
     FormularioAbmTelefonosComponent,
     FormularioAltaTelefonosComponent,
     FormularioCargaDatosComponent,
-    FormularioAbmPersonaComponent,
     FormularioVentaPersonaComponent],
   imports: [
     CommonModule,
@@ -46,7 +44,10 @@ import { FormularioVentaPersonaComponent } from './formulario-venta-persona/form
     MatIconModule
   ],
   exports: [
-    FormularioAbmTelefonosComponent, FormularioAltaTelefonosComponent, FormularioAltaPersona
+    FormularioAbmTelefonosComponent,
+    FormularioAltaTelefonosComponent,
+    FormularioAltaPersonaComponent,
+    FormularioVentaPersonaComponent
   ]
 })
 export class CargarDatosModule { }

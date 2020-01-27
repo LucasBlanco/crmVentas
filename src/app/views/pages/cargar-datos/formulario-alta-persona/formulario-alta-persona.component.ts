@@ -5,6 +5,7 @@ import { Persona } from '@modelos/persona';
 import { LocalidadesService } from '@servicios/localidades.service';
 import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'crm-formulario-alta-persona',
@@ -46,24 +47,11 @@ export class FormularioAltaPersonaComponent implements OnInit {
   get localidad() { return this.form.get('localidad'); }
   get codigoPostal() { return this.form.get('codigoPostal'); }
 
-  localidades: Localidad[] = [];
+  localidades$: Observable<Localidad[]>;
   constructor(private localidadSrv: LocalidadesService, private personaSrv: PersonaService) { }
 
-
-  ngAfterContentInit() {
-  }
-
-
   ngOnInit() {
-    this.localidadSrv.traerTodos().subscribe(localidades => this.localidades = localidades);
-  }
-
-  crearTelefonoVacio() {
-    return new FormGroup({
-      telefono: new FormControl(null, Validators.required),
-      horaDesde: new FormControl(null, Validators.required),
-      horaHasta: new FormControl(null, Validators.required)
-    });
+    this.localidades$ = this.localidadSrv.traerTodos();
   }
 
   fechaHoy = () => moment().format('YYYY-MM-DDThh:mm');

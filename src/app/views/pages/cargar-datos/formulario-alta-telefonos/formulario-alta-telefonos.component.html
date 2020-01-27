@@ -12,11 +12,12 @@
             <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Inicio horario contacto</mat-label>
-                    <input matInput formControlName="horaDesde" type="time">
-                    <mat-error *ngIf="contacto.get('horaDesde').hasError('required')">El campo es requerido
+                    <input matInput formControlName="horaDesde" type="time" [errorStateMatcher]="groupErrorMatcher">
+                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">
+                        El horario de inicio debe ser previo al horario de fin
                     </mat-error>
-                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">El horario de
-                        inicio debe ser previo al horario de fin
+                    <mat-error *ngIf="contacto.get('horaDesde').hasError('required')">
+                        El campo es requerido
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -24,16 +25,17 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Fin horario contacto</mat-label>
                     <input matInput formControlName="horaHasta" type="time">
-                    <mat-error *ngIf="contacto.get('horaHasta').hasError('required')">El campo es requerido
+                    <mat-error *ngIf="contacto.get('horaHasta').hasError('required')">
+                        El campo es requerido
                     </mat-error>
-                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">El horario de
-                        inicio debe ser previo al horario de fin
+                    <mat-error *ngIf="contacto.hasError('horaDesdeMayorAHoraHasta')">
+                        El horario de inicio debe ser previo al horario de fin
                     </mat-error>
                 </mat-form-field>
             </div>
             <div class="col-2">
                 <button mat-mini-fab color="warn" type="button" style="margin: 0 10px;" (click)="borrarTelefono(i)"
-                    title="Borrar">
+                    [disabled]="contactos.controls.length === 1" title="Borrar">
                     <mat-icon>delete_forever</mat-icon>
                 </button>
 
