@@ -2,95 +2,76 @@ import { Domicilio, getFakeDomicilio } from './domicilio';
 
 
 export interface IPersona {
-    nombre: string;
-    apellido: string;
-    telefonos: {
-        nombre: 'telefono' | 'celular',
-        numero: string,
-        horarioContacto: string
-    }[];
-    id: number;
-    dni: number;
-    cuil: number;
-    nacionalidad: string;
-    domicilio?: Domicilio;
-    estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
-    fechaNacimiento: string;
-    sexo: 'M' | 'F';
-    capitas: number;
+	nombre: string;
+	apellido: string;
+	telefonos: {
+		numero: string,
+		horarioContacto: { desde: string, hasta: string; },
+		id: number;
+	}[];
+	id: number;
+	dni: number;
+	cuil: number;
+	nacionalidad: string;
+	domicilio?: Domicilio;
+	estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
+	fechaNacimiento: string;
+	sexo: 'M' | 'F';
+	capitas: number;
 }
 
 export class Persona implements IPersona {
-    nombre: string;
-    apellido: string;
-    telefonos: {
-        nombre: 'telefono' | 'celular',
-        numero: string,
-        horarioContacto: string
-    }[];
-    id: number;
-    dni: number;
-    cuil: number;
-    domicilio?: Domicilio;
-    sexo: 'M' | 'F';
-    nacionalidad: string;
-    estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
-    fechaNacimiento: string;
-    capitas: number;
-    constructor(persona: IPersona) {
-        this.nombre = persona.nombre;
-        this.apellido = persona.apellido;
-        this.telefonos = persona.telefonos;
-        this.id = persona.id;
-        this.dni = persona.dni;
-        this.cuil = persona.cuil;
-        this.nacionalidad = persona.nacionalidad;
-        this.estadoCivil = persona.estadoCivil;
-        this.fechaNacimiento = persona.fechaNacimiento;
-        this.capitas = persona.capitas;
-        this.sexo = persona.sexo;
-        this.domicilio = persona.domicilio;
-    }
+	nombre: string;
+	apellido: string;
+	telefonos: {
+		numero: string,
+		horarioContacto: { desde: string, hasta: string; },
+		id: number;
+	}[];
+	id: number;
+	dni: number;
+	cuil: number;
+	domicilio?: Domicilio;
+	sexo: 'M' | 'F';
+	nacionalidad: string;
+	estadoCivil: 'CASADO' | 'SOLTERO' | 'CONCUVINATO';
+	fechaNacimiento: string;
+	capitas: number;
 
-    get telefono() {
-        const tel = this.telefonos.find(t => t.nombre === 'telefono');
-        return tel ? tel.numero : '';
-    }
+	constructor(persona: IPersona) {
+		this.nombre = persona.nombre;
+		this.apellido = persona.apellido;
+		this.telefonos = persona.telefonos;
+		this.id = persona.id;
+		this.dni = persona.dni;
+		this.cuil = persona.cuil;
+		this.nacionalidad = persona.nacionalidad;
+		this.estadoCivil = persona.estadoCivil;
+		this.fechaNacimiento = persona.fechaNacimiento;
+		this.capitas = persona.capitas;
+		this.sexo = persona.sexo;
+		this.domicilio = persona.domicilio;
+	}
 
-    get horaContactoTelefono() {
-        const tel = this.telefonos.find(t => t.nombre === 'telefono');
-        return tel ? tel.horarioContacto : '';
-    }
-
-    get celular() {
-        const tel = this.telefonos.find(t => t.nombre === 'celular');
-        return tel ? tel.numero : '';
-    }
-
-    get horaContactoCelular() {
-        const tel = this.telefonos.find(t => t.nombre === 'celular');
-        return tel ? tel.horarioContacto : '';
-    }
 
 }
 
 export const getFakePersona = () => {
-    const faker = require('faker/locale/es');
-    return new Persona({
-        nombre: faker.name.firstName(),
-        apellido: faker.name.lastName(),
-        telefonos: [
-            { nombre: 'telefono', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' },
-            { nombre: 'celular', numero: faker.phone.phoneNumber(), horarioContacto: 'de 11 a 12' }
-        ],
-        domicilio: getFakeDomicilio(),
-        id: faker.random.number(),
-        dni: faker.random.number(99999999),
-        cuil: faker.random.number(99999999999),
-        nacionalidad: faker.address.country(),
-        estadoCivil: 'CASADO',
-        fechaNacimiento: faker.date.past().toDateString(),
-        capitas: faker.random.number(10),
-        sexo: 'M'
-    });
+	const faker = require('faker/locale/es');
+	return new Persona({
+		nombre: faker.name.firstName(),
+		apellido: faker.name.lastName(),
+		telefonos: [
+			{ numero: faker.phone.phoneNumber(), horarioContacto: { desde: '11:00', hasta: '12:00' }, id: faker.random.number(10) }
+		],
+		domicilio: getFakeDomicilio(),
+		id: faker.random.number(),
+		dni: faker.random.number(99999999),
+		cuil: faker.random.number(99999999999),
+		nacionalidad: faker.address.country(),
+		estadoCivil: 'CASADO',
+		fechaNacimiento: faker.date.past().toDateString(),
+		capitas: faker.random.number(10),
+		sexo: 'M'
+	});
 };

@@ -70,6 +70,16 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
       && !this.horaHasta(index).hasError('required');
   }
 
+  cargarTelefonos(telefonos: { telefono, horaDesde, horaHasta; }[]) {
+    this.form.setControl('contactos', new FormArray(
+      telefonos.map(t => {
+        const tel = this.crearTelefonoVacio();
+        tel.patchValue(t);
+        return tel;
+      })
+    ));
+  }
+
   ngOnInit() {
 
   }

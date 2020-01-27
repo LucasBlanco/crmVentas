@@ -37,37 +37,31 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.formPersona = this.formPersonaComponent.form;
 		this.formTelefonos = this.formTelefonosComponent.form;
-		this.formObraSocial.patchValue({
-			obraSocial: 1
-		});
+		const p = this.persona;
+		console.log('persona', p);
 		this.formPersona.patchValue({
-			nombre: 'Lucas',
-			apellido: 'Blanco',
-			nacionalidad: 'ARGENTINA',
-			cuil: 12345678911,
-			sexo: 'M',
-			estadoCivil: 'SOLTERO',
-			fechaNacimiento: '1995-10-27',
-			capitas: 3,
-			calle: 'Dr. Luis Belaustegui',
-			numero: 4043,
-			piso: 3,
-			departamento: 'B',
-			localidad: 1,
-			codigoPostal: 1407,
+			nombre: p.nombre,
+			apellido: p.apellido,
+			nacionalidad: p.nacionalidad,
+			cuil: p.cuil,
+			sexo: p.sexo,
+			estadoCivil: p.estadoCivil,
+			fechaNacimiento: p.fechaNacimiento,
+			capitas: p.capitas,
+			calle: p.domicilio && p.domicilio.calle,
+			numero: p.domicilio && p.domicilio.numero,
+			piso: p.domicilio && p.domicilio.piso,
+			departamento: p.domicilio && p.domicilio.departamento,
+			localidad: p.domicilio && p.domicilio.idLocalidad,
+			codigoPostal: p.domicilio && p.domicilio.codigoPostal,
 		});
-		this.formTelefonos.patchValue({
-			contactos: [{
-				telefono: 45681513,
-				horaDesde: '20:00',
-				horaHasta: '22:00'
-			}, {
-				telefono: 45681514,
-				horaDesde: '21:00',
-				horaHasta: '23:00'
-			}
-			]
-		});
+		this.formTelefonosComponent.cargarTelefonos(
+			p.telefonos.map(t => ({
+				telefono: t.numero,
+				horaDesde: t.horarioContacto.desde,
+				horaHasta: t.horarioContacto.hasta
+			}))
+		);
 	}
 	ngOnInit() {
 		this.obraSocialSrv.traerTodos().subscribe(obrasSociales => this.obrasSociales = obrasSociales);
