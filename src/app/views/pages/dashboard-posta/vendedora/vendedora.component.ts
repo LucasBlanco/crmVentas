@@ -98,7 +98,6 @@ export class VendedoraComponent implements OnInit {
       this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
       this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
     });
-
   }
 
   cargarChart = (observable, data) => observable.next({ ...observable.value, data });

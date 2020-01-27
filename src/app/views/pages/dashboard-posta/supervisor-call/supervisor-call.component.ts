@@ -2,12 +2,12 @@ import { AfterViewInit, Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Operador } from '@modelos/operador';
+import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { DashboardChartService } from '../../../services/dashboard-chart.service';
 import { OperadoresService } from './../../../services/operadores.service';
-
 
 
 @Component({
@@ -123,7 +123,14 @@ export class SupervisorCallComponent implements AfterViewInit {
 		this.chartSrv.traerVentasUltimaSemana().subscribe(ventas => this.ventas.next(ventas));
 		this.chartSrv.traerAgendadosUltimaSemana().subscribe(ventas => this.agendados.next(ventas));
 		this.chartSrv.traerRellamadosUltimaSemana().subscribe(ventas => this.rellamados.next(ventas));
-		this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => this.cargarChart(this.supervisorChart, ventas));
+		this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => {
+			const { labels, datasets } = ventas;
+			this.cargarChart(this.supervisorChart,
+				{
+					datasets,
+					labels: labels.map(l => moment(l, 'YYYY-MM-DD').locale('es').format('dddd'))
+				});
+		});
 		this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
 		this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
 		this.chartSrv.traerVentasPorBaseUltimoAño().subscribe(ventas => this.cargarChart(this.basesChart, ventas));
