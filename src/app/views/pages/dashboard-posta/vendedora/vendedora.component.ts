@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Operador } from '@modelos/operador';
 import { DashboardChartService } from '@servicios/dashboard-chart.service';
+import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
@@ -94,7 +95,14 @@ export class VendedoraComponent implements OnInit {
       this.chartSrv.traerVentasUltimaSemana().subscribe(ventas => this.ventas.next(ventas));
       this.chartSrv.traerAgendadosUltimaSemana().subscribe(ventas => this.agendados.next(ventas));
       this.chartSrv.traerRellamadosUltimaSemana().subscribe(ventas => this.rellamados.next(ventas));
-      this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => this.cargarChart(this.supervisorChart, ventas));
+      this.chartSrv.traerVentasPorEstadoUltimaSemana().subscribe(ventas => {
+        const { labels, datasets } = ventas;
+        this.cargarChart(this.supervisorChart,
+          {
+            datasets,
+            labels: labels.map(l => moment(l, 'YYYY-MM-DD').locale('es').format('dddd'))
+          });
+      });
       this.chartSrv.traerRechazosHoy().subscribe(ventas => this.rechazos.next(ventas));
       this.chartSrv.traerVentasPorEstadoPorVendedoraHoy().subscribe(ventas => this.cargarChart(this.vendedorasChart, ventas));
     });
