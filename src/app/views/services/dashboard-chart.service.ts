@@ -265,7 +265,7 @@ export class DashboardChartService {
 			{ data: this.estadosRechazo, nombre: 'ultimoEstado' },
 			{ data: [0], nombre: 'cantidad' }
 		);
-		const rechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado'])(rechazos);
+		const rechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoConDetalleBy(['ultimoEstado'])(rechazos);
 		unaCombinatoria.mergeBy(['ultimoEstado'], rechazosAgrupados);
 		const rechazosFinales = unaCombinatoria.combinatoria;
 		const colorPalette = new ColorPalette(rechazosFinales.length);
