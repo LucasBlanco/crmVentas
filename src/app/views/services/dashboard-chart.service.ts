@@ -180,14 +180,15 @@ export class DashboardChartService {
 		return this.http.get<{ cantidad: number, ultimoEstado: Estados, fecha: string; }[]>(
 			`${environment.ip}/estadistica/cantidadEstados`, { params }
 		).pipe(
-			map(ventas => this.mapVentasPorEstado(ventas, periodo === 'porDia' ? this.diasUltimaSemana() : this.mesesUltimoAño()))
+			map(ventas => this.mapVentasPorEstado(ventas, periodo))
 		);
 	}
 
 	traerVentasPorEstadoUltimaSemana = () => this.traerVentasPorEstado(this.rangoUltimaSemana(), 'porDia');
 	traerVentasPorEstadoUltimoAño = () => this.traerVentasPorEstado(this.rangoUltimoAño(), 'porMes');
 
-	mapVentasPorEstado(ventas: { cantidad: number, ultimoEstado: Estados; fecha: string; }[], labels) {
+	mapVentasPorEstado(ventas: { cantidad: number, ultimoEstado: Estados; fecha: string; }[], periodo: 'porDia' | 'porMes') {
+		const labels = periodo === 'porDia' ? this.diasUltimaSemana() : this.mesesUltimoAño();
 		const datasetsLabels = this.estados;
 		const unaCombinatoria = new Combinatoria(
 			{ data: this.estados, nombre: 'ultimoEstado' },
@@ -206,7 +207,10 @@ export class DashboardChartService {
 				borderColor: color
 			};
 		});
-		return { labels, datasets };
+		return {
+			labels: periodo === 'porDia' ? labels.map(this.mapFechaANombreDia) : labels.map(this.mapFechaANombreMes),
+			datasets
+		};
 	}
 
 	/* POR BASE */
@@ -356,7 +360,23 @@ export class DashboardChartService {
 		unaCombinatoria.mergeBy(['fecha'], dias);
 		const diasFinal = unaCombinatoria.combinatoria;
 		const color = new ColorPalette(1).proximoColor();
-		return { labels, datasets: [{ label: 'cantidad', data: diasFinal, backgroundColor: color, borderColor: color }] };
+		return {
+			labels: labels.map(this.mapFechaANombreDia),
+			datasets: [{
+				label: 'cantidad',
+				data: diasFinal.map(d => d.cantidad),
+				backgroundColor: color,
+				borderColor: color
+			}]
+		};
+	}
+
+	mapFechaANombreDia(fecha) {
+		return moment(fecha, 'YYYY-MM-DD').locale('es').format('dddd');
+	}
+
+	mapFechaANombreMes(fecha) {
+		return moment(fecha, 'YYYY-MM').locale('es').format('MMMM');
 	}
 
 	rangoHoy() {
@@ -401,42 +421,18 @@ export class DashboardChartService {
 		};
 	}
 	diasUltimaSemana(): string[] {
-		/*let diasUltimaSemana = [];
+		let diasUltimaSemana = [];
 		for (let i = 0; i < 7; i++) {
 			diasUltimaSemana = [moment().add(-i, 'days').format('YYYY-MM-DD'), ...diasUltimaSemana];
-		}*/
-		const diasUltimaSemana = [
-			moment('2020-01-01', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-02', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-03', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-04', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-05', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-06', 'YYYY-MM-DD').format('YYYY-MM-DD'),
-			moment('2020-01-07', 'YYYY-MM-DD').format('YYYY-MM-DD')
-		];
+		}
 		return diasUltimaSemana;
 	}
 
 	mesesUltimoAño(): string[] {
-		/*let mesesUltimoAño = [];
+		let mesesUltimoAño = [];
 		for (let i = 0; i < 12; i++) {
 			mesesUltimoAño = [moment().add(-i, 'month').format('YYYY-MM-DD'), ...mesesUltimoAño];
-		}*/
-		const mesesUltimoAño = [
-			moment('2019-01', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-02', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-03', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-04', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-05', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-06', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-07', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-08', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-09', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-10', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-11', 'YYYY-MM').format('YYYY-MM'),
-			moment('2019-12', 'YYYY-MM').format('YYYY-MM'),
-			moment('2020-01', 'YYYY-MM').format('YYYY-MM')
-		];
+		}
 		return mesesUltimoAño;
 	}
 

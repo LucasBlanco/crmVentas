@@ -87,11 +87,6 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 	};
 
 	cambiarDeOpcion(value) {
-		/*const chartWidget = this.chartWidget.value;
-		chartWidget.data.labels = this.data[value].historico.data.labels;
-		chartWidget.data.datasets = this.data[value].historico.data.datasets;
-		this.cantidad = this.data[value].actual;
-		this.chartWidget.next(chartWidget);*/
 		this.opcionSeleccionada.emit(value);
 	}
 
@@ -111,10 +106,6 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-
-
-
 	}
 
-	cantidadDiaAnterior = () => this.data.value.historico.data.datasets[0].data[this.data.value.historico.data.datasets[0].data.length - 1];
 }
