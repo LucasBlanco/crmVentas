@@ -129,7 +129,7 @@ export class DashboardChartService {
 		return params;
 	}
 	defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta) {
-		return this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'ultimoEstado');
+		return this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'ultimoEstadoCrm');
 	}
 
 	renombrarUltimoEstadoRechazo = venta => ({ ...venta, ultimoEstado: nombreEstadoAgrupado(venta.ultimoEstado) });
@@ -147,8 +147,12 @@ export class DashboardChartService {
 
 	/* VENTAS */
 	traerVentas({ fechaDesde, fechaHasta }) {
-		const params = this.defaultHttpParams(fechaDesde, fechaHasta).append('groupBy[]', 'porDia');
-		return this.http.get<{ cantidad: number, fecha: string; }[]>(`${environment.ip}/estadistica/cantidadEstados`, { params }).pipe(
+		const params = this.defaultHttpParamsGroupByUltimoEstado(fechaDesde, fechaHasta).append('groupBy[]', 'porDia');
+		return this.http.get<{ cantidad: number, fecha: string, ultimoEstado: string; }[]>(
+			`${environment.ip}/estadistica/cantidadEstados`, { params }
+		).pipe(
+			map(ventas => ventas.filter(v => v.ultimoEstado === 'Creado')),
+			map(ventas => ventas.map(({ cantidad, fecha, ultimoEstado }) => ({ cantidad, fecha }))),
 			map(ventas => new WidgetData(this.completarUltimaSemana(ventas)))
 		);
 	}
@@ -234,7 +238,8 @@ export class DashboardChartService {
 			{ data: nombreBases, nombre: 'base' },
 			{ data: [0], nombre: 'cantidad' }
 		);
-		unaCombinatoria.mergeBy(['ultimoEstado', 'base'], ventas);
+		const ventasConRechazosAgrupados = this.agruparEstadosPorUltimoEstadoRechazoBy(['ultimoEstado'])(ventas);
+		unaCombinatoria.mergeBy(['ultimoEstado', 'base'], ventasConRechazosAgrupados);
 		const ventasPorBase = unaCombinatoria.combinatoria;
 		const colorPalette = new ColorPalette(labels.length);
 		const datasets = this.estados.map(estado => {

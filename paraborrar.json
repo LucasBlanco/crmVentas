@@ -1,0 +1,33 @@
+{
+    "dni": 39268594,
+    "nombre": "LUCAS",
+    "apellido": "BLANCO",
+    "nacionalidad": "ARGENTINA",
+    "telefonos": [
+        {
+            "numero": 1234,
+            "horario_contacto_desde": "20:00",
+            "horario_contacto_hasta": "21:00"
+        },
+        {
+            "numero": 1235,
+            "horario_contacto_desde": "20:00",
+            "horario_contacto_hasta": "21:00"
+        }
+    ],
+    "telefonos.*.numero": "required|string",
+    "telefonos.*.horario_contacto_desde": "required|string",
+    "telefonos.*.horario_contacto_hasta": "required|string",
+    "cuil": "required|unique:personas,cuil",
+    "estado_civil": "required",
+    "fecha_nacimiento": "required",
+    "capitas": "filled|integer",
+    "domicilio": "required|array",
+    "domicilio.id_localidad": "required",
+    "domicilio.calle": "required",
+    "domicilio.codigo_postal": "required",
+    "domicilio.piso": "filled",
+    "domicilio.departamento": "filled",
+    "estado_civil": "estado civil",
+    "fecha_nacimiento": "fecha de nacimiento",
+}
