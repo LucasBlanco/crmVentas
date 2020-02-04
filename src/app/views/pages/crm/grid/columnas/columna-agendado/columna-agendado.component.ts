@@ -31,24 +31,24 @@ export class ColumnaAgendadoComponent implements OnInit {
 
   handleLlamar(contacto: ContactoConHorario) {
     this.contactoSeleccionado = contacto;
-    console.log(contacto)
+    console.log(contacto);
     const dialogRef = this.dialog.open(ModalAgendadoComponent, {
       width: '60%',
       panelClass: 'custom',
-		data: {
-      		contacto
-		}
+      data: {
+        contacto
+      }
     });
 
     dialogRef.componentInstance.agendar.subscribe(form => {
       this.crmService.agendar(Columnas.AGENDADO, { ...form, id: this.contactoSeleccionado.id });
-      dialogRef.close()
-    })
+      dialogRef.close();
+    });
 
     dialogRef.componentInstance.rechazar.subscribe(form => {
-      this.crmService.rechazar(Columnas.AGENDADO, { observacion: form.observacion, id: this.contactoSeleccionado.id })
+      this.crmService.rechazar(Columnas.AGENDADO, { observacion: form.observacion, id: this.contactoSeleccionado.id });
       dialogRef.close();
-    })
+    });
     dialogRef.componentInstance.vender.subscribe(form => {
       this.crmService.vender(Columnas.AGENDADO, { ...form, id: this.contactoSeleccionado.id });
       dialogRef.close();

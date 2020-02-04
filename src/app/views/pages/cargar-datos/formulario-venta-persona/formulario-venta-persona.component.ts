@@ -25,8 +25,7 @@ export class FormularioVentaPersonaComponent extends FormularioAltaPersonaCompon
     piso: new FormControl(null),
     departamento: new FormControl(null),
     localidad: new FormControl(null, Validators.required),
-    codigoPostal: new FormControl(null, Validators.required),
-    obraSocial: new FormControl(null, Validators.required),
+    codigoPostal: new FormControl(null, Validators.required)
   });
 
   constructor(private _localidadSrv: LocalidadesService, private _personaSrv: PersonaService) {

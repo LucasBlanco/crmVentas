@@ -5,10 +5,12 @@
             <crm-formulario-rechazo (guardar)="rechazar.emit($event)"></crm-formulario-rechazo>
         </mat-tab>
         <mat-tab label="Agendar">
-            <crm-formulario-agendar [notaIn]="data.contacto.nota" (guardar)="agendar.emit($event)"></crm-formulario-agendar>
+            <crm-formulario-agendar [notaIn]="data.contacto.nota" (guardar)="agendar.emit($event)">
+            </crm-formulario-agendar>
         </mat-tab>
         <mat-tab label="Vender">
-            <crm-formulario-vender (guardar)="vender.emit($event)"></crm-formulario-vender>
+            <crm-formulario-vender (guardar)="vender.emit($event)" [contacto]="data.contacto">
+            </crm-formulario-vender>
         </mat-tab>
 
     </mat-tab-group>

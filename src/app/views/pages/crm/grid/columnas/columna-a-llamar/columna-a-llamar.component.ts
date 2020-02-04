@@ -43,7 +43,7 @@ export class ColumnaALlamarComponent implements OnInit {
       width: '60%',
       panelClass: 'custom',
       data: {
-        persona: this.contactoSeleccionado.persona
+        contacto: this.contactoSeleccionado
       }
 
     });
@@ -61,9 +61,9 @@ export class ColumnaALlamarComponent implements OnInit {
       dialogRef.close();
     });
     dialogRef.componentInstance.rechazar.subscribe(form => {
-      this.crmService.rechazar(Columnas.ALLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id })
+      this.crmService.rechazar(Columnas.ALLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id });
       dialogRef.close();
-    })
+    });
   }
 
 }

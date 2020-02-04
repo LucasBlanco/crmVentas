@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Contacto, ContactoConHorario, getFakeContacto, IContacto } from '@modelos/contacto';
+import { ContactoConHorario, getFakeContacto, ISeguimiento, Seguimiento } from '@modelos/contacto';
 import { Columnas } from '@servicios/crm.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -8,12 +8,12 @@ import { CrmService } from './crm.service';
 
 describe('CrmService', () => {
   let service: CrmService;
-  let contacto1: IContacto;
+  let contacto1: ISeguimiento;
   let contacto2: IContactoConHorario;
   let contacto3: IContactoConHorario;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({})
+    TestBed.configureTestingModule({});
     service = TestBed.get(CrmService);
     contacto1 = getFakeContacto();
     contacto2 = {
@@ -26,7 +26,7 @@ describe('CrmService', () => {
       nombre: 'Carlos3',
       id: 3
     };
-    service.contactosALlamar$ = new BehaviorSubject([new Contacto(contacto1)]);
+    service.contactosALlamar$ = new BehaviorSubject([new Seguimiento(contacto1)]);
     service.contactosAgendados$ = new BehaviorSubject([new ContactoConHorario(contacto2)]);
     service.contactosARellamar$ = new BehaviorSubject([new ContactoConHorario(contacto3)]);
   });

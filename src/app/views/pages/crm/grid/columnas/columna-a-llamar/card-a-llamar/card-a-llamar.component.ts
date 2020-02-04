@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IContacto } from '@modelos/contacto';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'crm-card-a-llamar',
@@ -11,7 +11,7 @@ export class CardALlamarComponent implements OnInit {
   @Input() contacto: IContacto;
   @Input() disabled: boolean;
   @Output() llamar = new EventEmitter();
-  
+
   constructor() { }
 
   ngOnInit() {

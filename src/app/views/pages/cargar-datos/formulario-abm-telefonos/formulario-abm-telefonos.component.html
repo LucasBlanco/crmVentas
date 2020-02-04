@@ -46,7 +46,7 @@
                         (click)="seleccionarTelefonoParaEditar(i)" title="Editar">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-mini-fab color="warn" type="button" style="margin: 0 10px;" (click)="borrarTelefono(i)"
+                    <button mat-mini-fab color="warn" type="button" style="margin: 0 10px;" [disabled]="contactos.controls.length === 1" (click)="borrarTelefono(i)"
                         title="Borrar">
                         <mat-icon>delete_forever</mat-icon>
                     </button>

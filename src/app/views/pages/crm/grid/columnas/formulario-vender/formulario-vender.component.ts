@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Persona } from '@modelos/persona';
+import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { LocalidadesService } from '@servicios/localidades.service';
 import { ObrasSocialesService } from '@servicios/obras-sociales.service';
 
+import { Contacto } from './../../../../../models/contacto';
 import { ObraSocial } from './../../../../../models/obraSocial';
+import { Venta } from './../../../../../models/venta';
 import {
     FormularioAbmTelefonosComponent,
 } from './../../../../cargar-datos/formulario-abm-telefonos/formulario-abm-telefonos.component';
@@ -19,8 +20,8 @@ import {
 })
 export class FormularioVenderComponent implements OnInit, AfterViewInit {
 
-	@Output() guardar = new EventEmitter();
-	@Input() persona: Persona;
+	@Output() guardar = new EventEmitter<Venta>();
+	@Input() contacto: Contacto;
 	@ViewChild(FormularioVentaPersonaComponent, { static: true }) formPersonaComponent: FormularioVentaPersonaComponent;
 	@ViewChild(FormularioAbmTelefonosComponent, { static: true }) formTelefonosComponent: FormularioAbmTelefonosComponent;
 	formPersona: FormGroup;
@@ -37,7 +38,7 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.formPersona = this.formPersonaComponent.form;
 		this.formTelefonos = this.formTelefonosComponent.form;
-		const p = this.persona;
+		const p = this.contacto.persona;
 		console.log('persona', p);
 		this.formPersona.patchValue({
 			nombre: p.nombre,
@@ -56,11 +57,7 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 			codigoPostal: p.domicilio && p.domicilio.codigoPostal,
 		});
 		this.formTelefonosComponent.cargarTelefonos(
-			p.telefonos.map(t => ({
-				telefono: t.numero,
-				horaDesde: t.horarioContacto.desde,
-				horaHasta: t.horarioContacto.hasta
-			}))
+			this.contacto.telefonos
 		);
 	}
 	ngOnInit() {
@@ -68,9 +65,39 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 	}
 
 	vender() {
-		console.log('persona', this.formPersona.value);
-		console.log('telefonos', this.formTelefonos.value);
-		console.log('obraSocial', this.formObraSocial.value);
+		const fp = this.formPersona.value;
+		const fo = this.formObraSocial.value;
+		const venta: Venta = {
+			id: this.contacto.id,
+			nombre: fp.nombre,
+			apellido: fp.apellido,
+			dni: fp.dni,
+			cuil: fp.cuil,
+			nacionalidad: fp.nacionalidad,
+			domicilio: {
+				calle: fp.calle,
+				codigoPostal: fp.codigoPostal,
+				departamento: fp.departamento,
+				numero: fp.numero,
+				piso: fp.piso,
+				idLocalidad: fp.localidad
+			},
+			estadoCivil: fp.estadoCivil,
+			fechaNacimiento: fp.fechaNacimiento,
+			sexo: fp.sexo,
+			capitas: fp.capitas,
+			idObraSocial: fo.obraSocial
+		};
+		this.guardar.emit(venta);
+	}
+
+	asd() {
+		Object.keys(this.formTelefonos.controls).forEach(key => {
+			const controlErrors: ValidationErrors = this.formTelefonos.get(key).errors;
+			if (controlErrors) {
+				console.log(controlErrors);
+			}
+		});
 	}
 
 }

@@ -1,9 +1,9 @@
 interface IDomicilio {
     calle: string;
     codigoPostal: number;
-    codigoPostalNuevo: number;
+    codigoPostalNuevo?: number;
     departamento: string;
-    id: number;
+    id?: number;
     numero: number;
     piso: string;
     idLocalidad: number;
@@ -12,9 +12,9 @@ interface IDomicilio {
 export class Domicilio implements IDomicilio {
     calle: string;
     codigoPostal: number;
-    codigoPostalNuevo: number;
+    codigoPostalNuevo?: number;
     departamento: string;
-    id: number;
+    id?: number;
     numero: number;
     piso: string;
     idLocalidad: number;

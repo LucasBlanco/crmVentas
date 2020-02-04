@@ -1,55 +1,46 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Persona } from '@modelos/persona';
-import * as moment from 'moment';
-import { of } from 'rxjs';
+import { Contacto } from '@modelos/contacto';
+import { CrmService } from '@servicios/crm.service';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import { Domicilio } from './../models/domicilio';
+import { environment } from '../../../environments/environment';
+import { Telefono } from './../models/telefono';
+import { PersonaMapperService } from './persona-mapper.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PersonaService {
 
-  constructor() { }
+  constructor(private http: HttpClient, private crmService: CrmService, private mapper: PersonaMapperService) { }
 
-  borrarTelefono(id) {
-    return of(true);
-  }
-  editarTelefono(id, telefono) {
-    return of(true);
-  }
-
-  mapToFront({ persona, telefonos }) {
-    return new Persona({
-      nombre: persona.nombre,
-      apellido: persona.apellido,
-      cuil: persona.cuil,
-      dni: persona.dni,
-      nacionalidad: persona.nacionalidad,
-      estadoCivil: persona.estadoCivil,
-      fechaNacimiento: moment(persona.fechaNacimiento).format('YYYY-MM-DD'),
-      capitas: persona.capitas,
-      id: persona.id,
-      sexo: persona.sexo,
-      domicilio: persona.domicilios[0] && this.mapDomicilioToFront(persona.domicilios[0]),
-      telefonos: telefonos.map(telefono => ({
-        numero: telefono.numero,
-        horarioContacto: { desde: telefono.horarioContactoDesde, hasta: telefono.horarioContactoHasta },
-        id: telefono.id
-      }))
-    });
+  borrarTelefono(telefono: Telefono, contacto: Contacto) {
+    return this.http.delete(`${environment.ip}/telefonos/${telefono.id}`).pipe(
+      tap(() => this.crmService.borrarTelefonoContacto(contacto, telefono))
+    );
   }
 
-  mapDomicilioToFront(domicilio) {
-    return new Domicilio({
-      calle: domicilio.calle,
-      codigoPostal: domicilio.codigoPostal,
-      codigoPostalNuevo: domicilio.codigoPostalNuevo,
-      departamento: domicilio.departamento,
-      id: domicilio.id,
-      numero: domicilio.numero,
-      piso: domicilio.piso,
-      idLocalidad: domicilio.idLocalidad
-    });
+  editarTelefono(telefono: Telefono, contacto: Contacto): Observable<Telefono> {
+    const telBack = this.mapper.mapTelefonoToBack(telefono);
+    return this.http.put<Telefono>(`${environment.ip}/telefonos/${telefono.id}`, telBack).pipe(
+      map(tel => this.mapper.mapTelefonoToFront(tel)),
+      tap(tel => this.crmService.modificarTelefonoContacto(contacto, tel))
+    );
   }
+
+  crearTelefono(telefono: Telefono, contacto: Contacto): Observable<Telefono> {
+    const telBack = {
+      ...this.mapper.mapTelefonoToBack(telefono),
+      id_base: contacto.idBase,
+      id_persona: contacto.persona.id
+    };
+    return this.http.post<Telefono>(`${environment.ip}/telefonos`, telBack).pipe(
+      map(tel => this.mapper.mapTelefonoToFront(tel)),
+      tap(tel => this.crmService.altaTelefonoContacto(contacto, tel))
+    );
+  }
+
 }
+

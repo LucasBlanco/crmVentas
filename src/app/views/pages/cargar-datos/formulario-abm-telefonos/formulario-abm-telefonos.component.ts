@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,6 +8,8 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Contacto } from '@modelos/contacto';
+import { Telefono } from '@modelos/telefono';
 import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
 
@@ -21,9 +23,11 @@ import { ChildForm } from '../childForm';
 export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
 
 
+  @Input() contacto: Contacto;
   indiceTelefonoEditandose: number = null;
   indiceTelefonoCreandose: number = null;
   rollbackTelefono: number = null;
+
   constructor(private personaSrv: PersonaService) { }
 
   horaDesdePrevioAHoraHasta: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
@@ -55,7 +59,8 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
     return new FormGroup({
       telefono: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
       horaDesde: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
-      horaHasta: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)])
+      horaHasta: new FormControl(null, [Validators.required, this.validarTelefonoGuardado.bind(this)]),
+      id: new FormControl(null)
     }, { validators: this.horaDesdePrevioAHoraHasta });
   }
 
@@ -70,13 +75,9 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
       && !this.horaHasta(index).hasError('required');
   }
 
-  cargarTelefonos(telefonos: { telefono, horaDesde, horaHasta; }[]) {
+  cargarTelefonos(telefonos: Telefono[]) {
     this.form.setControl('contactos', new FormArray(
-      telefonos.map(t => {
-        const tel = this.crearTelefonoVacio();
-        tel.patchValue(t);
-        return tel;
-      })
+      telefonos.map(this.mapTelefonoToControl)
     ));
   }
 
@@ -90,7 +91,9 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   };
 
   borrarTelefono = (index) => {
-    this.personaSrv.borrarTelefono(index).subscribe(
+    const telCtrl = this.contactos.at(index);
+    const tel = this.mapControlToTelefono(telCtrl);
+    this.personaSrv.borrarTelefono(tel, this.contacto).subscribe(
       () => this.contactos.removeAt(index)
     );
   };
@@ -130,12 +133,12 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
 
   editarTelefono = () => {
     const index = this.indiceTelefonoEditandose;
-    const telefono = this.contactos.at(index).value;
-    this.personaSrv.editarTelefono(index, telefono).subscribe(
-      () => {
+    const telefonoCtrl = this.contactos.at(index);
+    const tel = this.mapControlToTelefono(telefonoCtrl);
+    this.personaSrv.editarTelefono(tel, this.contacto).subscribe(
+      telModif => {
         this.contactos.removeAt(index);
-        const nuevoTelefono = this.crearTelefonoVacio();
-        nuevoTelefono.patchValue(telefono);
+        const nuevoTelefono = this.mapTelefonoToControl(telModif);
         this.contactos.insert(index, nuevoTelefono);
         this.indiceTelefonoEditandose = null;
       }
@@ -145,12 +148,41 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   crearTelefono = () => {
     const telefono = this.contactos.at(this.indiceTelefonoCreandose);
     const index = this.indiceTelefonoCreandose;
-    this.personaSrv.editarTelefono(index, telefono).subscribe(
-      () => {
+    const tel = this.mapControlToTelefono(telefono);
+    this.personaSrv.crearTelefono(tel, this.contacto).subscribe(
+      telNuevo => {
+        this.contactos.removeAt(index);
+        const nuevoTelefono = this.mapTelefonoToControl(telNuevo);
+        this.contactos.insert(index, nuevoTelefono);
         this.indiceTelefonoCreandose = null;
         this.validarContactos();
       }
     );
+  };
+
+  mapControlToTelefono = (control: AbstractControl) => {
+    const tel = control.value;
+    return new Telefono({
+      id: tel.id,
+      numero: tel.telefono,
+      horarioContacto: {
+        desde: tel.horaDesde,
+        hasta: tel.horaHasta
+      }
+    });
+  };
+
+  mapTelefonoToControl = (tel: Telefono) => {
+    const control = this.crearTelefonoVacio();
+    control.patchValue(
+      {
+        telefono: tel.numero,
+        horaDesde: tel.horarioContacto.desde,
+        horaHasta: tel.horarioContacto.hasta,
+        id: tel.id
+      }
+    );
+    return control;
   };
 
   validarContactos() {

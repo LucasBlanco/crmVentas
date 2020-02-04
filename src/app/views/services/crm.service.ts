@@ -1,15 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Contacto, ContactoConHorario } from '@modelos/contacto';
+import { Telefono } from '@modelos/telefono';
+import { Venta } from '@modelos/venta';
+import fp from 'lodash/fp';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
-import { PersonaService } from './persona.service';
+import { PersonaMapperService } from './persona-mapper.service';
 import { UserService } from './user.service';
 
 export enum Columnas {
-  ALLAMAR = 'ALLMAR',
+  ALLAMAR = 'ALLAMAR',
   RELLAMAR = 'RELLAMAR',
   AGENDADO = 'AGENDADO'
 }
@@ -23,7 +26,7 @@ export class CrmService {
   contactosAgendados$: BehaviorSubject<ContactoConHorario[]> = new BehaviorSubject([]);
   contactosARellamar$: BehaviorSubject<ContactoConHorario[]> = new BehaviorSubject([]);
 
-  constructor(private http: HttpClient, private userSrv: UserService, private personaSrv: PersonaService) {
+  constructor(private http: HttpClient, private userSrv: UserService, private personaMap: PersonaMapperService) {
     /*const contacto1 = getFakeContacto();
     const contacto2 = {
       ...getFakeContactoConHorario(),
@@ -40,46 +43,88 @@ export class CrmService {
     this.contactosARellamar$ = new BehaviorSubject([new ContactoConHorario(contacto3)]);*/
   }
 
+  cambiarTelefonos = (funcionCambio) => (contacto: Contacto) => {
+    const columnaNombre = this.columnaDondeEstaElContacto(contacto);
+    const columna$ = this.getObservable(columnaNombre);
+    const columna = columna$.value.map(cont => {
+      if (cont.id !== contacto.id) { return cont; }
+      contacto.telefonos = funcionCambio(contacto.telefonos);
+      return contacto;
+    });
+    columna$.next(columna);
+  };
+
+  borrarTelefonoContacto(contacto: Contacto, telefono: Telefono) {
+    const borrar = this.cambiarTelefonos(fp.filter<Telefono>(tel => {
+      return tel.id !== telefono.id;
+    }));
+    borrar(contacto);
+  }
+
+  altaTelefonoContacto(contacto: Contacto, telefono: Telefono) {
+    const alta = this.cambiarTelefonos(fp.concat(telefono));
+    alta(contacto);
+  }
+
+  modificarTelefonoContacto(contacto: Contacto, telefono: Telefono) {
+    const modificacion = this.cambiarTelefonos(fp.map<Telefono, Telefono>(tel => {
+      return tel.id === telefono.id ? telefono : tel;
+    }));
+    modificacion(contacto);
+  }
+
+  columnaDondeEstaElContacto(contacto: Contacto) {
+    const columnas = [
+      { columna: Columnas.ALLAMAR, contactos: this.contactosALlamar$.value },
+      { columnas: Columnas.RELLAMAR, contactos: this.contactosARellamar$.value },
+      { columnas: Columnas.AGENDADO, contactos: this.contactosAgendados$.value }
+    ];
+    return columnas.find(col => col.contactos.some(c => c.id === contacto.id)).columna;
+  }
 
   getContactosALlamar = (): Observable<Contacto[]> => {
     this.http.get<Contacto[]>(`${environment.ip}/crm/asignados/${this.userSrv.getCurrentUser().id}`)
       .pipe(map(contactos => contactos.map(this.mapContactoToFront)),
         tap(contactos => {
-          console.log('contactosMapeados', contactos)
+          console.log('contactosMapeados', contactos);
         }))
       .subscribe(contactos => this.contactosALlamar$.next(contactos));
     return this.contactosALlamar$;
-  }
+  };
 
   getContactosAgendados = (): Observable<ContactoConHorario[]> => {
     this.http.get<Contacto[]>(`${environment.ip}/crm/agendados/${this.userSrv.getCurrentUser().id}`)
       .pipe(map(contactos => contactos.map(this.mapContactoConHorarioToFront)))
       .subscribe(contactos => this.contactosAgendados$.next(contactos));
     return this.contactosAgendados$;
-  }
+  };
 
   getContactosARellamar = (): Observable<ContactoConHorario[]> => {
     this.http.get<Contacto[]>(`${environment.ip}/crm/rellamados/${this.userSrv.getCurrentUser().id}`)
       .pipe(map(contactos => contactos.map(this.mapContactoConHorarioToFront)))
       .subscribe(contactos => this.contactosARellamar$.next(contactos));
     return this.contactosARellamar$;
-  }
+  };
 
   mapContactoToFront = (contacto) => {
     return new Contacto({
       id: contacto.id,
-      persona: this.personaSrv.mapToFront(contacto)
+      persona: this.personaMap.mapToFront(contacto),
+      telefonos: contacto.telefonos.map(this.personaMap.mapTelefonoToFront),
+      idBase: contacto.idBase
     });
-  }
+  };
 
   mapContactoConHorarioToFront = (contacto) => {
     return new ContactoConHorario({
       id: contacto.id,
-      persona: this.personaSrv.mapToFront(contacto.persona),
-      horario: contacto.agendados[contacto.agendados.length -1].fecha,
-	  nota: contacto.agendados[contacto.agendados.length -1].nota
+      persona: this.personaMap.mapToFront(contacto.persona),
+      telefonos: contacto.telefonos.map(this.personaMap.mapTelefonoToFront),
+      horario: contacto.agendados[contacto.agendados.length - 1].fecha,
+      nota: contacto.agendados[contacto.agendados.length - 1].nota,
+      idBase: contacto.idBase
     });
-  }
+  };
 
   getObservable = (columnName: Columnas) => {
     switch (columnName) {
@@ -90,7 +135,7 @@ export class CrmService {
       case Columnas.AGENDADO:
         return this.contactosAgendados$;
     }
-  }
+  };
 
   moverContacto(from: Columnas, to: Columnas, id: number) {
     const fromObservable = this.getObservable(from);
@@ -120,39 +165,35 @@ export class CrmService {
   agendar(from: Columnas, { fechaYHoraDeProximoContacto, nota, id }) {
     this.http.post(`${environment.ip}/crm/agendarLlamado`,
       { id_venta: id, fecha: fechaYHoraDeProximoContacto, nota, rellamado: false })
-      .subscribe(() => { this.borrarContacto(from, id); this.getContactosAgendados() });
+      .subscribe(() => { this.borrarContacto(from, id); this.getContactosAgendados(); });
   }
 
   rellamar(from: Columnas, { fechaYHoraDeProximoContacto, nota, id }) {
     this.http.post(`${environment.ip}/crm/agendarLlamado`,
       { id_venta: id, fecha: fechaYHoraDeProximoContacto, nota, rellamado: true })
-      .subscribe(() => { this.borrarContacto(from, id); this.getContactosARellamar() });
+      .subscribe(() => { this.borrarContacto(from, id); this.getContactosARellamar(); });
   }
 
-  vender(from: Columnas, venta) {
+  vender(from: Columnas, venta: Venta) {
     this.http.post(`${environment.ip}/crm/vender`,
       {
         id_venta: venta.id,
         nombre: venta.nombre,
         apellido: venta.apellido,
         nacionalidad: venta.nacionalidad,
-        telefono: venta.telefono1,
         cuil: venta.cuil,
         sexo: venta.sexo,
         estado_civil: venta.estadoCivil,
-        id_obra_social: venta.obraSocial,
+        id_obra_social: venta.idObraSocial,
         fecha_nacimiento: venta.fechaNacimiento,
-        hora_contacto_tel: venta.horaContactoTel1,
-        hora_contacto_cel: venta.horaContactoTel2,
-        celular: venta.telefono2,
         capitas: venta.capitas,
         domicilio: {
-          codigo_postal: venta.codigoPostal,
-          numero: venta.numero,
-          id_localidad: venta.localidad,
-          calle: venta.calle,
-          piso: venta.piso,
-          departamento: venta.departamento
+          codigo_postal: venta.domicilio.codigoPostal,
+          numero: venta.domicilio.numero,
+          id_localidad: venta.domicilio.idLocalidad,
+          calle: venta.domicilio.calle,
+          piso: venta.domicilio.piso,
+          departamento: venta.domicilio.departamento
         }
       }).subscribe(() => {
         this.borrarContacto(from, venta.id);
