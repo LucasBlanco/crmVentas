@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Contacto } from '@modelos/contacto';
 import { CrmService } from '@servicios/crm.service';
@@ -17,7 +17,11 @@ export class PersonaService {
   constructor(private http: HttpClient, private crmService: CrmService, private mapper: PersonaMapperService) { }
 
   borrarTelefono(telefono: Telefono, contacto: Contacto) {
-    return this.http.delete(`${environment.ip}/telefonos/${telefono.id}`).pipe(
+    let params = new HttpParams()
+      .append('id_persona', contacto.persona.id.toString())
+      .append('id_base', contacto.idBase.toString())
+      .append('id_telefono', telefono.id.toString());
+    return this.http.delete(`${environment.ip}/contactos`, { params }).pipe(
       tap(() => this.crmService.borrarTelefonoContacto(contacto, telefono))
     );
   }
