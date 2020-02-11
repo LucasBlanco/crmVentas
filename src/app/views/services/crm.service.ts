@@ -76,8 +76,8 @@ export class CrmService {
   columnaDondeEstaElContacto(contacto: Contacto) {
     const columnas = [
       { columna: Columnas.ALLAMAR, contactos: this.contactosALlamar$.value },
-      { columnas: Columnas.RELLAMAR, contactos: this.contactosARellamar$.value },
-      { columnas: Columnas.AGENDADO, contactos: this.contactosAgendados$.value }
+      { columna: Columnas.RELLAMAR, contactos: this.contactosARellamar$.value },
+      { columna: Columnas.AGENDADO, contactos: this.contactosAgendados$.value }
     ];
     return columnas.find(col => col.contactos.some(c => c.id === contacto.id)).columna;
   }
@@ -118,7 +118,7 @@ export class CrmService {
   mapContactoConHorarioToFront = (contacto) => {
     return new ContactoConHorario({
       id: contacto.id,
-      persona: this.personaMap.mapToFront(contacto.persona),
+      persona: this.personaMap.mapToFront(contacto),
       telefonos: contacto.telefonos.map(this.personaMap.mapTelefonoToFront),
       horario: contacto.agendados[contacto.agendados.length - 1].fecha,
       nota: contacto.agendados[contacto.agendados.length - 1].nota,
