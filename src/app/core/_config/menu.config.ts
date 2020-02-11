@@ -9,7 +9,7 @@ export class MenuConfig {
 			...this.getControlOperadoras(),
 			...this.getVisualizacionSeguimientos(),
 			...this.getDashboard(),
-			...this.getCargarDatos()
+			// ...this.getCargarDatos()
 		];
 	}
 
