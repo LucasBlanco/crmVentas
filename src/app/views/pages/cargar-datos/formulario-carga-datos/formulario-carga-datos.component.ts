@@ -27,7 +27,11 @@ export class FormularioCargaDatosComponent implements OnInit {
   }
 
   guardar() {
-    console.log('persona', this.formPersona.value);
-    console.log('telefonos', this.formTelefonos.value);
+    this.formPersona.markAllAsTouched();
+    this.formTelefonos.markAllAsTouched();
+    if (this.formPersona.valid && this.formTelefonos.valid) {
+      console.log('persona', this.formPersona.value);
+      console.log('telefonos', this.formTelefonos.value);
+    }
   }
 }
