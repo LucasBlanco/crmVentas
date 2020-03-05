@@ -83,11 +83,8 @@ export class CrmService {
   }
 
   getContactosALlamar = (): Observable<Contacto[]> => {
-    this.http.get<Contacto[]>(`${environment.ip}/crm/asignados/${this.userSrv.getCurrentUser().id}`)
-      .pipe(map(contactos => contactos.map(this.mapContactoToFront)),
-        tap(contactos => {
-          console.log('contactosMapeados', contactos);
-        }))
+    this.http.get<Contacto[]>(`${environment.ip}/crm/asignados/${this.userSrv.getCurrentUser().id}?XDEBUG_SESSION_START=PHPSTORM`)
+      .pipe(map(contactos => contactos.map(this.mapContactoToFront)))
       .subscribe(contactos => this.contactosALlamar$.next(contactos));
     return this.contactosALlamar$;
   };

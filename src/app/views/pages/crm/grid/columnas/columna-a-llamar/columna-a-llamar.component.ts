@@ -23,7 +23,7 @@ export class ColumnaALlamarComponent implements OnInit {
 
   ngOnInit() {
     this.contactos$ = this.crmService.getContactosALlamar();
-    this.crmService.getContactosALlamar().subscribe(
+    this.contactos$.subscribe(
       contactos => {
         this.contactos = contactos;
       }
