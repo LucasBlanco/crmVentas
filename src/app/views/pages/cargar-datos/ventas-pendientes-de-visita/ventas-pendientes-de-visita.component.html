@@ -1,0 +1,38 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Ventas pendientes de visitas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput placeholder="Filtro" [formControl]="filtro">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-md-3" *ngFor="let venta of ventasPaginadas" style="margin-bottom: 10px;">
+                        <mat-card style="box-shadow: 0 0 10px #8080805e;">
+                            <mat-card-content>
+                                <h5><strong>Nombre:</strong> {{venta.apellido}}, {{venta.nombre}}</h5>
+                                <p><strong>Cuil:</strong> {{venta.cuil}}</p>
+                                <button mat-raised-button color="primary" style="width: 100%;"
+                                    (click)="irAGenerarVista(venta.id)">Generar Visita</button>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <mat-paginator [length]="ventasFiltradas.length" pageSize="10"
+                            (page)="getPagina($event.pageIndex)">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+    </mat-card-content>
+</mat-card>

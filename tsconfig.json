@@ -32,6 +32,9 @@
       ],
       "@estilos/*": [
         "./src/app/views/pages/styles"
+      ],
+      "@environment": [
+        "./src/environments/environment"
       ]
     }
   }

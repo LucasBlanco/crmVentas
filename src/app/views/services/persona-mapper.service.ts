@@ -1,23 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Domicilio } from '@modelos/domicilio';
 import { Persona } from '@modelos/persona';
-import { Telefono } from '@modelos/telefono';
 import moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PersonaMapperService {
-
+  /* Creado para evitar una dependencia circular entre CrmService y PersonaService */
   constructor() { }
 
-  mapToBack(telefono: Telefono) {
-    return {
-      numero: telefono.numero,
-      horario_contacto_desde: telefono.horarioContacto.desde,
-      horario_contacto_hasta: telefono.horarioContacto.hasta
-    };
-  }
   mapToFront({ persona, telefonos }) {
     return new Persona({
       nombre: persona.nombre,
@@ -52,23 +44,16 @@ export class PersonaMapperService {
     });
   }
 
-  mapTelefonoToFront(telefono) {
-    return new Telefono({
-      numero: telefono.numero,
-      id: telefono.id,
-      horarioContacto: {
-        desde: telefono.horarioContactoDesde,
-        hasta: telefono.horarioContactoHasta
-      }
-    });
-  }
-
-  mapTelefonoToBack(telefono: Telefono) {
+  mapDomicilioToBack(domicilio: Domicilio) {
     return {
-      numero: telefono.numero,
-      id: telefono.id,
-      horario_contacto_desde: telefono.horarioContacto.desde,
-      horario_contacto_hasta: telefono.horarioContacto.hasta
+      id_localidad: domicilio.idLocalidad,
+      calle: domicilio.calle,
+      numero: domicilio.numero,
+      codigo_postal: domicilio.codigoPostal,
+      piso: domicilio.piso,
+      departamento: domicilio.departamento
     };
   }
+
+
 }

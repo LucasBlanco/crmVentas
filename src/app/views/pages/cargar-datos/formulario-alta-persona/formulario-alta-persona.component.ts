@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Localidad } from '@modelos/localidad';
 import { Persona } from '@modelos/persona';
 import { LocalidadesService } from '@servicios/localidades.service';
-import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 
@@ -14,7 +13,12 @@ import { Observable } from 'rxjs';
 })
 export class FormularioAltaPersonaComponent implements OnInit {
 
+
   @Input() persona: Persona;
+
+
+
+  // tslint:disable-next-line: member-ordering
   form = new FormGroup({
     nombre: new FormControl(null, Validators.required),
     apellido: new FormControl(null, Validators.required),
@@ -32,6 +36,7 @@ export class FormularioAltaPersonaComponent implements OnInit {
     codigoPostal: new FormControl(null),
   });
 
+
   get nombre() { return this.form.get('nombre'); }
   get apellido() { return this.form.get('apellido'); }
   get nacionalidad() { return this.form.get('nacionalidad'); }
@@ -48,7 +53,7 @@ export class FormularioAltaPersonaComponent implements OnInit {
   get codigoPostal() { return this.form.get('codigoPostal'); }
 
   localidades$: Observable<Localidad[]>;
-  constructor(private localidadSrv: LocalidadesService, private personaSrv: PersonaService) { }
+  constructor(private localidadSrv: LocalidadesService) { }
 
   ngOnInit() {
     this.localidades$ = this.localidadSrv.traerTodos();
@@ -56,6 +61,26 @@ export class FormularioAltaPersonaComponent implements OnInit {
 
   fechaHoy = () => moment().format('YYYY-MM-DDThh:mm');
 
-
+  mapFormToPersona(): Persona {
+    return new Persona({
+      nombre: this.nombre.value,
+      apellido: this.apellido.value,
+      cuil: this.cuil.value,
+      nacionalidad: this.nacionalidad.value,
+      domicilio: {
+        calle: this.calle.value,
+        codigoPostal: this.codigoPostal.value,
+        departamento: this.departamento.value,
+        numero: this.numero.value,
+        piso: this.piso.value,
+        idLocalidad: this.localidad.value
+      },
+      estadoCivil: this.estadoCivil.value,
+      fechaNacimiento: this.fechaNacimiento.value,
+      sexo: this.sexo.value,
+      capitas: this.capitas.value,
+      telefonos: []
+    });
+  }
 
 }

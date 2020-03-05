@@ -10,10 +10,10 @@ import {
 } from '@angular/forms';
 import { Contacto } from '@modelos/contacto';
 import { Telefono } from '@modelos/telefono';
-import { PersonaService } from '@servicios/persona.service';
 import * as moment from 'moment';
 
 import { ChildForm } from '../childForm';
+import { TelefonoService } from './../../../services/telefono.service';
 
 @Component({
   selector: 'crm-formulario-abm-telefonos',
@@ -28,7 +28,7 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   indiceTelefonoCreandose: number = null;
   rollbackTelefono: number = null;
 
-  constructor(private personaSrv: PersonaService) { }
+  constructor(private telefonoSrv: TelefonoService) { }
 
   horaDesdePrevioAHoraHasta: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     console.log('funciona');
@@ -93,7 +93,7 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
   borrarTelefono = (index) => {
     const telCtrl = this.contactos.at(index);
     const tel = this.mapControlToTelefono(telCtrl);
-    this.personaSrv.borrarTelefono(tel, this.contacto).subscribe(
+    this.telefonoSrv.borrarTelefono(tel, this.contacto).subscribe(
       () => this.contactos.removeAt(index)
     );
   };
@@ -135,7 +135,7 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
     const index = this.indiceTelefonoEditandose;
     const telefonoCtrl = this.contactos.at(index);
     const tel = this.mapControlToTelefono(telefonoCtrl);
-    this.personaSrv.editarTelefono(tel, this.contacto).subscribe(
+    this.telefonoSrv.editarTelefono(tel, this.contacto).subscribe(
       telModif => {
         this.contactos.removeAt(index);
         const nuevoTelefono = this.mapTelefonoToControl(telModif);
@@ -149,7 +149,7 @@ export class FormularioAbmTelefonosComponent implements OnInit, ChildForm {
     const telefono = this.contactos.at(this.indiceTelefonoCreandose);
     const index = this.indiceTelefonoCreandose;
     const tel = this.mapControlToTelefono(telefono);
-    this.personaSrv.crearTelefono(tel, this.contacto).subscribe(
+    this.telefonoSrv.crearTelefono(tel, this.contacto).subscribe(
       telNuevo => {
         this.contactos.removeAt(index);
         const nuevoTelefono = this.mapTelefonoToControl(telNuevo);

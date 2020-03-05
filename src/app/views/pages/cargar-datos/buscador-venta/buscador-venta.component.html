@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-auto d-flex align-items-center">Buscar:</div>
+    <div class="col-6">
+        <mat-form-field>
+            <input type="text" matInput [formControl]="ctrl" [matAutocomplete]="auto"
+                [disabled]="!!idVenta || ventas.length === 0">
+        </mat-form-field>
+
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectVenta($event.option.value)"
+            [displayWith]="showVenta">
+            <mat-option *ngFor="let venta of ventasFiltradas$ | async" [value]="venta.id">
+                {{venta.nombre}}, {{venta.apellido}} {{venta.cuil}}
+            </mat-option>
+        </mat-autocomplete>
+    </div>
+</div>

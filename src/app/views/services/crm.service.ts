@@ -9,6 +9,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
 import { PersonaMapperService } from './persona-mapper.service';
+import { TelefonoMapperService } from './telefono-mapper.service';
 import { UserService } from './user.service';
 
 export enum Columnas {
@@ -26,7 +27,12 @@ export class CrmService {
   contactosAgendados$: BehaviorSubject<ContactoConHorario[]> = new BehaviorSubject([]);
   contactosARellamar$: BehaviorSubject<ContactoConHorario[]> = new BehaviorSubject([]);
 
-  constructor(private http: HttpClient, private userSrv: UserService, private personaMap: PersonaMapperService) {
+  constructor(
+    private http: HttpClient,
+    private userSrv: UserService,
+    private telefonoMap: TelefonoMapperService,
+    private personaMap: PersonaMapperService
+  ) {
     /*const contacto1 = getFakeContacto();
     const contacto2 = {
       ...getFakeContactoConHorario(),
@@ -110,7 +116,7 @@ export class CrmService {
     return new Contacto({
       id: contacto.id,
       persona: this.personaMap.mapToFront(contacto),
-      telefonos: contacto.telefonos.map(this.personaMap.mapTelefonoToFront),
+      telefonos: contacto.telefonos.map(this.telefonoMap.mapTelefonoToFront),
       idBase: contacto.idBase
     });
   };
@@ -119,7 +125,7 @@ export class CrmService {
     return new ContactoConHorario({
       id: contacto.id,
       persona: this.personaMap.mapToFront(contacto),
-      telefonos: contacto.telefonos.map(this.personaMap.mapTelefonoToFront),
+      telefonos: contacto.telefonos.map(this.telefonoMap.mapTelefonoToFront),
       horario: contacto.agendados[contacto.agendados.length - 1].fecha,
       nota: contacto.agendados[contacto.agendados.length - 1].nota,
       idBase: contacto.idBase

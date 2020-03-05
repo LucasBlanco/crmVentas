@@ -1,49 +1,52 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Contacto } from '@modelos/contacto';
+import { environment } from '@environment';
+import { Persona } from '@modelos/persona';
 import { CrmService } from '@servicios/crm.service';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-import { environment } from '../../../environments/environment';
-import { Telefono } from './../models/telefono';
 import { PersonaMapperService } from './persona-mapper.service';
+import { TelefonoMapperService } from './telefono-mapper.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PersonaService {
 
-  constructor(private http: HttpClient, private crmService: CrmService, private mapper: PersonaMapperService) { }
+  constructor(
+    private http: HttpClient,
+    private crmService: CrmService,
+    private mapper: PersonaMapperService,
+    private telefonoMap: TelefonoMapperService
+  ) { }
 
-  borrarTelefono(telefono: Telefono, contacto: Contacto) {
-    let params = new HttpParams()
-      .append('id_persona', contacto.persona.id.toString())
-      .append('id_base', contacto.idBase.toString())
-      .append('id_telefono', telefono.id.toString());
-    return this.http.delete(`${environment.ip}/contactos`, { params }).pipe(
-      tap(() => this.crmService.borrarTelefonoContacto(contacto, telefono))
+  crear(persona: Persona): Observable<Persona> {
+    return this.http.post<Persona>(`${environment.ip}/personas`, this.mapToBack(persona));
+  }
+
+  crearYObtenerIdVenta(persona: Persona): Observable<number> {
+    return this.http.post<Persona & { venta: any; }>(`${environment.ip}/personas`, this.mapToBack(persona)).pipe(
+      map(({ venta }) => venta.id)
     );
   }
 
-  editarTelefono(telefono: Telefono, contacto: Contacto): Observable<Telefono> {
-    const telBack = this.mapper.mapTelefonoToBack(telefono);
-    return this.http.put<Telefono>(`${environment.ip}/telefonos/${telefono.id}`, telBack).pipe(
-      map(tel => this.mapper.mapTelefonoToFront(tel)),
-      tap(tel => this.crmService.modificarTelefonoContacto(contacto, tel))
-    );
-  }
-
-  crearTelefono(telefono: Telefono, contacto: Contacto): Observable<Telefono> {
-    const telBack = {
-      ...this.mapper.mapTelefonoToBack(telefono),
-      id_base: contacto.idBase,
-      id_persona: contacto.persona.id
+  mapToBack(persona: Persona) {
+    const personaBack = {
+      dni: persona.dni,
+      nombre: persona.nombre,
+      apellido: persona.apellido,
+      nacionalidad: persona.nacionalidad,
+      telefonos: persona.telefonos.map(this.telefonoMap.mapTelefonoToBack),
+      cuil: persona.cuil,
+      estado_civil: persona.estadoCivil,
+      fecha_nacimiento: persona.fechaNacimiento,
+      capitas: persona.capitas,
     };
-    return this.http.post<Telefono>(`${environment.ip}/telefonos`, telBack).pipe(
-      map(tel => this.mapper.mapTelefonoToFront(tel)),
-      tap(tel => this.crmService.altaTelefonoContacto(contacto, tel))
-    );
+    if (persona.domicilio.calle && persona.domicilio.numero) {
+      return { ...personaBack, domicilio: this.mapper.mapDomicilioToBack(persona.domicilio) };
+    }
+    return personaBack;
   }
 
 }

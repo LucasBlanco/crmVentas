@@ -1,4 +1,4 @@
-interface IDomicilio {
+export interface IDomicilio {
     calle: string;
     codigoPostal: number;
     codigoPostalNuevo?: number;

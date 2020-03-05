@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { PersonaService } from '@servicios/persona.service';
 
 import { FormularioAltaPersonaComponent } from './../formulario-alta-persona/formulario-alta-persona.component';
 import { FormularioAltaTelefonosComponent } from './../formulario-alta-telefonos/formulario-alta-telefonos.component';
+
 
 @Component({
   selector: 'crm-formulario-carga-datos',
@@ -16,7 +18,8 @@ export class FormularioCargaDatosComponent implements OnInit {
   @ViewChild(FormularioAltaPersonaComponent, { static: true }) formPersonaComponent: FormularioAltaPersonaComponent;
   @ViewChild(FormularioAltaTelefonosComponent, { static: true }) formTelefonosComponent: FormularioAltaTelefonosComponent;
 
-  constructor() { }
+  constructor(public personaService: PersonaService) {
+  }
 
   ngAfterContentInit() {
     this.formPersona = this.formPersonaComponent.form;
@@ -29,9 +32,15 @@ export class FormularioCargaDatosComponent implements OnInit {
   guardar() {
     this.formPersona.markAllAsTouched();
     this.formTelefonos.markAllAsTouched();
+
     if (this.formPersona.valid && this.formTelefonos.valid) {
-      console.log('persona', this.formPersona.value);
-      console.log('telefonos', this.formTelefonos.value);
+      const persona = this.formPersonaComponent.mapFormToPersona();
+      const telefonos = this.formTelefonosComponent.mapFormToTelefonos();
+      persona.telefonos = telefonos;
+      this.personaService.crear(persona).subscribe({
+        next: () => { this.formPersona.reset(); this.formTelefonos.reset(); }
+      });
     }
   }
 }
+

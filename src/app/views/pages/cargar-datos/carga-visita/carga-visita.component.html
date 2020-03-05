@@ -1,0 +1,14 @@
+<mat-card>
+    <mat-card-title>
+        Carga de visita
+    </mat-card-title>
+    <mat-card-content>
+        <crm-buscador-venta (seleccionarVenta)="idVenta = $event" [idVenta]="idVenta"></crm-buscador-venta>
+        <crm-formulario-visita></crm-formulario-visita>
+        <div class="row">
+            <div class="col">
+                <button mat-raised-button color="accent" type="button" (click)="guardar()">Guardar</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

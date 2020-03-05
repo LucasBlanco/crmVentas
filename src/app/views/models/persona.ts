@@ -9,8 +9,8 @@ export interface IPersona {
 		horarioContacto: { desde: string, hasta: string; },
 		id: number;
 	}[];
-	id: number;
-	dni: number;
+	id?: number;
+	dni?: number;
 	cuil: number;
 	nacionalidad: string;
 	domicilio?: Domicilio;
@@ -29,7 +29,7 @@ export class Persona implements IPersona {
 		id: number;
 	}[];
 	id: number;
-	dni: number;
+	dni?: number;
 	cuil: number;
 	domicilio?: Domicilio;
 	sexo: 'M' | 'F';

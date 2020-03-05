@@ -2,9 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './core/auth';
+import { CargaVisitaComponent } from './views/pages/cargar-datos/carga-visita/carga-visita.component';
+import {
+    FormularioCargaDatosConVisitaComponent,
+} from './views/pages/cargar-datos/formulario-carga-datos-con-visita/formulario-carga-datos-con-visita.component';
 import {
     FormularioCargaDatosComponent,
 } from './views/pages/cargar-datos/formulario-carga-datos/formulario-carga-datos.component';
+import {
+    VentasPendientesDeVisitaComponent,
+} from './views/pages/cargar-datos/ventas-pendientes-de-visita/ventas-pendientes-de-visita.component';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
 
@@ -39,6 +46,22 @@ const routes: Routes = [
 			{
 				path: 'cargarDatos',
 				component: FormularioCargaDatosComponent
+			},
+			{
+				path: 'cargarDatosConVisita',
+				component: FormularioCargaDatosConVisitaComponent
+			},
+			{
+				path: 'cargarVisita/:idVenta',
+				component: CargaVisitaComponent
+			},
+			{
+				path: 'cargarVisita',
+				component: CargaVisitaComponent
+			},
+			{
+				path: 'ventasPendientesDeVisita',
+				component: VentasPendientesDeVisitaComponent
 			},
 			{
 				path: 'visualizarSeguimientos',

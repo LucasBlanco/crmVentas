@@ -9,7 +9,10 @@ export class MenuConfig {
 			...this.getControlOperadoras(),
 			...this.getVisualizacionSeguimientos(),
 			...this.getDashboard(),
-			// ...this.getCargarDatos()
+			...this.getCargarDatos(),
+			...this.getCargarDatosConVisita(),
+			...this.getCargarVisita(),
+			...this.getVentasPendientesDeVisita()
 		];
 	}
 
@@ -31,6 +34,10 @@ export class MenuConfig {
 
 	tienePerfil(perfil: string) {
 		return this.getPerfiles().some(p => p === perfil);
+	}
+
+	tieneAlgunPerfil(perfiles: string[]) {
+		return perfiles.some(perfil => this.tienePerfil(perfil));
 	}
 
 	getCrm() {
@@ -101,12 +108,51 @@ export class MenuConfig {
 	}
 
 	getCargarDatos() {
-		return [{
-			title: 'Cargar Datos',
-			root: true,
-			alignment: 'left',
-			page: '/cargarDatos',
-		}];
+		if (this.tieneAlgunPerfil(['OPERADORA'])) {
+			return [{
+				title: 'Cargar Datos',
+				root: true,
+				alignment: 'left',
+				page: '/cargarDatos',
+			}];
+		}
+		return [];
+	}
+
+	getCargarDatosConVisita() {
+		if (this.tieneAlgunPerfil(['VENDEDORA', 'PROMOTORA', 'EXTERNO', 'TEAM LEADER'])) {
+			return [{
+				title: 'Cargar Datos',
+				root: true,
+				alignment: 'left',
+				page: '/cargarDatosConVisita',
+			}];
+		}
+		return [];
+	}
+
+	getCargarVisita() {
+		if (this.tieneAlgunPerfil(['VENDEDORA', 'PROMOTORA', 'EXTERNO', 'TEAM LEADER'])) {
+			return [{
+				title: 'Cargar Visita',
+				root: true,
+				alignment: 'left',
+				page: '/cargarVisita',
+			}];
+		}
+		return [];
+	}
+
+	getVentasPendientesDeVisita() {
+		if (this.tieneAlgunPerfil(['VENDEDORA', 'PROMOTORA', 'EXTERNO', 'TEAM LEADER'])) {
+			return [{
+				title: 'Ventas pendientes de visita',
+				root: true,
+				alignment: 'left',
+				page: '/ventasPendientesDeVisita',
+			}];
+		}
+		return [];
 	}
 
 	public defaults: any = {

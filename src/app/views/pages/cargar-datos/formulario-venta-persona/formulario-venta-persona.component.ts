@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LocalidadesService } from '@servicios/localidades.service';
-import { PersonaService } from '@servicios/persona.service';
 
 import { FormularioAltaPersonaComponent } from './../formulario-alta-persona/formulario-alta-persona.component';
 
@@ -28,8 +27,8 @@ export class FormularioVentaPersonaComponent extends FormularioAltaPersonaCompon
     codigoPostal: new FormControl(null, Validators.required)
   });
 
-  constructor(private _localidadSrv: LocalidadesService, private _personaSrv: PersonaService) {
-    super(_localidadSrv, _personaSrv);
+  constructor(private _localidadSrv: LocalidadesService) {
+    super(_localidadSrv);
   }
 
 }

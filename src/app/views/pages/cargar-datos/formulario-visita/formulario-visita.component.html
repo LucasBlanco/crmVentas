@@ -1,0 +1,87 @@
+<form [formGroup]="form" *ngIf="form" class="row" (ngSubmit)="guardarForm()">
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Calle</mat-label>
+      <input matInput formControlName="calle">
+      <mat-error *ngIf="calle.invalid">El campo es requerido</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Numero</mat-label>
+      <input matInput formControlName="numero" type="number">
+      <mat-error *ngIf="numero.invalid">El campo es requerido</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Entre calles</mat-label>
+      <input matInput formControlName="entreCalles">
+      <mat-error *ngIf="entreCalles.invalid">El campo es requerido</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Departamento</mat-label>
+      <input matInput formControlName="departamento">
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Piso</mat-label>
+      <input matInput formControlName="piso" type="number">
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Localidad</mat-label>
+      <mat-select formControlName="localidad">
+        <mat-option *ngFor="let localidad of localidades$ | async" [value]="localidad.id">
+          {{localidad.nombre}} {{localidad.id}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="localidad.invalid">El campo es requerido</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-sm-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha</mat-label>
+      <input matInput formControlName="fecha" type="date">
+      <mat-error *ngIf="fecha.hasError('required')">El campo es requerido</mat-error>
+      <mat-error *ngIf="fecha.hasError('minDate')">La fecha debe ser mayor a la de hoy</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-sm-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Horario desde</mat-label>
+      <input matInput formControlName="horaDesde" type="time" [errorStateMatcher]="groupErrorMatcher">
+      <mat-error *ngIf="horaDesde.hasError('required')">El campo es requerido</mat-error>
+      <mat-error *ngIf="form.hasError('horaDesdeMayorAHoraHasta')">El horario de
+        inicio debe ser previo al horario de fin
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="col-sm-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Horario hasta</mat-label>
+      <input matInput formControlName="horaHasta" type="time" [errorStateMatcher]="groupErrorMatcher">
+      <mat-error *ngIf="form.hasError('horaDesdeMayorAHoraHasta')">El horario de inicio debe ser previo al horario de
+        fin</mat-error>
+      <mat-error *ngIf="horaHasta.hasError('required')">El campo es requerido</mat-error>
+
+    </mat-form-field>
+  </div>
+  <div class="col-md-6">
+    <mat-form-field appearance="outline">
+      <mat-label>Observacion</mat-label>
+      <input matInput formControlName="observacion">
+    </mat-form-field>
+  </div>
+  <div class="col-md-6">
+    <mat-form-field appearance="outline">
+      <mat-label>Lugar</mat-label>
+      <input matInput formControlName="lugar">
+      <mat-error *ngIf="lugar.invalid">El campo es requerido</mat-error>
+    </mat-form-field>
+  </div>
+</form>

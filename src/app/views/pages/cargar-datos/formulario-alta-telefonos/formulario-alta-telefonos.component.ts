@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Telefono } from '@modelos/telefono';
 import { PersonaService } from '@servicios/persona.service';
 import moment from 'moment';
 
@@ -61,6 +62,15 @@ export class FormularioAltaTelefonosComponent implements OnInit {
     this.contactos.removeAt(index);
   };
 
+  mapFormToTelefonos(): Telefono[] {
+    return this.contactos.value.map(t => ({
+      numero: t.telefono,
+      horarioContacto: {
+        desde: t.horaDesde,
+        hasta: t.horaHasta
+      }
+    }));
+  }
 
 
 }

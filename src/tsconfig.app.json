@@ -18,6 +18,9 @@
       ],
       "@estilos/*": [
         "./app/views/pages/styles"
+      ],
+      "@environment": [
+        "./environments/environment"
       ]
     }
   },

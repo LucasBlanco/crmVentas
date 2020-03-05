@@ -49,6 +49,7 @@ import { AuthModule } from './views/pages/auth/auth.module';
 import { CargarDatosModule } from './views/pages/cargar-datos/cargar-datos.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Angular
 // Angular in memory
@@ -118,7 +119,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 		InlineSVGModule.forRoot(),
 		ThemeModule,
 		MatSnackBarModule,
-		CargarDatosModule
+		CargarDatosModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
 
 	],
 	exports: [],
