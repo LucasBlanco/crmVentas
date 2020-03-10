@@ -6,6 +6,12 @@ import { map } from 'rxjs/operators';
 
 import { generarArrayColores } from './helpers/color-palette';
 
+export interface IndicadoresBase {
+  cantidad: number;
+  conSeguimientos: number;
+  faltantes: number;
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,15 +31,15 @@ export class EstadisticasBaseService {
     const params = attachParams(new HttpParams());
     return this.http.get<{ grupoDeEstados: string, cantidad: number; }[]>(`${environment.ip}/estadistica/cantidadVentas`, { params })
       .pipe(
-        map(cantidades => ({
-          labels: cantidades.map(c => c.grupoDeEstados),
-          datasets: [{
-            label: 'cantidad',
-            data: cantidades.map(c => c.cantidad),
-            backgroundColor: generarArrayColores(cantidades.length)
-          }]
-        })
-        )
+        map(this.mapCantidades('grupoDeEstados'))
+      );
+  }
+
+  traerCantidadDatos(idBase) {
+    const params = new HttpParams().append('bases[]', idBase);
+    return this.http.get<IndicadoresBase[]>(`${environment.ip}/estadistica/cantidadDatos`, { params })
+      .pipe(
+        map(indicadores => indicadores[0])
       );
   }
 
@@ -58,20 +64,20 @@ export class EstadisticasBaseService {
     const params = attachParams(new HttpParams());
     return this.http.get<{ estados: string, cantidad: number; }[]>(`${environment.ip}/estadistica/cantidadVentas`, { params })
       .pipe(
-        map(this.mapCantidades)
+        map(this.mapCantidades('estado'))
       );
   }
 
-  mapCantidades(cantidades) {
+  mapCantidades = (label) => (cantidades) => {
     return {
-      labels: cantidades.map(c => c.estado),
+      labels: cantidades.map(c => c[label]),
       datasets: [{
         label: 'cantidad',
         data: cantidades.map(c => c.cantidad),
         backgroundColor: generarArrayColores(cantidades.length)
       }]
     };
-  }
+  };
 
 
 

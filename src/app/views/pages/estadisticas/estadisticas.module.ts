@@ -12,15 +12,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChartComponent } from '../../components/chart/chart.component';
 import { LandingComponent } from '../landing/landing.component';
 import { EstadisiticasBaseComponent } from './estadisiticas-base/estadisiticas-base.component';
-import { Guard } from './Guard';
 import { SupervisorCallComponent } from './supervisor-call/supervisor-call.component';
 import { VendedoraComponent } from './vendedora/vendedora.component';
 import { WidgetComponent } from './widget/widget.component';
-
-const dashboard = () => {
-
-
-};
 
 const routes: Routes = [
 	{ path: 'landing', component: LandingComponent },
@@ -29,7 +23,6 @@ const routes: Routes = [
 
 @NgModule({
 	declarations: [SupervisorCallComponent, ChartComponent, WidgetComponent, VendedoraComponent, LandingComponent, EstadisiticasBaseComponent],
-	providers: [Guard],
 	imports: [
 		CommonModule,
 		RouterModule.forChild(routes),

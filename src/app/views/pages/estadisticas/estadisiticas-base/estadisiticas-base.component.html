@@ -2,28 +2,54 @@
     <div class="row">
         <div class="col">
             <mat-card>
-                <mat-card-header>
+                <mat-card-header style="margin: 20px">
                     <h3>Estadisticas Base</h3>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="row">
+                        <div class="col">
+                            <mat-card>
+                                <mat-card-content>
+                                    <h3>Cantidad</h3>
+                                    <h4>{{(indicadores$ | async)?.cantidad}}</h4>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="col">
+                            <mat-card>
+                                <mat-card-content>
+                                    <h3>Faltantes</h3>
+                                    <h4>{{(indicadores$ | async)?.faltantes}}</h4>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="col">
+                            <mat-card>
+                                <mat-card-content>
+                                    <h3>Con seguimientos</h3>
+                                    <h4>{{(indicadores$ | async)?.conSeguimientos}}</h4>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 20px">
                         <div class="col-6">
                             <crm-chart height="400px" id="base" [config]="baseConfig$"></crm-chart>
                         </div>
                         <div class="col-6">
                             <mat-tab-group>
                                 <mat-tab label="Vendibles">
-                                    <crm-chart height="400px" id="vendibles" [config]="vendiblesConfig$"></crm-chart>
+                                    <crm-chart height="300px" id="vendibles" [config]="vendiblesConfig$"></crm-chart>
                                 </mat-tab>
                                 <mat-tab label="Invendibles">
-                                    <crm-chart height="400px" id="invendibles" [config]="invendiblesConfig$">
+                                    <crm-chart height="300px" id="invendibles" [config]="invendiblesConfig$">
                                     </crm-chart>
                                 </mat-tab>
                                 <mat-tab label="Vendidos">
-                                    <crm-chart height="400px" id="vendidos" [config]="vendidosConfig$"></crm-chart>
+                                    <crm-chart height="300px" id="vendidos" [config]="vendidosConfig$"></crm-chart>
                                 </mat-tab>
                                 <mat-tab label="Incontactables">
-                                    <crm-chart height="400px" id="incontactables" [config]="incontactablesConfig$">
+                                    <crm-chart height="300px" id="incontactables" [config]="incontactablesConfig$">
                                     </crm-chart>
                                 </mat-tab>
                             </mat-tab-group>
