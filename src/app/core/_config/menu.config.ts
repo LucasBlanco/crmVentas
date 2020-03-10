@@ -12,7 +12,8 @@ export class MenuConfig {
 			...this.getCargarDatos(),
 			...this.getCargarDatosConVisita(),
 			...this.getCargarVisita(),
-			...this.getVentasPendientesDeVisita()
+			...this.getVentasPendientesDeVisita(),
+			...this.getEstadisticasBases()
 		];
 	}
 
@@ -150,6 +151,18 @@ export class MenuConfig {
 				root: true,
 				alignment: 'left',
 				page: '/ventasPendientesDeVisita',
+			}];
+		}
+		return [];
+	}
+
+	getEstadisticasBases() {
+		if (true) {
+			return [{
+				title: 'Estadisticas base',
+				root: true,
+				alignment: 'left',
+				page: '/estadisticas/base',
 			}];
 		}
 		return [];

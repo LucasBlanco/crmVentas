@@ -36,8 +36,8 @@ const routes: Routes = [
 				loadChildren: () => import('./views/pages/asignacion-bases/asignacion-bases.module').then(m => m.AsignacionBasesModule)
 			},
 			{
-				path: 'dashboard',
-				loadChildren: () => import('./views/pages/dashboard-posta/dashboard-posta.module').then(m => m.DashboardPostaModule)
+				path: 'estadisticas',
+				loadChildren: () => import('./views/pages/estadisticas/estadisticas.module').then(m => m.EstadisticasModule)
 			},
 			{
 				path: 'controlOperadoras',

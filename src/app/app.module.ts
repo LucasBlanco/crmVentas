@@ -7,6 +7,7 @@ import { GestureConfig, MatProgressSpinnerModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
@@ -49,7 +50,6 @@ import { AuthModule } from './views/pages/auth/auth.module';
 import { CargarDatosModule } from './views/pages/cargar-datos/cargar-datos.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Angular
 // Angular in memory

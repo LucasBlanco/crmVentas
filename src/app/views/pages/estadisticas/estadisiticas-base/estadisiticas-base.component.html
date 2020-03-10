@@ -1,0 +1,37 @@
+<div class="container-floid">
+    <div class="row">
+        <div class="col">
+            <mat-card>
+                <mat-card-header>
+                    <h3>Estadisticas Base</h3>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-6">
+                            <crm-chart height="400px" id="base" [config]="baseConfig$"></crm-chart>
+                        </div>
+                        <div class="col-6">
+                            <mat-tab-group>
+                                <mat-tab label="Vendibles">
+                                    <crm-chart height="400px" id="vendibles" [config]="vendiblesConfig$"></crm-chart>
+                                </mat-tab>
+                                <mat-tab label="Invendibles">
+                                    <crm-chart height="400px" id="invendibles" [config]="invendiblesConfig$">
+                                    </crm-chart>
+                                </mat-tab>
+                                <mat-tab label="Vendidos">
+                                    <crm-chart height="400px" id="vendidos" [config]="vendidosConfig$"></crm-chart>
+                                </mat-tab>
+                                <mat-tab label="Incontactables">
+                                    <crm-chart height="400px" id="incontactables" [config]="incontactablesConfig$">
+                                    </crm-chart>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+</div>

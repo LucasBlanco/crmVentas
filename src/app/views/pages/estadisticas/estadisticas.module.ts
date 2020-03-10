@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule, MatSelectModule } from '@angular/material';
+import { MatCardModule, MatSelectModule, MatTabsModule } from '@angular/material';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ChartComponent } from '../../components/chart/chart.component';
 import { LandingComponent } from '../landing/landing.component';
+import { EstadisiticasBaseComponent } from './estadisiticas-base/estadisiticas-base.component';
 import { Guard } from './Guard';
 import { SupervisorCallComponent } from './supervisor-call/supervisor-call.component';
 import { VendedoraComponent } from './vendedora/vendedora.component';
@@ -22,13 +23,12 @@ const dashboard = () => {
 };
 
 const routes: Routes = [
-	{ path: 'supervisorcall', component: SupervisorCallComponent, canActivate: [Guard] },
-	{ path: 'vendedora/:id', component: VendedoraComponent, canActivate: [Guard] },
-	{ path: 'landing', component: LandingComponent, canActivate: [Guard] }
+	{ path: 'landing', component: LandingComponent },
+	{ path: 'base', component: EstadisiticasBaseComponent }
 ];
 
 @NgModule({
-	declarations: [SupervisorCallComponent, ChartComponent, WidgetComponent, VendedoraComponent, LandingComponent],
+	declarations: [SupervisorCallComponent, ChartComponent, WidgetComponent, VendedoraComponent, LandingComponent, EstadisiticasBaseComponent],
 	providers: [Guard],
 	imports: [
 		CommonModule,
@@ -42,8 +42,9 @@ const routes: Routes = [
 		MatInputModule,
 		MatFormFieldModule,
 		MatButtonModule,
-		MatIconModule
+		MatIconModule,
+		MatTabsModule
 	]
 })
-export class DashboardPostaModule {
+export class EstadisticasModule {
 }

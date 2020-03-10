@@ -15,77 +15,11 @@ import {
 import { Perfiles } from './../enums/perfiles';
 import { Fuente } from './../models/fuente';
 import { FuentesService } from './fuentes.service';
+import { ColorPalette } from './helpers/color-palette';
+import { Combinatoria } from './helpers/combinatoria';
+import { WidgetData } from './helpers/widget-data';
 import { OperadoresService } from './operadores.service';
 
-
-class ColorPalette {
-	constructor(private nroColores: number) { }
-	ultimoIndice = -1;
-	colors = [
-		'#1c84c6',
-		'#1ab394',
-		'#23c6c8',
-		'#ed5565',
-		'#f6db5f',
-		'#FCB5B5',
-		'#f8ac59',
-		'#087E8B',
-		'#ECB0E1',
-		'#C9DDFF',
-		'#C0C781',
-		'#DEB986',
-		'#F7B05B',
-	];
-	proximoColor() {
-		this.ultimoIndice = (this.ultimoIndice > this.nroColores - 1) ? 0 : this.ultimoIndice + 1;
-		return this.colors[this.ultimoIndice];
-	}
-}
-
-export class WidgetData {
-
-	labels: string[];
-	datasets: any[];
-	constructor(chart) {
-		this.labels = chart.labels;
-		this.datasets = chart.datasets;
-	}
-
-	get valorActual() {
-		const index = this.labels.findIndex(l => l === moment().format('YYYY-MM-DD'));
-		return this.datasets[0].data[index];
-	}
-}
-
-export class Combinatoria {
-	combinatoria;
-	constructor(
-		...elemsParaLaCombinatoria: { data: (string | number)[], nombre: string; }[]
-	) {
-		const [head, ...tail] = elemsParaLaCombinatoria.map(this.toArrayDeObjectos);
-		this.combinatoria = tail.reduce((arrayFinal, elemActual) => {
-			return arrayFinal.map(elem =>
-				elemActual.map(otroElem => ({ ...elem, ...otroElem }))
-			).flat();
-		}, head);
-	}
-
-	private toArrayDeObjectos({ data, nombre }): object[] {
-		// transforma cada elemento de la combinatoria en un array de objectos con el nombre correcspondiente
-		return data.map(e => ({ [nombre]: e }));
-	}
-
-	agregarPropiedades(propiedades: { [key: string]: (string | number); }) {
-		this.combinatoria = this.combinatoria.map(comb => ({ ...comb, ...propiedades }));
-	}
-
-	mergeBy(identificadores: string[], data: any[]) {
-		this.combinatoria = this.combinatoria.map(comb => {
-			const elemRepetido = data.find(d => identificadores.every(i => d[i] === comb[i]));
-			return elemRepetido ? elemRepetido : comb;
-		});
-	}
-}
 
 @Injectable({
 	providedIn: 'root'
@@ -334,6 +268,7 @@ export class DashboardChartService {
 		});
 		return { labels: usuariosOrdenadosPorCantidad, datasets };
 	}
+
 
 	/* HELPERS */
 	combinarEstadosRepetidosSumandoCantidad = (identificadores: string[]) => (array, valorActual) => {
