@@ -5,6 +5,7 @@ import { flow } from 'lodash/fp';
 import { map } from 'rxjs/operators';
 
 import { generarArrayColores } from './helpers/color-palette';
+import * as est from './helpers/estadisticas';
 
 export interface IndicadoresBase {
   cantidad: number;
@@ -19,14 +20,10 @@ export class EstadisticasBaseService {
 
   constructor(private http: HttpClient) { }
 
-  private groupBy = (campo) => (params) => params.append('groupBy[]', campo);
-  private filter = (campo, valor) => (params) => params.append(`filters[${campo}][]`, valor);
-
-
   traerVentasPorBase(idBase: number) {
     const attachParams = flow([
-      this.groupBy('grupoDeEstados'),
-      this.filter('bases', [idBase])
+      est.groupBy('grupoDeEstados'),
+      est.filter('bases', idBase)
     ]);
     const params = attachParams(new HttpParams());
     return this.http.get<{ grupoDeEstados: string, cantidad: number; }[]>(`${environment.ip}/estadistica/cantidadVentas`, { params })
@@ -58,8 +55,8 @@ export class EstadisticasBaseService {
 
   traerVentasPorGrupoEstados(idBase, grupoEstado) {
     const attachParams = flow([
-      this.filter('grupoDeEstados', [grupoEstado]),
-      this.groupBy('estado')
+      est.filter('grupoDeEstados', grupoEstado),
+      est.groupBy('estado')
     ]);
     const params = attachParams(new HttpParams());
     return this.http.get<{ estados: string, cantidad: number; }[]>(`${environment.ip}/estadistica/cantidadVentas`, { params })

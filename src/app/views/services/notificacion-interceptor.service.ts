@@ -15,18 +15,18 @@ export class NotificacionInterceptorService implements HttpInterceptor {
 		const nextHadle = next.handle(req);
 		return nextHadle.pipe(
 			catchError((error) => {
-				this._snackBar.open(error.error.title, "x", { duration: 2000, })
-				return of(error)
+				this._snackBar.open(error.error.title, "x", { duration: 2000, });
+				return of(error);
 			}),
 			tap((data) => {
 				if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
 					if (data instanceof HttpResponse) {
 						this._snackBar.open('La accion se realizo con exito', 'x', {
 							duration: 2000
-						})
+						});
 					}
 				}
 			})
-		)
+		);
 	}
 }

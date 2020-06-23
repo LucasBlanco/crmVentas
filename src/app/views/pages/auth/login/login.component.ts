@@ -7,10 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { finalize, takeUntil, tap } from 'rxjs/operators';
 
-import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
+import { MenuConfigService, MenuHorizontalService, SubheaderService } from '../../../../core/_base/layout';
+import { MenuConfig } from '../../../../core/_config/menu.config';
+import { AuthNoticeService, AuthService } from '../../../../core/auth';
 import { AppState } from '../../../../core/reducers';
-import {MenuConfig} from "../../../../core/_config/menu.config";
-import {MenuConfigService, MenuHorizontalService, SubheaderService} from "../../../../core/_base/layout";
 
 // RxJS
 // Translate
@@ -152,7 +152,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 						//this.store.dispatch(new Login({ authToken: user.accessToken }));
 						this.menuConfigService.loadConfigs(new MenuConfig().configs);
 						this.menuHorizontalService.loadMenu();
-						this.router.navigateByUrl('landing'); // Main page
+						this.router.navigateByUrl('estadisticas/landing'); // Main page
 					} else {
 						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
 					}
