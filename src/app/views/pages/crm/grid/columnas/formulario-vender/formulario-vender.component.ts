@@ -7,10 +7,10 @@ import { Contacto } from './../../../../../models/contacto';
 import { ObraSocial } from './../../../../../models/obraSocial';
 import { Venta } from './../../../../../models/venta';
 import {
-    FormularioAbmTelefonosComponent,
+	FormularioAbmTelefonosComponent,
 } from './../../../../cargar-datos/formulario-abm-telefonos/formulario-abm-telefonos.component';
 import {
-    FormularioVentaPersonaComponent,
+	FormularioVentaPersonaComponent,
 } from './../../../../cargar-datos/formulario-venta-persona/formulario-venta-persona.component';
 
 @Component({
@@ -64,9 +64,27 @@ export class FormularioVenderComponent implements OnInit, AfterViewInit {
 		this.obraSocialSrv.traerTodos().subscribe(obrasSociales => this.obrasSociales = obrasSociales);
 	}
 
+	public findInvalidControls(form: FormGroup) {
+		const invalid = [];
+		const controls = form.controls;
+		for (const name in controls) {
+			if (controls[name].invalid) {
+				invalid.push(name);
+			}
+		}
+		return invalid;
+	}
+
 	vender() {
 		const fp = this.formPersona.value;
 		const fo = this.formObraSocial.value;
+		this.formPersona.markAllAsTouched();
+		this.formObraSocial.markAllAsTouched();
+		if (this.formPersona.invalid || this.formPersona.invalid) {
+			console.log('error persona', this.findInvalidControls(this.formPersona));
+			console.log('error obrasocial', this.findInvalidControls(this.formObraSocial));
+			return;
+		}
 		const venta: Venta = {
 			id: this.contacto.id,
 			nombre: fp.nombre,

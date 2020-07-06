@@ -42,6 +42,7 @@
                         <mat-radio-button value="M">M</mat-radio-button>
                         <mat-radio-button value="F">F</mat-radio-button>
                     </mat-radio-group>
+                    <mat-error *ngIf="sexo.invalid && sexo.touched">El sexo es requerido</mat-error>
                 </div>
             </div>
 
