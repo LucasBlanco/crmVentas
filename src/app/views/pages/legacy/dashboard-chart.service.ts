@@ -5,17 +5,17 @@ import * as moment from 'moment';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import {
-    Estados,
-    EstadosRechazoAgrupados,
-    nombreEstadoAgrupado,
-    nombreEstadoAgrupadoConDetalleRechazo,
-} from '../enums/estados';
-import { Perfiles } from './../enums/perfiles';
-import { Fuente } from './../models/fuente';
-import { FuentesService } from './fuentes.service';
-import { OperadoresService } from './operadores.service';
+	Estados,
+	EstadosRechazoAgrupados,
+	nombreEstadoAgrupado,
+	nombreEstadoAgrupadoConDetalleRechazo,
+} from '../../enums/estados';
+import { Perfiles } from '../../enums/perfiles';
+import { Fuente } from '../../models/fuente';
+import { FuentesService } from '../../services/fuentes.service';
+import { OperadoresService } from '../../services/operadores.service';
 
 
 class ColorPalette {

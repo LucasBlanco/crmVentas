@@ -1,21 +1,22 @@
-import {CommonModule} from '@angular/common';
-import {Injectable, NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {MatCardModule, MatSelectModule} from '@angular/material';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterModule, RouterStateSnapshot, Routes} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Injectable, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule, MatSelectModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterModule, RouterStateSnapshot, Routes } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
-import {ChartComponent} from '../../components/chart/chart.component';
-import {LandingComponent} from '../landing/landing.component';
-import {UserService} from './../../services/user.service';
-import {SupervisorCallComponent} from './supervisor-call/supervisor-call.component';
-import {VendedoraComponent} from './vendedora/vendedora.component';
-import {WidgetComponent} from './widget/widget.component';
+
+import { SupervisorCallComponent } from './supervisor-call/supervisor-call.component';
+import { VendedoraComponent } from './vendedora/vendedora.component';
+import { WidgetComponent } from './widget/widget.component';
+import { UserService } from '@servicios/user.service';
+import { LandingComponent } from '../../landing/landing.component';
+import { ChartComponent } from '../../estadisticas/components/chart/chart.component';
 
 const dashboard = () => {
 
@@ -64,9 +65,9 @@ class Guard implements CanActivate {
 }
 
 const routes: Routes = [
-	{path: 'supervisorcall', component: SupervisorCallComponent, canActivate: [Guard]},
-	{path: 'vendedora/:id', component: VendedoraComponent, canActivate: [Guard]},
-	{path: 'landing', component: LandingComponent, canActivate: [Guard]}
+	{ path: 'supervisorcall', component: SupervisorCallComponent, canActivate: [Guard] },
+	{ path: 'vendedora/:id', component: VendedoraComponent, canActivate: [Guard] },
+	{ path: 'landing', component: LandingComponent, canActivate: [Guard] }
 ];
 
 @NgModule({

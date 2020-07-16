@@ -9,6 +9,7 @@ export class MenuConfig {
 			...this.getControlOperadoras(),
 			...this.getVisualizacionSeguimientos(),
 			...this.getDashboard(),
+			...this.getEstadisticas()
 			// ...this.getCargarDatos()
 		];
 	}
@@ -108,6 +109,20 @@ export class MenuConfig {
 			page: '/cargarDatos',
 		}];
 	}
+
+	getEstadisticas() {
+		if (true) {
+			return [{
+				title: 'Estadisticas',
+				root: true,
+				alignment: 'left',
+				page: '/estadisticas',
+			}];
+		} else {
+			return [];
+		}
+	}
+
 
 	public defaults: any = {
 		header: {

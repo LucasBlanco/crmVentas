@@ -11,7 +11,6 @@ import { MailModule } from './apps/mail/mail.module';
 import { AsignacionBasesModule } from './asignacion-bases/asignacion-bases.module';
 import { ControlOperadorasModule } from './control-operadoras/control-operadoras.module';
 import { CrmModule } from './crm/crm.module';
-import { DashboardPostaModule } from './dashboard-posta/dashboard-posta.module';
 import { MyPageComponent } from './my-page/my-page.component';
 import { UserManagementModule } from './user-management/user-management.module';
 import { VisualizarSeguimientosModule } from './visualizar-seguimientos/visualizar-seguimientos.module';
@@ -32,7 +31,6 @@ import { VisualizarSeguimientosModule } from './visualizar-seguimientos/visualiz
 		ECommerceModule,
 		UserManagementModule,
 		CrmModule,
-		DashboardPostaModule,
 		AsignacionBasesModule,
 		AsignacionBasesModule,
 		ControlOperadorasModule,

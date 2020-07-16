@@ -1,0 +1,19 @@
+.card{
+    background-color: white;
+    padding: 50px;
+    border-radius: 30px;
+    border-color: #f1f1f1;
+    margin: 10px;
+    height: 100%;
+    .header{
+        font-size: 2em;
+        font-weight: 600;
+        margin-bottom: 50px;
+        text-align: center
+    }
+}
+
+.card-row{
+
+    margin-bottom: 50px;
+}

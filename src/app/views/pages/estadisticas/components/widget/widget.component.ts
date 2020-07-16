@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { DashboardChartService } from '../../services/dashboard-chart.service';
+import { DashboardChartService } from '../../../legacy/dashboard-chart.service';
 
 @Component({
   selector: 'crm-widget',

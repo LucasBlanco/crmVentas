@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { DashboardChartService } from '../../services/dashboard-chart.service';
 
 
 @Component({
@@ -16,7 +15,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   @Input() id = '';
   @Input() config: BehaviorSubject<any>;
   chart;
-  constructor(public chartSrv: DashboardChartService) { }
+  constructor() { }
 
 
   ngAfterViewInit() {

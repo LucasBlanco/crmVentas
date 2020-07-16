@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DashboardChartService } from '@servicios/dashboard-chart.service';
 import { BehaviorSubject } from 'rxjs';
+import { DashboardChartService } from '../../dashboard-chart.service';
 
 
 

@@ -49,6 +49,7 @@ import { AuthModule } from './views/pages/auth/auth.module';
 import { CargarDatosModule } from './views/pages/cargar-datos/cargar-datos.module';
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
+import { EstadisticasModule } from './views/pages/estadisticas/estadisticas.module';
 
 // Angular
 // Angular in memory
@@ -118,7 +119,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 		InlineSVGModule.forRoot(),
 		ThemeModule,
 		MatSnackBarModule,
-		CargarDatosModule
+		CargarDatosModule,
+		EstadisticasModule
 
 	],
 	exports: [],

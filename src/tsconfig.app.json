@@ -23,6 +23,7 @@
   },
   "exclude": [
     "test.ts",
+    "./src/app/views/pages/legacy",
     "**/*.spec.ts"
   ]
 }

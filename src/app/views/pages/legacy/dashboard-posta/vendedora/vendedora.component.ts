@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Operador } from '@modelos/operador';
-import { DashboardChartService } from '@servicios/dashboard-chart.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { DashboardChartService } from '../../dashboard-chart.service';
 
 @Component({
   selector: 'crm-vendedora',

@@ -1,9 +1,10 @@
+import { LandingComponent } from './views/pages/landing/landing.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './core/auth';
 import {
-    FormularioCargaDatosComponent,
+	FormularioCargaDatosComponent,
 } from './views/pages/cargar-datos/formulario-carga-datos/formulario-carga-datos.component';
 import { BaseComponent } from './views/theme/base/base.component';
 import { ErrorPageComponent } from './views/theme/content/error-page/error-page.component';
@@ -29,8 +30,8 @@ const routes: Routes = [
 				loadChildren: () => import('./views/pages/asignacion-bases/asignacion-bases.module').then(m => m.AsignacionBasesModule)
 			},
 			{
-				path: 'dashboard',
-				loadChildren: () => import('./views/pages/dashboard-posta/dashboard-posta.module').then(m => m.DashboardPostaModule)
+				path: 'estadisticas',
+				loadChildren: () => import('./views/pages/estadisticas/estadisticas.module').then(m => m.EstadisticasModule)
 			},
 			{
 				path: 'controlOperadoras',
@@ -46,32 +47,8 @@ const routes: Routes = [
 					.then(m => m.VisualizarSeguimientosModule)
 			},
 			{
-				path: 'mail',
-				loadChildren: () => import('./views/pages/apps/mail/mail.module').then(m => m.MailModule)
-			},
-			{
-				path: 'ecommerce',
-				loadChildren: () => import('./views/pages/apps/e-commerce/e-commerce.module').then(m => m.ECommerceModule),
-			},
-			{
-				path: 'ngbootstrap',
-				loadChildren: () => import('./views/pages/ngbootstrap/ngbootstrap.module').then(m => m.NgbootstrapModule)
-			},
-			{
-				path: 'material',
-				loadChildren: () => import('./views/pages/material/material.module').then(m => m.MaterialModule)
-			},
-			{
-				path: 'user-management',
-				loadChildren: () => import('./views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
-			},
-			{
-				path: 'wizard',
-				loadChildren: () => import('./views/pages/wizard/wizard.module').then(m => m.WizardModule)
-			},
-			{
-				path: 'builder',
-				loadChildren: () => import('./views/theme/content/builder/builder.module').then(m => m.BuilderModule)
+				path: "landing",
+				component: LandingComponent
 			},
 			{
 				path: 'error/403',
@@ -86,7 +63,6 @@ const routes: Routes = [
 			{ path: 'error/:type', component: ErrorPageComponent },
 			{ path: '', redirectTo: 'landing', pathMatch: 'full' },
 			{ path: '**', redirectTo: 'landing', pathMatch: 'full' },
-			{ path: 'landing', redirectTo: 'dashboard/landing', pathMatch: 'full' },
 		]
 	},
 
@@ -97,7 +73,10 @@ const routes: Routes = [
 	imports: [
 		RouterModule.forRoot(routes, { useHash: true })
 	],
-	exports: [RouterModule]
+	exports: [RouterModule],
+	declarations: [
+		LandingComponent
+	]
 })
 export class AppRoutingModule {
 }

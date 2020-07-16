@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { Operador } from '@modelos/operador';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { DashboardChartService } from '../../dashboard-chart.service';
+import { OperadoresService } from '@servicios/operadores.service';
 
-import { DashboardChartService } from '../../../services/dashboard-chart.service';
-import { OperadoresService } from '../../../services/operadores.service';
 
 @Component({
 	selector: 'crm-supervisor-call',
