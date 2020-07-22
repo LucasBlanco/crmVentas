@@ -33,6 +33,7 @@
         "@ngrx/store-devtools": "^8.1.0",
         "@ngx-loading-bar/core": "^4.2.0",
         "@ngx-translate/core": "^11.0.1",
+        "@rxweb/reactive-form-validators": "^2.0.0",
         "@types/faker": "^4.1.7",
         "@types/lodash": "^4.14.136",
         "angular-in-memory-web-api": "^0.8.0",

@@ -18,7 +18,7 @@ export class PersonaMapperService {
       horario_contacto_hasta: telefono.horarioContacto.hasta
     };
   }
-  mapToFront({ persona, telefonos }) {
+  mapToFront({ telefonos, ...persona }) {
     return new Persona({
       nombre: persona.nombre,
       apellido: persona.apellido,

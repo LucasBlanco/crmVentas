@@ -111,7 +111,7 @@ export class MenuConfig {
 	}
 
 	getEstadisticas() {
-		if (true) {
+		if (this.tienePerfil('SUPERVISOR CALL') || this.tienePerfil('ADMINISTRACION GENERAL')) {
 			return [{
 				title: 'Estadisticas',
 				root: true,

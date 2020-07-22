@@ -1,3 +1,4 @@
+import { Paginator } from './../helpers/paginator';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Seguimiento } from '@modelos/seguimiento';
@@ -6,9 +7,9 @@ import { EstadoService } from '@servicios/estado.service';
 import { ObrasSocialesService } from '@servicios/obras-sociales.service';
 import { Moment } from 'moment';
 import { map } from 'rxjs/operators';
-
 import { environment } from '../../../environments/environment';
 import { PersonaMapperService } from './persona-mapper.service';
+import { LaravelPaginatorData, LaravelPaginatorAdapter } from '../helpers/laravel-paginator';
 
 interface Parametros {
 	obraSocial: number;
@@ -16,6 +17,7 @@ interface Parametros {
 	desde: Moment;
 	hasta: Moment;
 	cuil: number;
+	estado: string;
 }
 
 @Injectable({
@@ -32,12 +34,18 @@ export class SeguimientosService {
 	) { }
 
 	crear(seguimiento) {
-		console.log('oda2');
 		this.http.post(environment.ip + '/ventas', seguimiento).subscribe(p => console.log(p));
 	}
 
-	traerTodos(params: Parametros) {
-		let param = new HttpParams();
+	traerTodos(params: Parametros): LaravelPaginatorAdapter<Seguimiento> {
+		const paginator = new LaravelPaginatorAdapter<Seguimiento>(
+			this.traerTodosParaPaginar(params).bind(this),
+			this.mapToFront.bind(this)
+		);
+		return paginator;
+	}
+
+	traerTodosParaPaginar = (params: Parametros) => (param: HttpParams) => {
 		if (params.obraSocial) {
 			param = param.set('obraSocial', params.obraSocial.toString());
 		}
@@ -53,11 +61,12 @@ export class SeguimientosService {
 		if (params.cuil) {
 			param = param.set('cuil', params.cuil.toString());
 		}
+		if (params.estado) {
+			param = param.set('estado', params.estado);
+		}
 		const options = { params: param };
-		return this.http.get<Seguimiento[]>(environment.ip + '/ventas', options).pipe(
-			map(seguimientos => seguimientos.map(x => this.mapToFront(x)))
-		);
-	}
+		return this.http.get<any[]>(environment.ip + '/ventas', options);
+	};
 
 	mapToFront(seguimiento) {
 		const persona = this.personaSrv.mapToFront(seguimiento.persona);
