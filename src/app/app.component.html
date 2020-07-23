@@ -1,2 +1,7 @@
 <kt-splash-screen *ngIf="loader"></kt-splash-screen>
+
+<div *ngIf="showSpinner" class="spinner">
+    <span>Cargando...</span>
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
 <router-outlet></router-outlet>
