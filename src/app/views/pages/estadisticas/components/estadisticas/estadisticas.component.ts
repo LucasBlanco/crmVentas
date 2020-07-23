@@ -22,6 +22,7 @@ export class EstadisticasComponent implements OnInit {
   gestionadosPorPersona$ = new BehaviorSubject(this.baseConfig);
   brutasYNetas$ = new BehaviorSubject(this.baseConfig);
   ventasPorPersona$ = new BehaviorSubject(this.baseConfig);
+  ventasPorMes$ = new BehaviorSubject(this.baseConfig);
   basesDataSource = new MatTableDataSource<ResultadoBase>();
   agendadosDataSource = new MatTableDataSource<{ nombre: string, cantidad: number; }>();
   totalAgendados = 0;
@@ -34,6 +35,7 @@ export class EstadisticasComponent implements OnInit {
   ngOnInit() {
     this.estadisticasApi.gestionadosPorPersona().subscribe(config => this.gestionadosPorPersona$.next(config));
     this.estadisticasApi.netasYBrutas().subscribe(config => this.brutasYNetas$.next(config as any));
+    this.estadisticasApi.cantVentasPorMes().subscribe(config => this.ventasPorMes$.next(config));
     this.cambiarRangoVentasPorPersona('hoy');
     this.estadisticasApi.resultadosBase().subscribe(resultados => {
       this.basesDataSource.sort = this.sortAgendados;

@@ -22,6 +22,16 @@ export class EstadisticasService {
     return this.estadisticaApi.netasYBrutas().pipe(map(data => ({ type: 'bar', data: this.toChartConfigGroup(data) })));
   }
 
+  cantVentasPorMes() {
+    return this.estadisticaApi.cantVentasPorMes().pipe(
+      map(data => ({
+        ...this.chartConfig({ type: 'bar', stacked: true }),
+        data: this.toChartConfigGroup(data),
+      })
+      )
+    );
+  }
+
   resultadosBase() {
     return this.estadisticaApi.resultadosBase();
   }
@@ -33,20 +43,17 @@ export class EstadisticasService {
   ventasPorPersona(rango: 'hoy' | 'ultimoDia' | 'ultimaSemana' | 'ultimoMes') {
     return this.estadisticaApi.ventasPorPersona(rango).pipe(
       map(data => ({
-        type: 'bar',
+        ...this.chartConfig({ type: 'bar', stacked: true }),
         data: this.toChartConfigGroup(data),
-        options: {
-          scales: {
-            xAxes: [{
-              stacked: true
-            }],
-            yAxes: [{
-              stacked: true
-            }]
-          }
-        }
       })
       ));
+  }
+
+  chartConfig(options: { type: 'bar' | 'line', stacked?: boolean; }) {
+    return {
+      type: options.type,
+      options: options.stacked ? { scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] } } : {}
+    };
   }
 
 

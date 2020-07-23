@@ -10,11 +10,22 @@
     <div class="col-6">
         <div class="card">
             <div class="header">
+                Ventas por mes
+            </div>
+            <crm-chart [config]="ventasPorMes$"></crm-chart>
+        </div>
+
+
+    </div>
+</div>
+<div class="row card-row">
+    <div class="col">
+        <div class="card">
+            <div class="header">
                 Brutas y netas
             </div>
             <crm-chart [config]="brutasYNetas$"></crm-chart>
         </div>
-
     </div>
 </div>
 
