@@ -69,7 +69,7 @@ export class SeguimientosService {
 	};
 
 	mapToFront(seguimiento) {
-		const persona = this.personaSrv.mapToFront(seguimiento.persona);
+		const persona = this.personaSrv.mapToFront(seguimiento);
 		const obraSocial = seguimiento.obraSocial ? this.obraSocialSrv.mapToFront(seguimiento.obraSocial) : null;
 		const estados = seguimiento.estados.map(estado => this.estadoSrv.mapToFront(estado));
 		const agendados = seguimiento.agendados.map(agendado => this.agendadoSrv.mapToFront(agendado));
