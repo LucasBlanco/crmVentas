@@ -62,7 +62,7 @@ export class SeguimientosService {
 			param = param.set('cuil', params.cuil.toString());
 		}
 		if (params.estado) {
-			param = param.set('estado', params.estado);
+			param = param.set('ultimoEstado[]', params.estado);
 		}
 		const options = { params: param };
 		return this.http.get<any[]>(environment.ip + '/ventas', options);
