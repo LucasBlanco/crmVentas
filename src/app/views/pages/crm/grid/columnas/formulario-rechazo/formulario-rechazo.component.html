@@ -1,12 +1,12 @@
 <form [formGroup]="form" (submit)="rechazar()">
     <mat-form-field appearance="outline">
-        <mat-label>Observacion</mat-label>
-        <mat-select formControlName="observacion">
-            <mat-option *ngFor="let observacion of observaciones" [value]="observacion">
-                {{observacion}}
-            </mat-option>
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="tipo">
+            <mat-option *ngFor="let tipo of tiposRechazo$ |async" [value]="tipo">
+                {{tipo}}
+            </mat-option>tipo
         </mat-select>
-        <mat-error *ngIf="this.form.get('observacion').invalid">El campo es requerido</mat-error>
+        <mat-error *ngIf="this.form.get('tipo').invalid">El campo es requerido</mat-error>
     </mat-form-field>
     <div class="d-flex justify-content-end">
         <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Enviar</button>

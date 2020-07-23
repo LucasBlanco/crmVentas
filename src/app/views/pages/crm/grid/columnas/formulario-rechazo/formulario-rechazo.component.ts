@@ -1,6 +1,8 @@
+import { EstadoService } from '@servicios/estado.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CrmService } from '@servicios/crm.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'crm-formulario-rechazo',
@@ -9,36 +11,19 @@ import { CrmService } from '@servicios/crm.service';
 })
 export class FormularioRechazoComponent implements OnInit {
 
-  @Output() guardar = new EventEmitter<{ observacion: string }>();
+  @Output() guardar = new EventEmitter<{ tipo: string; }>();
+  tiposRechazo$: Observable<any>;
   form = new FormGroup({
-    observacion: new FormControl('', Validators.required)
+    tipo: new FormControl('', Validators.required)
   });
 
-  observaciones = [
-    'No le interesa',
-    'No trabaja',
-    'Colgo el telefono',
-    'Monotributista',
-    'Enfermo',
-    'Conforme con obra social',
-    'Capita',
-    'Convenio de obra social',
-	'No contesta',
-	'Inexistente',
-	'No disponible',
-	'Equivocado',
-	'Falta numero',
-	'Contestador automatico',
-	'Edad',
-  ]
-
-  constructor(private carmSrv: CrmService) { }
+  constructor(private carmSrv: CrmService, private estadoSrv: EstadoService) { }
 
   ngOnInit() {
+    this.tiposRechazo$ = this.estadoSrv.rechazosEnLlamado();
   }
 
   rechazar() {
-    console.log('rechazo')
-    this.guardar.emit({ observacion: this.form.get('observacion').value });
+    this.guardar.emit({ tipo: this.form.get('tipo').value });
   }
 }

@@ -38,22 +38,22 @@ export class ColumnaRellamarComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalRellamarComponent, {
       width: '60%',
       panelClass: 'custom',
-		data:{
-      	contacto
-		}
+      data: {
+        contacto
+      }
     });
     dialogRef.componentInstance.agendar.subscribe(form => {
       this.crmService.agendar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
-      dialogRef.close()
+      dialogRef.close();
     });
     dialogRef.componentInstance.rellamar.subscribe(form => {
       this.crmService.rellamar(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
       dialogRef.close();
     });
     dialogRef.componentInstance.rechazar.subscribe(form => {
-      this.crmService.rechazar(Columnas.RELLAMAR, { observacion: form.observacion, id: this.contactoSeleccionado.id })
+      this.crmService.rechazar(Columnas.RELLAMAR, { tipo: form.tipo, id: this.contactoSeleccionado.id });
       dialogRef.close();
-    })
+    });
     dialogRef.componentInstance.vender.subscribe(form => {
       this.crmService.vender(Columnas.RELLAMAR, { ...form, id: this.contactoSeleccionado.id });
       dialogRef.close();

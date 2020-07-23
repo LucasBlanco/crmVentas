@@ -22,4 +22,8 @@ export class EstadoService {
       map(data => data.map(({ estado }) => estado))
     );
   }
+
+  rechazosEnLlamado() {
+    return this.http.get((`${environment.ip}/estados/rechazosEnLlamado`));
+  }
 }

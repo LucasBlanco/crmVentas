@@ -154,8 +154,8 @@ export class CrmService {
     fromObservable.next(fromValues.filter(c => c.id !== id));
   }
 
-  rechazar(from: Columnas, { id, observacion }) {
-    this.http.post(`${environment.ip}/crm/rechazar`, { id_venta: id, observacion })
+  rechazar(from: Columnas, { id, tipo }) {
+    this.http.post(`${environment.ip}/crm/rechazar`, { id_venta: id, estado: tipo, observacion: null })
       .subscribe(() => this.borrarContacto(from, id));
   }
 
