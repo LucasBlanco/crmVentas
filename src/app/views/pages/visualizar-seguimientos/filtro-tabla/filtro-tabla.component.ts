@@ -1,3 +1,4 @@
+import { Estados } from './../../../enums/estados';
 import { LaravelPaginatorAdapter } from './../../../helpers/laravel-paginator';
 import { EstadoService } from '@servicios/estado.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -86,6 +87,10 @@ export class FiltroTablaComponent implements OnInit {
 
 	selectPage(page: { pageIndex: number; }) {
 		this.paginator.loadPage(page.pageIndex + 1);
+	}
+
+	getVendedora(seguimiento: Seguimiento) {
+		return seguimiento.estados.find(e => e.estado === Estados.ASIGNADO).usuario.nombre;
 	}
 
 }

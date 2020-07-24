@@ -32,6 +32,11 @@ export class EstadisticaApiService {
     return this.http.get<EstadisticaDosNiveles[]>(`${environment.ip}/estadistica/cantidadVentasBrutasYNetas`);
   }
 
+
+  cantVentasPorMes() {
+    return this.http.get<EstadisticaDosNiveles[]>(`${environment.ip}/estadistica/cantidadVentasPorMes`);
+  }
+
   resultadosBase(): Observable<ResultadoBase[]> {
     return this.http.get<any[]>(`${environment.ip}/estadistica/resultadoBases`).pipe(
       map(data => data.map(d => ({
