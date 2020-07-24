@@ -29,17 +29,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpUtilsService, LayoutUtilsService, TypesUtilsService } from './core/_base/crud';
 import {
-    DataTableService,
-    FakeApiService,
-    KtDialogService,
-    LayoutConfigService,
-    LayoutRefService,
-    MenuAsideService,
-    MenuConfigService,
-    MenuHorizontalService,
-    PageConfigService,
-    SplashScreenService,
-    SubheaderService,
+	DataTableService,
+	FakeApiService,
+	KtDialogService,
+	LayoutConfigService,
+	LayoutRefService,
+	MenuAsideService,
+	MenuConfigService,
+	MenuHorizontalService,
+	PageConfigService,
+	SplashScreenService,
+	SubheaderService,
 } from './core/_base/layout';
 import { LayoutConfig } from './core/_config/layout.config';
 import { AuthService } from './core/auth';
@@ -50,6 +50,9 @@ import { CargarDatosModule } from './views/pages/cargar-datos/cargar-datos.modul
 import { PartialsModule } from './views/partials/partials.module';
 import { ThemeModule } from './views/theme/theme.module';
 import { EstadisticasModule } from './views/pages/estadisticas/estadisticas.module';
+import { SharedModule } from './views/pages/shared/shared.module';
+import { SpinnerComponent } from './views/pages/shared/spinner/spinner.component';
+import { SpinnerInterceptorService } from './views/interceptors/spinner-interceptor.service';
 
 // Angular
 // Angular in memory
@@ -95,7 +98,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 }
 
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent, SpinnerComponent],
 	imports: [
 		BrowserAnimationsModule,
 		BrowserModule,
@@ -120,7 +123,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 		ThemeModule,
 		MatSnackBarModule,
 		CargarDatosModule,
-		EstadisticasModule
+		EstadisticasModule,
+		SharedModule
 
 	],
 	exports: [],
@@ -159,6 +163,11 @@ export function hljsLanguages(): HighlightLanguage[] {
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: NotificacionInterceptorService,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: SpinnerInterceptorService,
 			multi: true
 		},
 		// template services

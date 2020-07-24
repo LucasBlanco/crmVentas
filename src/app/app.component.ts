@@ -11,6 +11,7 @@ import { locale as esLang } from './core/_config/i18n/es';
 import { locale as frLang } from './core/_config/i18n/fr';
 import { locale as jpLang } from './core/_config/i18n/jp';
 import { AfkService } from './views/services/afk.service';
+import { ShowOverlayService } from './views/interceptors/show-overlay.service';
 
 // Angular
 // Layout
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	// Public properties
 	title = 'Metronic';
 	loader: boolean;
+	showSpinner = false;
 	private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
 	/**
@@ -51,7 +53,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		private layoutConfigService: LayoutConfigService,
 		private splashScreenService: SplashScreenService,
 		private afkService: AfkService,
-		private actividadSesion: ActividadSesionService) {
+		private actividadSesion: ActividadSesionService,
+		private showOverlay: ShowOverlayService
+	) {
 
 		// register translations
 		this.afkService.subscribeToMouseMove(this.mouseMoveObservable);
@@ -66,6 +70,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	 * On init
 	 */
 	ngOnInit(): void {
+		this.showOverlay.show$.subscribe(show => {
+			this.showSpinner = show;
+		});
 		// enable/disable loader
 		this.loader = this.layoutConfigService.getConfig('loader.enabled');
 
