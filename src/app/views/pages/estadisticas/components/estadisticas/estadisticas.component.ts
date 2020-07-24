@@ -36,9 +36,8 @@ export class EstadisticasComponent implements OnInit {
     this.estadisticasApi.gestionadosPorPersona().subscribe(config => this.gestionadosPorPersona$.next(config));
     this.estadisticasApi.netasYBrutas().subscribe(config => this.brutasYNetas$.next(config as any));
     this.estadisticasApi.cantVentasPorMes().subscribe(config => this.ventasPorMes$.next(config));
-    this.cambiarRangoVentasPorPersona('hoy');
     this.estadisticasApi.resultadosBase().subscribe(resultados => {
-      this.basesDataSource.sort = this.sortAgendados;
+      this.basesDataSource.sort = this.sortBases;
       this.basesDataSource.filterPredicate = (base, filtro) => base.nombre.toUpperCase().includes(filtro.toUpperCase());
       this.basesDataSource.data = resultados;
     });

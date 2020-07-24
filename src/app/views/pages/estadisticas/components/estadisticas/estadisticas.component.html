@@ -1,5 +1,43 @@
 <div class="row card-row">
-    <div class="col-6">
+    <div class="col" style="padding: 0">
+        <div class="card">
+            <div class="header">
+                Cantidad agendados
+            </div>
+            <div class="row">
+
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Filtro</mat-label>
+                        <input matInput (keyup)="actualizarFiltroAgendados($event.target.value)">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <table #sortAgendados="matSort" mat-table matSort [dataSource]="agendadosDataSource" style="width: 100%;">
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Vendedora </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                    <td mat-footer-cell *matFooterCellDef> Total </td>
+                </ng-container>
+                <ng-container matColumnDef="cantidad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{totalAgendados}} </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="['nombre', 'cantidad']"></tr>
+                <tr mat-row *matRowDef="let myRowData; columns: ['nombre', 'cantidad']"></tr>
+                <tr mat-footer-row *matFooterRowDef="['nombre', 'cantidad']"></tr>
+            </table>
+        </div>
+        <div class="card">
+            <div class="header">
+                Brutas y netas
+            </div>
+            <crm-chart [config]="brutasYNetas$"></crm-chart>
+        </div>
         <div class="card">
             <div class="header">
                 Datos gestionados en promedio por persona
@@ -7,48 +45,36 @@
             <crm-chart [config]="gestionadosPorPersona$"></crm-chart>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col" style="padding: 0">
         <div class="card">
             <div class="header">
-                Ventas por mes
+                Cantidad datos por operadora
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <mat-form-field>
+                        <mat-label>Rango</mat-label>
+                        <mat-select (selectionChange)="cambiarRangoVentasPorPersona($event.value)">
+                            <mat-option value="hoy">Hoy</mat-option>
+                            <mat-option value="ultimoDia">Ultimo dia habil</mat-option>
+                            <mat-option value="ultimaSemana">Ultima semana</mat-option>
+                            <mat-option value="ultimoMes">Ultimo Mes</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <crm-chart [config]="ventasPorPersona$"></crm-chart>
+        </div>
+
+        <div class="card">
+            <div class="header">
+                Datos por mes
             </div>
             <crm-chart [config]="ventasPorMes$"></crm-chart>
         </div>
 
-
     </div>
 </div>
-<div class="row card-row">
-    <div class="col">
-        <div class="card">
-            <div class="header">
-                Brutas y netas
-            </div>
-            <crm-chart [config]="brutasYNetas$"></crm-chart>
-        </div>
-    </div>
-</div>
-
-<div class="card card-row">
-    <div class="header">
-        Cantidad ventas por persona
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <mat-form-field>
-                <mat-label>Rango</mat-label>
-                <mat-select (selectionChange)="cambiarRangoVentasPorPersona($event.value)">
-                    <mat-option value="hoy">Hoy</mat-option>
-                    <mat-option value="ultimoDia">Ultimo dia habil</mat-option>
-                    <mat-option value="ultimaSemana">Ultima semana</mat-option>
-                    <mat-option value="ultimoMes">UltimoMes</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-    <crm-chart [config]="ventasPorPersona$"></crm-chart>
-</div>
-
 
 <div class="card card-row">
     <div class="header">
@@ -104,39 +130,5 @@
         'porcentajeContactadas', 'porcentajeVendidas', 'porcentajeVendibles', 'porcentajeInvendibles']"></tr>
         <tr mat-row *matRowDef="let myRowData; columns: ['nombre', 'llamadas', 'contactadas', 'vendidas', 'vendibles', 'invendibles',
         'porcentajeContactadas', 'porcentajeVendidas', 'porcentajeVendibles', 'porcentajeInvendibles']"></tr>
-    </table>
-</div>
-
-
-<div class="card card-row">
-    <div class="header">
-        Cantidad agendados
-    </div>
-    <div class="row">
-
-        <div class="col">
-            <mat-form-field>
-                <mat-label>Filtro</mat-label>
-                <input matInput (keyup)="actualizarFiltroAgendados($event.target.value)">
-            </mat-form-field>
-        </div>
-    </div>
-
-    <table #sortAgendados="matSort" mat-table matSort [dataSource]="agendadosDataSource" style="width: 100%;">
-        <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vendedora </th>
-            <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
-            <td mat-footer-cell *matFooterCellDef> Total </td>
-        </ng-container>
-        <ng-container matColumnDef="cantidad">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
-            <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
-            <td mat-footer-cell *matFooterCellDef> {{totalAgendados}} </td>
-        </ng-container>
-
-
-        <tr mat-header-row *matHeaderRowDef="['nombre', 'cantidad']"></tr>
-        <tr mat-row *matRowDef="let myRowData; columns: ['nombre', 'cantidad']"></tr>
-        <tr mat-footer-row *matFooterRowDef="['nombre', 'cantidad']"></tr>
     </table>
 </div>
