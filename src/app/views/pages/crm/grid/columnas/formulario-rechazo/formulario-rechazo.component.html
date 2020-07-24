@@ -4,7 +4,7 @@
         <mat-select formControlName="tipo">
             <mat-option *ngFor="let tipo of tiposRechazo$ |async" [value]="tipo">
                 {{tipo}}
-            </mat-option>tipo
+            </mat-option>
         </mat-select>
         <mat-error *ngIf="this.form.get('tipo').invalid">El campo es requerido</mat-error>
     </mat-form-field>
