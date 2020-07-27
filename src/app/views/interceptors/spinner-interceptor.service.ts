@@ -1,8 +1,8 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { ShowOverlayService } from './show-overlay.service';
 
@@ -22,6 +22,12 @@ export class SpinnerInterceptorService implements HttpInterceptor {
         if (data instanceof HttpResponse) {
           this.showOverlay.endRequest();
         }
+      }),
+      catchError(error => {
+        if (error instanceof HttpErrorResponse) {
+          this.showOverlay.endRequest();
+        }
+        return throwError(error);
       })
     );
   }
