@@ -4,12 +4,15 @@ import { OperadoresService } from "@servicios/operadores.service";
 import { Estado } from "@modelos/estado";
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EstadoService {
 
+  rechazosEnLlamado$ = new ReplaySubject<string[]>();
+  firstLoad = true;
   constructor(private operadorSrv: OperadoresService, private http: HttpClient) { }
 
   mapToFront(estado) {
@@ -24,6 +27,12 @@ export class EstadoService {
   }
 
   rechazosEnLlamado() {
-    return this.http.get((`${environment.ip}/estados/rechazosEnLlamado`));
+    if (this.firstLoad) {
+      this.http.get<string[]>((`${environment.ip}/estados/rechazosEnLlamado`)).subscribe(
+        rechazos => this.rechazosEnLlamado$.next(rechazos)
+      );
+      this.firstLoad = false;
+    }
+    return this.rechazosEnLlamado$;
   }
 }
